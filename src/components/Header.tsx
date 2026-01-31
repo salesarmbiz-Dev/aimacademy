@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard,
   Blocks,
@@ -10,6 +11,7 @@ import {
   X,
   LogOut,
   User,
+  Zap,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUser } from '@/contexts/UserContext';
@@ -26,10 +28,21 @@ const navItems = [
 export const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [xpPulse, setXpPulse] = useState(false);
+  const prevXp = useRef<number>(0);
   const location = useLocation();
   const navigate = useNavigate();
   const { signOut } = useAuth();
   const { profile, stats } = useUser();
+
+  // Detect XP changes and trigger pulse animation
+  useEffect(() => {
+    if (prevXp.current > 0 && stats.currentXp !== prevXp.current) {
+      setXpPulse(true);
+      setTimeout(() => setXpPulse(false), 1000);
+    }
+    prevXp.current = stats.currentXp;
+  }, [stats.currentXp]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -51,12 +64,12 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 h-16 bg-oxford z-50 border-b border-rackley/30">
+      <header className="fixed top-0 left-0 right-0 h-16 bg-secondary z-50 border-b border-muted-foreground/30">
         <div className="container h-full flex items-center justify-between">
           {/* Logo */}
           <Link 
             to="/dashboard" 
-            className="text-turquoise font-bold text-xl hover:opacity-90 transition-opacity duration-200"
+            className="text-accent font-bold text-xl hover:opacity-90 transition-opacity duration-200 hover-scale"
           >
             Prompt Lego
           </Link>
@@ -70,14 +83,21 @@ export const Header: React.FC = () => {
                   key={path}
                   to={path}
                   className={cn(
-                    'flex items-center gap-2 px-4 py-2 rounded-md transition-all duration-200',
+                    'relative flex items-center gap-2 px-4 py-2 rounded-md transition-all duration-200',
                     isActive
-                      ? 'text-tennessee border-b-2 border-tennessee'
-                      : 'text-white hover:text-turquoise'
+                      ? 'text-primary'
+                      : 'text-white hover:text-accent'
                   )}
                 >
                   <Icon className="h-4 w-4" />
                   <span className="text-sm font-medium">{label}</span>
+                  {isActive && (
+                    <motion.div
+                      layoutId="nav-indicator"
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"
+                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                    />
+                  )}
                 </Link>
               );
             })}
@@ -87,17 +107,28 @@ export const Header: React.FC = () => {
           <div className="flex items-center gap-4">
             {/* XP Progress */}
             <div className="hidden sm:flex items-center gap-3">
-              <span className="text-turquoise text-sm font-semibold">
-                Level {stats.level}
-              </span>
               <div className="flex items-center gap-2">
-                <div className="w-20 h-1 bg-rootbeer rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-tennessee rounded-full transition-all duration-300"
-                    style={{ width: `${xpProgress}%` }}
+                <Zap className={cn(
+                  "w-4 h-4 text-accent transition-all duration-300",
+                  xpPulse && "text-primary scale-125"
+                )} />
+                <span className="text-accent text-sm font-semibold">
+                  Lv.{stats.level}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className={cn(
+                  "w-24 h-2 bg-background rounded-full overflow-hidden transition-all duration-300",
+                  xpPulse && "shadow-[0_0_10px_theme(colors.primary)]"
+                )}>
+                  <motion.div 
+                    className="h-full bg-gradient-to-r from-primary to-accent rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${xpProgress}%` }}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
                   />
                 </div>
-                <span className="text-rackley text-xs">
+                <span className="text-muted-foreground text-xs whitespace-nowrap">
                   {stats.currentXp}/{stats.totalXpForNextLevel}
                 </span>
               </div>
@@ -107,42 +138,50 @@ export const Header: React.FC = () => {
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center justify-center w-8 h-8 rounded-full bg-rackley text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+                className="flex items-center justify-center w-9 h-9 rounded-full bg-muted-foreground/30 text-white text-sm font-semibold hover:bg-muted-foreground/50 transition-all hover-scale"
               >
                 {profile ? getInitials(profile.name) : 'U'}
               </button>
 
-              {dropdownOpen && (
-                <>
-                  <div 
-                    className="fixed inset-0 z-40" 
-                    onClick={() => setDropdownOpen(false)} 
-                  />
-                  <div className="absolute right-0 top-full mt-2 w-48 bg-oxford border border-rackley rounded-lg shadow-lg z-50 overflow-hidden animate-fade-in">
-                    <Link
-                      to="/profile"
-                      className="flex items-center gap-2 px-4 py-3 text-white hover:bg-rootbeer transition-colors"
-                      onClick={() => setDropdownOpen(false)}
+              <AnimatePresence>
+                {dropdownOpen && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-40" 
+                      onClick={() => setDropdownOpen(false)} 
+                    />
+                    <motion.div 
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 top-full mt-2 w-48 bg-secondary border border-muted-foreground/30 rounded-lg shadow-xl z-50 overflow-hidden"
                     >
-                      <User className="h-4 w-4" />
-                      <span>โปรไฟล์</span>
-                    </Link>
-                    <div className="border-t border-rackley/30" />
-                    <button
-                      onClick={handleSignOut}
-                      className="flex items-center gap-2 w-full px-4 py-3 text-white hover:bg-rootbeer transition-colors"
-                    >
-                      <LogOut className="h-4 w-4" />
-                      <span>ออกจากระบบ</span>
-                    </button>
-                  </div>
-                </>
-              )}
+                      <Link
+                        to="/profile"
+                        className="flex items-center gap-2 px-4 py-3 text-white hover:bg-background transition-colors"
+                        onClick={() => setDropdownOpen(false)}
+                      >
+                        <User className="h-4 w-4" />
+                        <span>โปรไฟล์</span>
+                      </Link>
+                      <div className="border-t border-muted-foreground/30" />
+                      <button
+                        onClick={handleSignOut}
+                        className="flex items-center gap-2 w-full px-4 py-3 text-white hover:bg-background transition-colors"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        <span>ออกจากระบบ</span>
+                      </button>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden p-2 text-white hover:text-turquoise transition-colors"
+              className="md:hidden p-2 text-white hover:text-accent transition-colors"
               onClick={() => setMobileMenuOpen(true)}
               aria-label="Open menu"
             >
@@ -153,67 +192,84 @@ export const Header: React.FC = () => {
       </header>
 
       {/* Mobile Menu Drawer */}
-      {mobileMenuOpen && (
-        <>
-          <div 
-            className="fixed inset-0 bg-black/50 z-50 md:hidden"
-            onClick={() => setMobileMenuOpen(false)}
-          />
-          <div className="fixed left-0 top-0 bottom-0 w-72 bg-oxford z-50 md:hidden animate-slide-in">
-            <div className="flex items-center justify-between p-4 border-b border-rackley/30">
-              <span className="text-turquoise font-bold text-xl">Prompt Lego</span>
-              <button
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2 text-white hover:text-turquoise transition-colors"
-                aria-label="Close menu"
-              >
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-
-            <nav className="flex flex-col py-4">
-              {navItems.map(({ path, label, icon: Icon }) => {
-                const isActive = location.pathname === path;
-                return (
-                  <Link
-                    key={path}
-                    to={path}
-                    className={cn(
-                      'flex items-center gap-3 px-6 py-4 transition-colors',
-                      isActive
-                        ? 'text-tennessee bg-rootbeer/50'
-                        : 'text-white hover:text-turquoise hover:bg-rootbeer/30'
-                    )}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <Icon className="h-5 w-5" />
-                    <span className="font-medium">{label}</span>
-                  </Link>
-                );
-              })}
-            </nav>
-
-            <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-rackley/30">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full bg-rackley flex items-center justify-center text-white font-semibold">
-                  {profile ? getInitials(profile.name) : 'U'}
-                </div>
-                <div>
-                  <p className="text-white font-medium">{profile?.name || 'User'}</p>
-                  <p className="text-rackley text-sm">Level {stats.level}</p>
-                </div>
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 md:hidden"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            <motion.div 
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="fixed left-0 top-0 bottom-0 w-72 bg-secondary z-50 md:hidden shadow-2xl"
+            >
+              <div className="flex items-center justify-between p-4 border-b border-muted-foreground/30">
+                <span className="text-accent font-bold text-xl">Prompt Lego</span>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 text-white hover:text-accent transition-colors"
+                  aria-label="Close menu"
+                >
+                  <X className="h-6 w-6" />
+                </button>
               </div>
-              <button
-                onClick={handleSignOut}
-                className="flex items-center gap-2 w-full px-4 py-3 text-white bg-rootbeer rounded-md hover:opacity-90 transition-opacity"
-              >
-                <LogOut className="h-4 w-4" />
-                <span>ออกจากระบบ</span>
-              </button>
-            </div>
-          </div>
-        </>
-      )}
+
+              <nav className="flex flex-col py-4">
+                {navItems.map(({ path, label, icon: Icon }, index) => {
+                  const isActive = location.pathname === path;
+                  return (
+                    <motion.div
+                      key={path}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                    >
+                      <Link
+                        to={path}
+                        className={cn(
+                          'flex items-center gap-3 px-6 py-4 transition-colors',
+                          isActive
+                            ? 'text-primary bg-background/50 border-l-4 border-primary'
+                            : 'text-white hover:text-accent hover:bg-background/30'
+                        )}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <Icon className="h-5 w-5" />
+                        <span className="font-medium">{label}</span>
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+              </nav>
+
+              <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-muted-foreground/30">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-muted-foreground/30 flex items-center justify-center text-white font-semibold">
+                    {profile ? getInitials(profile.name) : 'U'}
+                  </div>
+                  <div>
+                    <p className="text-white font-medium">{profile?.name || 'User'}</p>
+                    <p className="text-muted-foreground text-sm">Level {stats.level}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center gap-2 w-full px-4 py-3 text-white bg-background rounded-lg hover:opacity-90 transition-opacity btn-press"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>ออกจากระบบ</span>
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 };

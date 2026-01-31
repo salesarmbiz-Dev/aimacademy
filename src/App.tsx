@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { UserProvider } from '@/contexts/UserContext';
 import { ProgressProvider } from '@/contexts/ProgressContext';
+import { AnimationProvider } from '@/contexts/AnimationContext';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { PublicRoute } from '@/components/PublicRoute';
 import { ScrollToTop } from '@/components/ScrollToTop';
@@ -36,55 +37,57 @@ const App = () => (
         <AuthProvider>
           <UserProvider>
             <ProgressProvider>
-              <ScrollToTop />
-              <Suspense fallback={<PageLoader />}>
-                <Routes>
-                  {/* Public Routes */}
-                  <Route
-                    path="/"
-                    element={
-                      <PublicRoute>
-                        <Landing />
-                      </PublicRoute>
-                    }
-                  />
-                  <Route
-                    path="/login"
-                    element={
-                      <PublicRoute>
-                        <Login />
-                      </PublicRoute>
-                    }
-                  />
-                  <Route
-                    path="/register"
-                    element={
-                      <PublicRoute>
-                        <Register />
-                      </PublicRoute>
-                    }
-                  />
+              <AnimationProvider>
+                <ScrollToTop />
+                <Suspense fallback={<PageLoader />}>
+                  <Routes>
+                    {/* Public Routes */}
+                    <Route
+                      path="/"
+                      element={
+                        <PublicRoute>
+                          <Landing />
+                        </PublicRoute>
+                      }
+                    />
+                    <Route
+                      path="/login"
+                      element={
+                        <PublicRoute>
+                          <Login />
+                        </PublicRoute>
+                      }
+                    />
+                    <Route
+                      path="/register"
+                      element={
+                        <PublicRoute>
+                          <Register />
+                        </PublicRoute>
+                      }
+                    />
 
-                  {/* Protected Routes with App Layout */}
-                  <Route
-                    element={
-                      <ProtectedRoute>
-                        <AppLayout />
-                      </ProtectedRoute>
-                    }
-                  >
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/prompt-lego" element={<PromptLego />} />
-                    <Route path="/challenges" element={<Challenges />} />
-                    <Route path="/library" element={<Library />} />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="/leaderboard" element={<Leaderboard />} />
-                  </Route>
+                    {/* Protected Routes with App Layout */}
+                    <Route
+                      element={
+                        <ProtectedRoute>
+                          <AppLayout />
+                        </ProtectedRoute>
+                      }
+                    >
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/prompt-lego" element={<PromptLego />} />
+                      <Route path="/challenges" element={<Challenges />} />
+                      <Route path="/library" element={<Library />} />
+                      <Route path="/profile" element={<Profile />} />
+                      <Route path="/leaderboard" element={<Leaderboard />} />
+                    </Route>
 
-                  {/* 404 Route */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Suspense>
+                    {/* 404 Route */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Suspense>
+              </AnimationProvider>
             </ProgressProvider>
           </UserProvider>
         </AuthProvider>
