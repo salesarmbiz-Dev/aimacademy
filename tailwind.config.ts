@@ -7,18 +7,49 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: {
+        DEFAULT: "1rem",
+        sm: "1.5rem",
+        lg: "2rem",
+      },
       screens: {
-        "2xl": "1400px",
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["'Noto Sans Thai'", "system-ui", "-apple-system", "sans-serif"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        // Prompt Lego Corporate Colors
+        oxford: {
+          DEFAULT: "#012840",
+          foreground: "#FFFFFF",
+        },
+        tennessee: {
+          DEFAULT: "#F27405",
+          foreground: "#FFFFFF",
+        },
+        turquoise: {
+          DEFAULT: "#05F2F2",
+          foreground: "#012840",
+        },
+        rackley: {
+          DEFAULT: "#6593A6",
+          foreground: "#FFFFFF",
+        },
+        rootbeer: {
+          DEFAULT: "#260D0B",
+          foreground: "#FFFFFF",
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -59,31 +90,27 @@ export default {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "8px",
+        md: "6px",
+        sm: "4px",
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      transitionDuration: {
+        "200": "200ms",
+        "300": "300ms",
       },
     },
   },
