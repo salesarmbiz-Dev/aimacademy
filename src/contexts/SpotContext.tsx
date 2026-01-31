@@ -40,6 +40,18 @@ export interface SpotState {
   currentChallenge: SpotChallenge | null;
   sessionCorrect: number;
   sessionTotal: number;
+
+  // Phase C additions
+  unlockedBadges: string[];
+  badgeProgress: { [badgeId: string]: number };
+  dailyChallengeCompleted: boolean;
+  dailyChallengeDate: string;
+  hasSeenLegoPromo: boolean;
+  claimedMilestones: number[];
+  categoriesPlayed: string[];
+  fastAnswers: number;
+  playDays: number;
+  lastPlayDate: string;
 }
 
 interface SpotContextValue extends SpotState {
@@ -48,6 +60,12 @@ interface SpotContextValue extends SpotState {
   addPattern: (pattern: string) => void;
   updateSkill: (skill: keyof SpotSkills, points: number) => void;
   resetSession: () => void;
+  unlockBadge: (badgeId: string) => void;
+  completeDailyChallenge: () => void;
+  claimStreakMilestone: (milestone: number) => void;
+  setHasSeenLegoPromo: (seen: boolean) => void;
+  addFastAnswer: () => void;
+  recordPlayDay: () => void;
 }
 
 const defaultSkills: SpotSkills = {
@@ -69,6 +87,17 @@ const defaultState: SpotState = {
   currentChallenge: null,
   sessionCorrect: 0,
   sessionTotal: 0,
+  // Phase C additions
+  unlockedBadges: [],
+  badgeProgress: {},
+  dailyChallengeCompleted: false,
+  dailyChallengeDate: '',
+  hasSeenLegoPromo: false,
+  claimedMilestones: [],
+  categoriesPlayed: [],
+  fastAnswers: 0,
+  playDays: 0,
+  lastPlayDate: '',
 };
 
 // Mock challenges for Spot the Difference
@@ -178,6 +207,9 @@ export const SpotProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setState(prev => {
       const newStreak = correct ? prev.currentStreak + 1 : 0;
       const newLongestStreak = Math.max(prev.longestStreak, newStreak);
+      const newCategoriesPlayed = prev.categoriesPlayed.includes(challenge.category)
+        ? prev.categoriesPlayed
+        : [...prev.categoriesPlayed, challenge.category];
       
       return {
         ...prev,
@@ -189,6 +221,7 @@ export const SpotProvider: React.FC<{ children: React.ReactNode }> = ({ children
         sessionCorrect: prev.sessionCorrect + (correct ? 1 : 0),
         sessionTotal: prev.sessionTotal + 1,
         currentChallenge: null,
+        categoriesPlayed: newCategoriesPlayed,
         skills: correct ? {
           ...prev.skills,
           [challenge.skill]: Math.min(100, prev.skills[challenge.skill] + 5),
@@ -228,6 +261,61 @@ export const SpotProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }));
   }, []);
 
+  const unlockBadge = useCallback((badgeId: string) => {
+    setState(prev => {
+      if (prev.unlockedBadges.includes(badgeId)) return prev;
+      return {
+        ...prev,
+        unlockedBadges: [...prev.unlockedBadges, badgeId],
+      };
+    });
+  }, []);
+
+  const completeDailyChallenge = useCallback(() => {
+    const today = new Date().toISOString().split('T')[0];
+    setState(prev => ({
+      ...prev,
+      dailyChallengeCompleted: true,
+      dailyChallengeDate: today,
+    }));
+  }, []);
+
+  const claimStreakMilestone = useCallback((milestone: number) => {
+    setState(prev => {
+      if (prev.claimedMilestones.includes(milestone)) return prev;
+      return {
+        ...prev,
+        claimedMilestones: [...prev.claimedMilestones, milestone],
+      };
+    });
+  }, []);
+
+  const setHasSeenLegoPromo = useCallback((seen: boolean) => {
+    setState(prev => ({
+      ...prev,
+      hasSeenLegoPromo: seen,
+    }));
+  }, []);
+
+  const addFastAnswer = useCallback(() => {
+    setState(prev => ({
+      ...prev,
+      fastAnswers: prev.fastAnswers + 1,
+    }));
+  }, []);
+
+  const recordPlayDay = useCallback(() => {
+    const today = new Date().toISOString().split('T')[0];
+    setState(prev => {
+      if (prev.lastPlayDate === today) return prev;
+      return {
+        ...prev,
+        playDays: prev.playDays + 1,
+        lastPlayDate: today,
+      };
+    });
+  }, []);
+
   return (
     <SpotContext.Provider value={{
       ...state,
@@ -236,6 +324,12 @@ export const SpotProvider: React.FC<{ children: React.ReactNode }> = ({ children
       addPattern,
       updateSkill,
       resetSession,
+      unlockBadge,
+      completeDailyChallenge,
+      claimStreakMilestone,
+      setHasSeenLegoPromo,
+      addFastAnswer,
+      recordPlayDay,
     }}>
       {children}
     </SpotContext.Provider>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Eye, Trophy, Target, Flame, Lightbulb, Lock, 
-  Shuffle, Clock, Zap, Star, AlertTriangle, UserPlus 
+  Shuffle, Zap, Star, AlertTriangle, UserPlus 
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,11 @@ import { useSpot } from '@/contexts/SpotContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUser } from '@/contexts/UserContext';
 import { CATEGORIES, getChallengesByCategory } from '@/data/spotChallenges';
+import SkillRadarChart from '@/components/spot/SkillRadarChart';
+import DailyChallengeCard from '@/components/spot/DailyChallengeCard';
+import BadgesPreview from '@/components/spot/BadgesPreview';
+import QuickLinksCard from '@/components/spot/QuickLinksCard';
+import StreakMilestones from '@/components/spot/StreakMilestones';
 
 const SpotHub: React.FC = () => {
   const navigate = useNavigate();
@@ -143,28 +148,46 @@ const SpotHub: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Skill Levels */}
+        {/* Skill Levels with Radar Chart */}
         <Card className="bg-card border-rackley/30 mb-6">
           <CardContent className="p-5">
             <h2 className="text-lg font-semibold text-foreground mb-4">📈 SKILL LEVELS</h2>
-            <div className="space-y-4">
-              {skillsList.map((skill) => (
-                <div key={skill.key} className="flex items-center gap-4">
-                  <span className="text-sm text-rackley w-32 flex-shrink-0">{skill.name}</span>
-                  <div className="flex-1">
-                    <Progress 
-                      value={skill.value} 
-                      className="h-2 bg-oxford-blue"
-                    />
+            <div className="flex flex-col md:flex-row gap-6">
+              {/* Progress bars */}
+              <div className="flex-1 space-y-4">
+                {skillsList.map((skill) => (
+                  <div key={skill.key} className="flex items-center gap-4">
+                    <span className="text-sm text-rackley w-32 flex-shrink-0">{skill.name}</span>
+                    <div className="flex-1">
+                      <Progress 
+                        value={skill.value} 
+                        className="h-2 bg-oxford-blue"
+                      />
+                    </div>
+                    <span className="text-sm text-foreground font-semibold w-12 text-right">
+                      {skill.value}%
+                    </span>
                   </div>
-                  <span className="text-sm text-foreground font-semibold w-12 text-right">
-                    {skill.value}%
-                  </span>
-                </div>
-              ))}
+                ))}
+              </div>
+              {/* Radar chart */}
+              <div className="hidden lg:flex items-center justify-center">
+                <SkillRadarChart skills={skills} size={200} />
+              </div>
             </div>
           </CardContent>
         </Card>
+
+        {/* Badges Preview & Quick Links */}
+        <div className="grid md:grid-cols-2 gap-4 mb-6">
+          <BadgesPreview />
+          <QuickLinksCard />
+        </div>
+
+        {/* Streak Milestones */}
+        <div className="mb-6">
+          <StreakMilestones />
+        </div>
 
         {/* Categories */}
         <h2 className="text-lg font-semibold text-foreground mb-4">📂 CATEGORIES</h2>
@@ -255,37 +278,7 @@ const SpotHub: React.FC = () => {
         </div>
 
         {/* Daily Challenge */}
-        <Card className="bg-gradient-to-r from-oxford-blue to-root-beer border-tennessee/50 mb-6">
-          <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-tennessee/20 rounded-xl">
-                  <Trophy className="w-8 h-8 text-tennessee" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-bold text-foreground text-lg">🏆 DAILY CHALLENGE</h3>
-                    <Badge className="bg-tennessee text-foreground border-0">2x XP!</Badge>
-                  </div>
-                  <p className="text-rackley">วันนี้: "Ad Copy สำหรับคอร์สออนไลน์"</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2 text-rackley">
-                  <Clock className="w-4 h-4" />
-                  <span className="text-sm">18:32:45</span>
-                </div>
-                <Button 
-                  className="bg-tennessee text-foreground hover:bg-tennessee/90"
-                  onClick={() => handlePlayCategory('daily')}
-                >
-                  <Zap className="w-4 h-4 mr-2" />
-                  เริ่ม Daily Challenge
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <DailyChallengeCard />
       </div>
     </div>
   );
