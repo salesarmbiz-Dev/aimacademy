@@ -122,7 +122,7 @@ export const Header: React.FC = () => {
           <div className="flex items-center gap-4">
             {/* XP Progress */}
             {(isAuthenticated || isGuestMode) && (
-              <div className="hidden sm:flex items-center gap-3">
+              <div className="hidden sm:flex items-center gap-3 group relative">
                 <div className="flex items-center gap-2">
                   <Zap className={cn(
                     "w-4 h-4 text-accent transition-all duration-300",
@@ -147,11 +147,32 @@ export const Header: React.FC = () => {
                         />
                       </div>
                       <span className="text-muted-foreground text-xs whitespace-nowrap">
-                        {stats.currentXp}/{stats.totalXpForNextLevel}
+                        {stats.xpForCurrentLevel || stats.currentXp}/{stats.xpForNextLevel || stats.totalXpForNextLevel}
                       </span>
                     </>
                   )}
                 </div>
+                
+                {/* Tooltip with XP breakdown */}
+                {!isGuestMode && (
+                  <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-secondary border border-muted-foreground/30 rounded-lg p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 w-48">
+                    <p className="text-foreground font-semibold mb-2 text-sm">XP Breakdown</p>
+                    <div className="space-y-1 text-xs">
+                      <div className="flex justify-between">
+                        <span className="text-turquoise">🎯 Spot:</span>
+                        <span className="text-foreground">{stats.spotXp?.toLocaleString() || 0} XP</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-tennessee">🧱 Lego:</span>
+                        <span className="text-foreground">{stats.legoXp?.toLocaleString() || 0} XP</span>
+                      </div>
+                      <div className="border-t border-muted-foreground/30 mt-2 pt-2 flex justify-between">
+                        <span className="text-rackley">Total:</span>
+                        <span className="text-accent font-semibold">{stats.totalXp?.toLocaleString() || 0} XP</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

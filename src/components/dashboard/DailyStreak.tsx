@@ -1,76 +1,109 @@
 import React from 'react';
-import { Check, X } from 'lucide-react';
+import { Check, X, Flame, Gift, Star } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
-const DAYS = ['จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส', 'อา'];
+const DAYS = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
 
-interface DayStatus {
-  status: 'completed' | 'today' | 'future' | 'missed';
-}
-
-// Mock data: Last 5 days completed, today active, tomorrow future
-const getMockStreak = (): DayStatus[] => {
-  return [
-    { status: 'completed' },
-    { status: 'completed' },
-    { status: 'completed' },
-    { status: 'completed' },
-    { status: 'completed' },
-    { status: 'today' },
-    { status: 'future' },
-  ];
-};
+const STREAK_MILESTONES = [
+  { days: 3, bonus: '+10% XP', icon: '🔥' },
+  { days: 7, bonus: '+25% XP', icon: '⭐' },
+  { days: 14, bonus: '+50% XP', icon: '🌟' },
+  { days: 30, bonus: '+100% XP', icon: '💎' },
+];
 
 interface DailyStreakProps {
   streak?: number;
 }
 
 const DailyStreak: React.FC<DailyStreakProps> = ({ streak = 5 }) => {
-  const days = getMockStreak();
-  const daysToMilestone = 7 - streak;
+  // Get last 7 days activity
+  const today = new Date().getDay();
+  const activityDays = Array.from({ length: 7 }, (_, i) => {
+    const dayIndex = (today - 6 + i + 7) % 7;
+    const isActive = i >= 7 - Math.min(streak, 7);
+    const isToday = i === 6;
+    return { day: DAYS[dayIndex], isActive, isToday };
+  });
+
+  // Find milestones
+  const nextMilestone = STREAK_MILESTONES.find(m => m.days > streak);
+  const currentMilestone = [...STREAK_MILESTONES].reverse().find(m => m.days <= streak);
+  const longestStreak = Math.max(streak, 12); // Mock longest streak
 
   return (
-    <div className="bg-card rounded-2xl p-6 mt-6 animate-fade-in">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-foreground text-lg font-semibold">Daily Streak 🔥</h2>
-        <span className="text-tennessee text-2xl font-bold">{streak} วัน</span>
-      </div>
-
-      {/* Week View */}
-      <div className="flex justify-between gap-2">
-        {days.map((day, index) => (
-          <div key={index} className="flex flex-col items-center">
-            <div
-              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
-                day.status === 'completed'
-                  ? 'bg-tennessee'
-                  : day.status === 'today'
-                  ? 'bg-turquoise animate-pulse'
-                  : day.status === 'missed'
-                  ? 'bg-root-beer border border-rackley/30'
-                  : 'bg-root-beer border border-rackley/30'
-              }`}
-            >
-              {day.status === 'completed' && <Check className="h-5 w-5 text-foreground" />}
-              {day.status === 'missed' && <X className="h-4 w-4 text-rackley/50" />}
-              {day.status === 'today' && <span className="w-2 h-2 bg-oxford-blue rounded-full" />}
+    <Card className="bg-card border-tennessee/30">
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-tennessee/20 rounded-xl">
+              <Flame className="w-6 h-6 text-tennessee" />
             </div>
-            <span className="text-rackley text-xs mt-2">{DAYS[index]}</span>
+            <div>
+              <h3 className="text-lg font-semibold text-foreground">Daily Streak</h3>
+              <p className="text-sm text-rackley">เล่นทุกวันเพื่อ Bonus!</p>
+            </div>
           </div>
-        ))}
-      </div>
+          <div className="text-right">
+            <p className="text-3xl font-bold text-tennessee">{streak}</p>
+            <p className="text-xs text-rackley">วันติดต่อกัน</p>
+          </div>
+        </div>
 
-      {/* Motivation Text */}
-      <p className="text-rackley text-sm mt-4 text-center">
-        {streak > 0 ? (
-          <>
-            ทำต่อไป! อีก {daysToMilestone} วันจะได้ Badge:{' '}
-            <span className="text-turquoise">Week Warrior 🏅</span>
-          </>
-        ) : (
-          <span className="text-tennessee">เริ่มสร้าง Streak วันนี้เลย!</span>
+        {/* Week Calendar */}
+        <div className="flex gap-2 mb-6">
+          {activityDays.map((day, i) => (
+            <div key={i} className="flex-1 text-center">
+              <div 
+                className={cn(
+                  "w-full aspect-square rounded-lg flex items-center justify-center mb-1 transition-all",
+                  day.isActive 
+                    ? "bg-tennessee text-foreground" 
+                    : "bg-background text-rackley",
+                  day.isToday && "ring-2 ring-turquoise ring-offset-2 ring-offset-card"
+                )}
+              >
+                {day.isActive ? (day.isToday ? '🔥' : <Check className="w-4 h-4" />) : '○'}
+              </div>
+              <p className="text-xs text-rackley">{day.day}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Current Bonus */}
+        {currentMilestone && (
+          <div className="p-3 bg-tennessee/10 rounded-lg mb-4 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-xl">{currentMilestone.icon}</span>
+              <span className="text-sm text-foreground">Active Bonus:</span>
+            </div>
+            <span className="text-tennessee font-semibold">{currentMilestone.bonus}</span>
+          </div>
         )}
-      </p>
-    </div>
+
+        {/* Next Milestone */}
+        {nextMilestone && (
+          <div className="p-3 bg-background rounded-lg flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Gift className="w-4 h-4 text-rackley" />
+              <span className="text-sm text-rackley">
+                อีก {nextMilestone.days - streak} วัน:
+              </span>
+            </div>
+            <span className="text-turquoise font-semibold">{nextMilestone.bonus}</span>
+          </div>
+        )}
+
+        {/* Longest Streak */}
+        <div className="mt-4 pt-4 border-t border-rackley/20 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-rackley text-sm">
+            <Star className="w-4 h-4" />
+            <span>Best Streak:</span>
+          </div>
+          <span className="text-foreground font-semibold">{longestStreak} วัน</span>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

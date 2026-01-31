@@ -54,8 +54,11 @@ export const PageLoader: React.FC = () => (
       transition={{ duration: 0.3 }}
       className="text-center"
     >
-      <h1 className="text-3xl font-bold text-accent">Prompt Lego</h1>
-      <p className="text-muted-foreground text-sm mt-1">AI Learning Gamification</p>
+      <div className="flex items-center justify-center gap-2 mb-2">
+        <span className="text-4xl">🎓</span>
+        <h1 className="text-3xl font-bold text-accent">AIM Academy</h1>
+      </div>
+      <p className="text-muted-foreground text-sm">AI Learning Gamification</p>
     </motion.div>
     
     {/* Spinner */}

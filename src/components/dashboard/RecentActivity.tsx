@@ -1,115 +1,151 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, FlaskConical, Trophy, Lightbulb, Award, TrendingUp, Inbox } from 'lucide-react';
+import { Clock, FlaskConical, Trophy, Lightbulb, Award, TrendingUp, Inbox, Eye, Puzzle, Zap, Flame } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { formatDistanceToNow } from 'date-fns';
+import { th } from 'date-fns/locale';
 
 interface Activity {
-  type: 'experiment' | 'challenge' | 'insight' | 'badge' | 'levelup';
-  time: string;
-  text: string;
-  xp: number | null;
+  id: string;
+  type: 'spot_correct' | 'spot_streak' | 'lego_experiment' | 'lego_insight' | 'badge_unlock' | 'level_up';
+  description: string;
+  xpEarned: number;
+  timestamp: Date;
+  game: 'spot' | 'lego' | 'global';
 }
 
-const mockActivities: Activity[] = [
-  { type: 'experiment', time: '2 นาทีที่แล้ว', text: 'ทดลอง Prompt: Email Follow-up', xp: 15 },
-  { type: 'insight', time: '5 นาทีที่แล้ว', text: 'ค้นพบ: ROLE คือ Block ที่สำคัญที่สุด', xp: 30 },
-  { type: 'challenge', time: '1 ชั่วโมงที่แล้ว', text: 'ผ่าน Minimize Challenge', xp: 100 },
-  { type: 'badge', time: '1 ชั่วโมงที่แล้ว', text: 'ได้รับ Badge: First Build 🏆', xp: 50 },
-  { type: 'experiment', time: '2 ชั่วโมงที่แล้ว', text: 'ทดลอง Prompt: Product Description', xp: 15 },
-  { type: 'levelup', time: 'เมื่อวาน', text: 'เลื่อนขั้นเป็น Level 5!', xp: null },
+const MOCK_ACTIVITIES: Activity[] = [
+  {
+    id: '1',
+    type: 'spot_correct',
+    description: 'ตอบถูก Social Media Challenge',
+    xpEarned: 50,
+    timestamp: new Date(Date.now() - 1800000),
+    game: 'spot',
+  },
+  {
+    id: '2',
+    type: 'spot_streak',
+    description: 'ถูก 5 ข้อติด! 🔥',
+    xpEarned: 75,
+    timestamp: new Date(Date.now() - 3600000),
+    game: 'spot',
+  },
+  {
+    id: '3',
+    type: 'lego_insight',
+    description: 'ค้นพบ Insight ใหม่',
+    xpEarned: 30,
+    timestamp: new Date(Date.now() - 7200000),
+    game: 'lego',
+  },
+  {
+    id: '4',
+    type: 'badge_unlock',
+    description: 'ปลดล็อค Badge "ตาไว"',
+    xpEarned: 100,
+    timestamp: new Date(Date.now() - 86400000),
+    game: 'global',
+  },
+  {
+    id: '5',
+    type: 'lego_experiment',
+    description: 'ทดลอง Prompt ใหม่',
+    xpEarned: 25,
+    timestamp: new Date(Date.now() - 172800000),
+    game: 'lego',
+  },
 ];
 
-const getActivityIcon = (type: Activity['type']) => {
+const getActivityIcon = (type: Activity['type'], game: Activity['game']) => {
+  if (game === 'spot') {
+    return { icon: Eye, color: 'text-turquoise', bg: 'bg-turquoise/20' };
+  }
+  if (game === 'lego') {
+    return { icon: Puzzle, color: 'text-tennessee', bg: 'bg-tennessee/20' };
+  }
+  
   switch (type) {
-    case 'experiment': return FlaskConical;
-    case 'challenge': return Trophy;
-    case 'insight': return Lightbulb;
-    case 'badge': return Award;
-    case 'levelup': return TrendingUp;
+    case 'badge_unlock':
+      return { icon: Trophy, color: 'text-tennessee', bg: 'bg-tennessee/20' };
+    case 'level_up':
+      return { icon: TrendingUp, color: 'text-turquoise', bg: 'bg-turquoise/20' };
+    default:
+      return { icon: Lightbulb, color: 'text-rackley', bg: 'bg-rackley/20' };
   }
 };
 
-const getActivityColor = (type: Activity['type']) => {
-  switch (type) {
-    case 'experiment': return 'bg-turquoise';
-    case 'challenge': return 'bg-tennessee';
-    case 'insight': return 'bg-tennessee';
-    case 'badge': return 'bg-yellow-500';
-    case 'levelup': return 'bg-turquoise';
+const getGameEmoji = (game: Activity['game']) => {
+  switch (game) {
+    case 'spot': return '🎯';
+    case 'lego': return '🧱';
+    default: return '🌟';
   }
 };
 
-interface RecentActivityProps {
-  activities?: Activity[];
-}
-
-const RecentActivity: React.FC<RecentActivityProps> = ({ activities = mockActivities }) => {
-  const isEmpty = activities.length === 0;
+const RecentActivity: React.FC = () => {
+  const isEmpty = MOCK_ACTIVITIES.length === 0;
 
   return (
-    <div className="bg-card rounded-2xl p-6 animate-fade-in">
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-2">
-          <Clock className="h-5 w-5 text-rackley" />
-          <h2 className="text-foreground text-lg font-semibold">กิจกรรมล่าสุด</h2>
-        </div>
-        <Link to="#" className="text-turquoise text-sm hover:underline">
-          ดูทั้งหมด
-        </Link>
-      </div>
-
-      {isEmpty ? (
-        <div className="flex flex-col items-center justify-center py-8 text-center">
-          <Inbox className="h-12 w-12 text-rackley mb-3" />
-          <p className="text-rackley font-medium">ยังไม่มีกิจกรรม</p>
-          <p className="text-rackley text-sm mt-1">เริ่ม Experiment แรกของคุณเลย!</p>
-          <Link
-            to="/prompt-lego"
-            className="mt-4 px-4 py-2 bg-tennessee text-foreground rounded-lg font-medium hover:opacity-90"
-          >
-            เริ่มเลย
+    <Card className="bg-card border-rackley/30">
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-2">
+            <Flame className="h-5 w-5 text-tennessee" />
+            <h2 className="text-foreground text-lg font-semibold">Recent Activity</h2>
+          </div>
+          <Link to="/profile" className="text-turquoise text-sm hover:underline">
+            ดูทั้งหมด
           </Link>
         </div>
-      ) : (
-        <div className="relative">
-          {/* Timeline line */}
-          <div className="absolute left-1.5 top-2 bottom-2 w-0.5 bg-rackley/30" />
 
-          <div className="space-y-4">
-            {activities.map((activity, index) => {
-              const Icon = getActivityIcon(activity.type);
-              const dotColor = getActivityColor(activity.type);
-
+        {isEmpty ? (
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <Inbox className="h-12 w-12 text-rackley mb-3" />
+            <p className="text-rackley font-medium">ยังไม่มีกิจกรรม</p>
+            <p className="text-rackley text-sm mt-1">เริ่มเล่นเกมเพื่อสะสม XP!</p>
+            <Link
+              to="/spot"
+              className="mt-4 px-4 py-2 bg-turquoise text-oxford-blue rounded-lg font-medium hover:opacity-90"
+            >
+              เริ่มเลย
+            </Link>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {MOCK_ACTIVITIES.map((activity) => {
+              const { icon: Icon, color, bg } = getActivityIcon(activity.type, activity.game);
+              
               return (
-                <div
-                  key={index}
-                  className="flex gap-4 animate-fade-in"
-                  style={{ animationDelay: `${index * 50}ms` }}
+                <div 
+                  key={activity.id}
+                  className="flex items-center gap-3 p-3 rounded-lg bg-background/50 hover:bg-background transition-colors"
                 >
-                  {/* Dot */}
-                  <div className={`w-3 h-3 rounded-full ${dotColor} mt-1.5 z-10`} />
-
-                  {/* Content */}
+                  <div className={`p-2 rounded-lg ${bg}`}>
+                    <Icon className={`w-4 h-4 ${color}`} />
+                  </div>
+                  
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <Icon className="h-4 w-4 text-rackley flex-shrink-0" />
-                        <p className="text-foreground text-sm truncate">{activity.text}</p>
-                      </div>
-                      {activity.xp && (
-                        <span className="text-tennessee text-xs bg-tennessee/20 px-2 py-0.5 rounded flex-shrink-0">
-                          +{activity.xp} XP
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-rackley text-xs mt-1">{activity.time}</p>
+                    <p className="text-foreground text-sm">
+                      <span className="mr-2">{getGameEmoji(activity.game)}</span>
+                      {activity.description}
+                    </p>
+                    <p className="text-xs text-rackley">
+                      {formatDistanceToNow(activity.timestamp, { addSuffix: true, locale: th })}
+                    </p>
+                  </div>
+                  
+                  <div className="flex items-center gap-1 text-tennessee font-semibold text-sm">
+                    <Zap className="w-3 h-3" />
+                    +{activity.xpEarned}
                   </div>
                 </div>
               );
             })}
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
