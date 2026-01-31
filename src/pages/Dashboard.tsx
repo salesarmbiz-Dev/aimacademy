@@ -1,5 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useUser } from '@/contexts/UserContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { useSpot } from '@/contexts/SpotContext';
+import { useProgress } from '@/contexts/ProgressContext';
 import WelcomeHeader from '@/components/dashboard/WelcomeHeader';
 import StatsCards from '@/components/dashboard/StatsCards';
 import QuickActions from '@/components/dashboard/QuickActions';
@@ -9,9 +13,14 @@ import ProgressChart from '@/components/dashboard/ProgressChart';
 import InsightsPreview from '@/components/dashboard/InsightsPreview';
 import BadgesShowcase from '@/components/dashboard/BadgesShowcase';
 import FloatingActionButton from '@/components/dashboard/FloatingActionButton';
+import GameProgressCards from '@/components/dashboard/GameProgressCards';
+import RecommendedNext from '@/components/dashboard/RecommendedNext';
 
 const Dashboard: React.FC = () => {
   const { profile, stats, loading } = useUser();
+  const { isGuestMode } = useAuth();
+  const spotState = useSpot();
+  const { insights } = useProgress();
 
   if (loading) {
     return (
@@ -38,20 +47,50 @@ const Dashboard: React.FC = () => {
     );
   }
 
+  // Calculate total XP from both games
+  const totalXp = stats.currentXp + spotState.gameXp;
+  const totalInsights = insights.length + spotState.patternsDiscovered.length;
+
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Welcome Header */}
-        <WelcomeHeader userName={profile.name} />
+        <WelcomeHeader 
+          userName={isGuestMode ? 'Guest' : (profile?.name || 'User')} 
+          isGuest={isGuestMode}
+        />
 
         {/* Stats Overview Cards */}
         <StatsCards
           level={stats.level}
-          currentXp={stats.currentXp}
+          currentXp={totalXp}
           totalXpForNextLevel={stats.totalXpForNextLevel}
           experimentsCount={stats.experimentsCount}
-          challengesCompleted={stats.challengesCompleted}
-          insightsDiscovered={stats.insightsDiscovered}
+          challengesCompleted={stats.challengesCompleted + spotState.challengesCompleted}
+          insightsDiscovered={totalInsights}
+        />
+
+        {/* Game Progress Cards */}
+        <GameProgressCards 
+          spotStats={{
+            completed: spotState.challengesCompleted,
+            accuracy: spotState.challengesCompleted > 0 
+              ? Math.round((spotState.correctAnswers / spotState.challengesCompleted) * 100) 
+              : 0,
+            streak: spotState.currentStreak,
+            xp: spotState.gameXp,
+          }}
+          legoStats={{
+            experiments: stats.experimentsCount,
+            challenges: stats.challengesCompleted,
+            xp: stats.currentXp,
+          }}
+        />
+
+        {/* Recommended Next */}
+        <RecommendedNext 
+          spotCompleted={spotState.challengesCompleted}
+          legoCompleted={stats.challengesCompleted}
         />
 
         {/* Quick Actions */}
@@ -68,7 +107,7 @@ const Dashboard: React.FC = () => {
           {/* Right Column (40%) */}
           <div className="md:col-span-2">
             <ProgressChart />
-            <InsightsPreview count={stats.insightsDiscovered || 12} />
+            <InsightsPreview count={totalInsights} />
             <BadgesShowcase />
           </div>
         </div>

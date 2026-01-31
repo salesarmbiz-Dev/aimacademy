@@ -3,13 +3,20 @@ import { supabase } from '@/integrations/supabase/client';
 import type { AuthState, User, Session } from '@/types';
 
 interface AuthContextValue extends AuthState {
+  isGuestMode: boolean;
+  guestChallengesRemaining: number;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signUp: (email: string, password: string, name: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: string | null }>;
+  startGuestMode: () => void;
+  exitGuestMode: () => void;
+  decrementGuestChallenges: () => number;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+
+const GUEST_CHALLENGES_LIMIT = 5;
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, setState] = useState<AuthState>({
@@ -17,6 +24,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     session: null,
     isAuthenticated: false,
     loading: true,
+  });
+
+  const [isGuestMode, setIsGuestMode] = useState<boolean>(() => {
+    return localStorage.getItem('aim_guest_mode') === 'true';
+  });
+
+  const [guestChallengesRemaining, setGuestChallengesRemaining] = useState<number>(() => {
+    const stored = localStorage.getItem('aim_guest_challenges');
+    return stored ? parseInt(stored, 10) : GUEST_CHALLENGES_LIMIT;
   });
 
   useEffect(() => {
@@ -36,6 +52,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           isAuthenticated: true,
           loading: false,
         });
+        // Clear guest mode when user logs in
+        setIsGuestMode(false);
+        localStorage.removeItem('aim_guest_mode');
       } else {
         setState({
           user: null,
@@ -113,6 +132,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
+    setIsGuestMode(false);
+    localStorage.removeItem('aim_guest_mode');
   }, []);
 
   const resetPassword = useCallback(async (email: string) => {
@@ -127,8 +148,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error: null };
   }, []);
 
+  const startGuestMode = useCallback(() => {
+    setIsGuestMode(true);
+    setGuestChallengesRemaining(GUEST_CHALLENGES_LIMIT);
+    localStorage.setItem('aim_guest_mode', 'true');
+    localStorage.setItem('aim_guest_challenges', GUEST_CHALLENGES_LIMIT.toString());
+  }, []);
+
+  const exitGuestMode = useCallback(() => {
+    setIsGuestMode(false);
+    localStorage.removeItem('aim_guest_mode');
+    localStorage.removeItem('aim_guest_challenges');
+  }, []);
+
+  const decrementGuestChallenges = useCallback(() => {
+    const newCount = guestChallengesRemaining - 1;
+    setGuestChallengesRemaining(newCount);
+    localStorage.setItem('aim_guest_challenges', newCount.toString());
+    return newCount;
+  }, [guestChallengesRemaining]);
+
   return (
-    <AuthContext.Provider value={{ ...state, signIn, signUp, signOut, resetPassword }}>
+    <AuthContext.Provider value={{ 
+      ...state, 
+      isGuestMode,
+      guestChallengesRemaining,
+      signIn, 
+      signUp, 
+      signOut, 
+      resetPassword,
+      startGuestMode,
+      exitGuestMode,
+      decrementGuestChallenges,
+    }}>
       {children}
     </AuthContext.Provider>
   );

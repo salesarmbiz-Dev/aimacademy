@@ -3,15 +3,21 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard,
-  Blocks,
+  Eye,
+  Puzzle,
   Trophy,
-  Library,
   Medal,
   Menu,
   X,
   LogOut,
   User,
   Zap,
+  Lightbulb,
+  Settings,
+  ChevronDown,
+  UserPlus,
+  GraduationCap,
+  Sparkles,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUser } from '@/contexts/UserContext';
@@ -19,9 +25,8 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/prompt-lego', label: 'Prompt Lego', icon: Blocks },
-  { path: '/challenges', label: 'Challenges', icon: Trophy },
-  { path: '/library', label: 'Library', icon: Library },
+  { path: '/spot', label: 'Spot the Difference', icon: Eye },
+  { path: '/prompt-lego', label: 'Prompt Lego', icon: Puzzle },
   { path: '/leaderboard', label: 'Leaderboard', icon: Medal },
 ];
 
@@ -32,7 +37,7 @@ export const Header: React.FC = () => {
   const prevXp = useRef<number>(0);
   const location = useLocation();
   const navigate = useNavigate();
-  const { signOut } = useAuth();
+  const { signOut, isAuthenticated, isGuestMode, exitGuestMode } = useAuth();
   const { profile, stats } = useUser();
 
   // Detect XP changes and trigger pulse animation
@@ -46,7 +51,12 @@ export const Header: React.FC = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/login');
+    navigate('/');
+  };
+
+  const handleExitGuest = () => {
+    exitGuestMode();
+    navigate('/');
   };
 
   const getInitials = (name: string) => {
@@ -62,22 +72,27 @@ export const Header: React.FC = () => {
     ? (stats.currentXp / stats.totalXpForNextLevel) * 100 
     : 0;
 
+  const displayName = isGuestMode ? 'Guest' : (profile?.name || 'User');
+
   return (
     <>
       <header className="fixed top-0 left-0 right-0 h-16 bg-secondary z-50 border-b border-muted-foreground/30">
         <div className="container h-full flex items-center justify-between">
           {/* Logo */}
           <Link 
-            to="/dashboard" 
-            className="text-accent font-bold text-xl hover:opacity-90 transition-opacity duration-200 hover-scale"
+            to={isAuthenticated || isGuestMode ? '/dashboard' : '/'} 
+            className="flex items-center gap-2 hover:opacity-90 transition-opacity duration-200 hover-scale"
           >
-            Prompt Lego
+            <GraduationCap className="w-7 h-7 text-accent" />
+            <Sparkles className="w-4 h-4 text-primary" />
+            <span className="text-accent font-bold text-xl hidden sm:block">AIM Academy</span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1">
             {navItems.map(({ path, label, icon: Icon }) => {
-              const isActive = location.pathname === path;
+              const isActive = location.pathname === path || 
+                (path !== '/dashboard' && location.pathname.startsWith(path));
               return (
                 <Link
                   key={path}
@@ -90,7 +105,7 @@ export const Header: React.FC = () => {
                   )}
                 >
                   <Icon className="h-4 w-4" />
-                  <span className="text-sm font-medium">{label}</span>
+                  <span className="text-sm font-medium hidden lg:block">{label}</span>
                   {isActive && (
                     <motion.div
                       layoutId="nav-indicator"
@@ -106,41 +121,51 @@ export const Header: React.FC = () => {
           {/* Right Side */}
           <div className="flex items-center gap-4">
             {/* XP Progress */}
-            <div className="hidden sm:flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <Zap className={cn(
-                  "w-4 h-4 text-accent transition-all duration-300",
-                  xpPulse && "text-primary scale-125"
-                )} />
-                <span className="text-accent text-sm font-semibold">
-                  Lv.{stats.level}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className={cn(
-                  "w-24 h-2 bg-background rounded-full overflow-hidden transition-all duration-300",
-                  xpPulse && "shadow-[0_0_10px_theme(colors.primary)]"
-                )}>
-                  <motion.div 
-                    className="h-full bg-gradient-to-r from-primary to-accent rounded-full"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${xpProgress}%` }}
-                    transition={{ duration: 0.5, ease: 'easeOut' }}
-                  />
+            {(isAuthenticated || isGuestMode) && (
+              <div className="hidden sm:flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <Zap className={cn(
+                    "w-4 h-4 text-accent transition-all duration-300",
+                    xpPulse && "text-primary scale-125"
+                  )} />
+                  {isGuestMode ? (
+                    <span className="text-muted-foreground text-xs">Login เพื่อเก็บ XP</span>
+                  ) : (
+                    <>
+                      <span className="text-accent text-sm font-semibold">
+                        Lv.{stats.level}
+                      </span>
+                      <div className={cn(
+                        "w-24 h-2 bg-background rounded-full overflow-hidden transition-all duration-300",
+                        xpPulse && "shadow-[0_0_10px_theme(colors.primary)]"
+                      )}>
+                        <motion.div 
+                          className="h-full bg-gradient-to-r from-primary to-accent rounded-full"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${xpProgress}%` }}
+                          transition={{ duration: 0.5, ease: 'easeOut' }}
+                        />
+                      </div>
+                      <span className="text-muted-foreground text-xs whitespace-nowrap">
+                        {stats.currentXp}/{stats.totalXpForNextLevel}
+                      </span>
+                    </>
+                  )}
                 </div>
-                <span className="text-muted-foreground text-xs whitespace-nowrap">
-                  {stats.currentXp}/{stats.totalXpForNextLevel}
-                </span>
               </div>
-            </div>
+            )}
 
             {/* User Dropdown */}
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center justify-center w-9 h-9 rounded-full bg-muted-foreground/30 text-white text-sm font-semibold hover:bg-muted-foreground/50 transition-all hover-scale"
+                className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-muted-foreground/20 transition-all"
               >
-                {profile ? getInitials(profile.name) : 'U'}
+                <div className="w-8 h-8 rounded-full bg-accent/20 border-2 border-accent/50 flex items-center justify-center text-accent text-sm font-semibold">
+                  {getInitials(displayName)}
+                </div>
+                <span className="text-white text-sm font-medium hidden sm:block">{displayName}</span>
+                <ChevronDown className="w-4 h-4 text-muted-foreground" />
               </button>
 
               <AnimatePresence>
@@ -157,22 +182,63 @@ export const Header: React.FC = () => {
                       transition={{ duration: 0.15 }}
                       className="absolute right-0 top-full mt-2 w-48 bg-secondary border border-muted-foreground/30 rounded-lg shadow-xl z-50 overflow-hidden"
                     >
-                      <Link
-                        to="/profile"
-                        className="flex items-center gap-2 px-4 py-3 text-white hover:bg-background transition-colors"
-                        onClick={() => setDropdownOpen(false)}
-                      >
-                        <User className="h-4 w-4" />
-                        <span>โปรไฟล์</span>
-                      </Link>
-                      <div className="border-t border-muted-foreground/30" />
-                      <button
-                        onClick={handleSignOut}
-                        className="flex items-center gap-2 w-full px-4 py-3 text-white hover:bg-background transition-colors"
-                      >
-                        <LogOut className="h-4 w-4" />
-                        <span>ออกจากระบบ</span>
-                      </button>
+                      {isGuestMode ? (
+                        <>
+                          <button
+                            onClick={() => {
+                              setDropdownOpen(false);
+                              navigate('/register');
+                            }}
+                            className="flex items-center gap-2 w-full px-4 py-3 text-white hover:bg-background transition-colors"
+                          >
+                            <UserPlus className="h-4 w-4" />
+                            <span>สร้าง Account</span>
+                          </button>
+                          <div className="border-t border-muted-foreground/30" />
+                          <button
+                            onClick={handleExitGuest}
+                            className="flex items-center gap-2 w-full px-4 py-3 text-primary hover:bg-background transition-colors"
+                          >
+                            <LogOut className="h-4 w-4" />
+                            <span>ออกจากระบบ Guest</span>
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <Link
+                            to="/profile"
+                            className="flex items-center gap-2 px-4 py-3 text-white hover:bg-background transition-colors"
+                            onClick={() => setDropdownOpen(false)}
+                          >
+                            <User className="h-4 w-4" />
+                            <span>Profile</span>
+                          </Link>
+                          <Link
+                            to="/insights"
+                            className="flex items-center gap-2 px-4 py-3 text-white hover:bg-background transition-colors"
+                            onClick={() => setDropdownOpen(false)}
+                          >
+                            <Lightbulb className="h-4 w-4" />
+                            <span>Insights</span>
+                          </Link>
+                          <Link
+                            to="/profile"
+                            className="flex items-center gap-2 px-4 py-3 text-white hover:bg-background transition-colors"
+                            onClick={() => setDropdownOpen(false)}
+                          >
+                            <Settings className="h-4 w-4" />
+                            <span>Settings</span>
+                          </Link>
+                          <div className="border-t border-muted-foreground/30" />
+                          <button
+                            onClick={handleSignOut}
+                            className="flex items-center gap-2 w-full px-4 py-3 text-primary hover:bg-background transition-colors"
+                          >
+                            <LogOut className="h-4 w-4" />
+                            <span>Logout</span>
+                          </button>
+                        </>
+                      )}
                     </motion.div>
                   </>
                 )}
@@ -210,7 +276,10 @@ export const Header: React.FC = () => {
               className="fixed left-0 top-0 bottom-0 w-72 bg-secondary z-50 md:hidden shadow-2xl"
             >
               <div className="flex items-center justify-between p-4 border-b border-muted-foreground/30">
-                <span className="text-accent font-bold text-xl">Prompt Lego</span>
+                <div className="flex items-center gap-2">
+                  <GraduationCap className="w-6 h-6 text-accent" />
+                  <span className="text-accent font-bold text-xl">AIM Academy</span>
+                </div>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
                   className="p-2 text-white hover:text-accent transition-colors"
@@ -250,21 +319,33 @@ export const Header: React.FC = () => {
 
               <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-muted-foreground/30">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-muted-foreground/30 flex items-center justify-center text-white font-semibold">
-                    {profile ? getInitials(profile.name) : 'U'}
+                  <div className="w-10 h-10 rounded-full bg-accent/20 border-2 border-accent/50 flex items-center justify-center text-accent font-semibold">
+                    {getInitials(displayName)}
                   </div>
                   <div>
-                    <p className="text-white font-medium">{profile?.name || 'User'}</p>
-                    <p className="text-muted-foreground text-sm">Level {stats.level}</p>
+                    <p className="text-white font-medium">{displayName}</p>
+                    <p className="text-muted-foreground text-sm">
+                      {isGuestMode ? 'Guest Mode' : `Level ${stats.level}`}
+                    </p>
                   </div>
                 </div>
-                <button
-                  onClick={handleSignOut}
-                  className="flex items-center gap-2 w-full px-4 py-3 text-white bg-background rounded-lg hover:opacity-90 transition-opacity btn-press"
-                >
-                  <LogOut className="h-4 w-4" />
-                  <span>ออกจากระบบ</span>
-                </button>
+                {isGuestMode ? (
+                  <button
+                    onClick={handleExitGuest}
+                    className="flex items-center gap-2 w-full px-4 py-3 text-white bg-background rounded-lg hover:opacity-90 transition-opacity btn-press"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>ออกจากระบบ Guest</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleSignOut}
+                    className="flex items-center gap-2 w-full px-4 py-3 text-white bg-background rounded-lg hover:opacity-90 transition-opacity btn-press"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>ออกจากระบบ</span>
+                  </button>
+                )}
               </div>
             </motion.div>
           </>

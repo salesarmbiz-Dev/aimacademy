@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Twitter, Linkedin, Youtube } from 'lucide-react';
+import { Facebook, Twitter, Linkedin, Youtube, GraduationCap, Sparkles } from 'lucide-react';
 
 const Footer: React.FC = () => {
   return (
@@ -9,19 +9,23 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <span className="text-turquoise font-bold text-xl">Prompt Lego</span>
+            <div className="flex items-center gap-2 mb-2">
+              <GraduationCap className="w-6 h-6 text-turquoise" />
+              <Sparkles className="w-4 h-4 text-tennessee" />
+              <span className="text-turquoise font-bold text-xl">AIM Academy</span>
+            </div>
             <p className="text-rackley text-sm mt-2">AI Learning by Gamification</p>
-            <p className="text-rackley text-xs mt-4">© 2025 Prompt Lego. All rights reserved.</p>
+            <p className="text-rackley text-xs mt-4">© 2025 AIM Academy. All rights reserved.</p>
           </div>
 
-          {/* Product */}
+          {/* Games */}
           <div>
-            <h4 className="text-foreground font-semibold mb-4">Product</h4>
+            <h4 className="text-foreground font-semibold mb-4">Games</h4>
             <ul className="space-y-2">
-              <li><a href="#features" className="text-rackley hover:text-turquoise transition-colors text-sm">Features</a></li>
-              <li><a href="#pricing" className="text-rackley hover:text-turquoise transition-colors text-sm">Pricing</a></li>
+              <li><Link to="/spot" className="text-rackley hover:text-turquoise transition-colors text-sm">Spot the Difference</Link></li>
+              <li><Link to="/prompt-lego" className="text-rackley hover:text-turquoise transition-colors text-sm">Prompt Lego</Link></li>
               <li><Link to="/challenges" className="text-rackley hover:text-turquoise transition-colors text-sm">Challenges</Link></li>
-              <li><Link to="/library" className="text-rackley hover:text-turquoise transition-colors text-sm">Block Library</Link></li>
+              <li><Link to="/leaderboard" className="text-rackley hover:text-turquoise transition-colors text-sm">Leaderboard</Link></li>
             </ul>
           </div>
 

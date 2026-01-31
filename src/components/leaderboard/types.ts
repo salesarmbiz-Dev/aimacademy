@@ -5,6 +5,8 @@ export interface LeaderboardUser {
   avatar: string;
   level: number;
   totalXp: number;
+  spotXp: number;
+  legoXp: number;
   weeklyXp: number;
   tier: TierType;
   change: number;
@@ -30,7 +32,7 @@ export interface ChallengeLeaderboardUser {
 }
 
 export type TierType = 'legend' | 'master' | 'expert' | 'skilled' | 'beginner';
-export type LeaderboardTab = 'global' | 'weekly' | 'minimize' | 'maximize' | 'fix' | 'build';
+export type LeaderboardTab = 'global' | 'spot' | 'lego' | 'weekly' | 'minimize' | 'maximize' | 'fix' | 'build';
 
 export interface TierInfo {
   name: string;
@@ -94,6 +96,8 @@ export const MOCK_GLOBAL_LEADERBOARD: LeaderboardUser[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=PromptMaster",
     level: 42,
     totalXp: 58420,
+    spotXp: 28000,
+    legoXp: 30420,
     weeklyXp: 2450,
     tier: "legend",
     change: 0,
@@ -107,6 +111,8 @@ export const MOCK_GLOBAL_LEADERBOARD: LeaderboardUser[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=AIBuilder",
     level: 38,
     totalXp: 52180,
+    spotXp: 22000,
+    legoXp: 30180,
     weeklyXp: 3200,
     tier: "legend",
     change: 2,
@@ -120,6 +126,8 @@ export const MOCK_GLOBAL_LEADERBOARD: LeaderboardUser[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=LegoKing",
     level: 35,
     totalXp: 48950,
+    spotXp: 18000,
+    legoXp: 30950,
     weeklyXp: 1890,
     tier: "master",
     change: -1,
@@ -133,6 +141,8 @@ export const MOCK_GLOBAL_LEADERBOARD: LeaderboardUser[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=CodeNinja",
     level: 32,
     totalXp: 42300,
+    spotXp: 20000,
+    legoXp: 22300,
     weeklyXp: 2100,
     tier: "master",
     change: 1,
@@ -146,6 +156,8 @@ export const MOCK_GLOBAL_LEADERBOARD: LeaderboardUser[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=PromptWizard",
     level: 30,
     totalXp: 38750,
+    spotXp: 15000,
+    legoXp: 23750,
     weeklyXp: 1650,
     tier: "master",
     change: 0,
@@ -159,6 +171,8 @@ export const MOCK_GLOBAL_LEADERBOARD: LeaderboardUser[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=BlockChamp",
     level: 28,
     totalXp: 32100,
+    spotXp: 12000,
+    legoXp: 20100,
     weeklyXp: 2800,
     tier: "expert",
     change: 5,
@@ -172,6 +186,8 @@ export const MOCK_GLOBAL_LEADERBOARD: LeaderboardUser[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=AIExplorer",
     level: 26,
     totalXp: 28400,
+    spotXp: 14000,
+    legoXp: 14400,
     weeklyXp: 1200,
     tier: "expert",
     change: -2,
@@ -185,6 +201,8 @@ export const MOCK_GLOBAL_LEADERBOARD: LeaderboardUser[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=PromptPro",
     level: 24,
     totalXp: 24800,
+    spotXp: 10000,
+    legoXp: 14800,
     weeklyXp: 980,
     tier: "expert",
     change: 0,
@@ -198,6 +216,8 @@ export const MOCK_GLOBAL_LEADERBOARD: LeaderboardUser[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=LegoLearner",
     level: 22,
     totalXp: 21500,
+    spotXp: 8000,
+    legoXp: 13500,
     weeklyXp: 1450,
     tier: "expert",
     change: 3,
@@ -211,6 +231,8 @@ export const MOCK_GLOBAL_LEADERBOARD: LeaderboardUser[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=BuilderBot",
     level: 20,
     totalXp: 18200,
+    spotXp: 7000,
+    legoXp: 11200,
     weeklyXp: 750,
     tier: "expert",
     change: -1,
@@ -224,6 +246,8 @@ export const MOCK_GLOBAL_LEADERBOARD: LeaderboardUser[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=PromptAce",
     level: 18,
     totalXp: 15600,
+    spotXp: 6000,
+    legoXp: 9600,
     weeklyXp: 890,
     tier: "expert",
     change: 2,
@@ -237,6 +261,8 @@ export const MOCK_GLOBAL_LEADERBOARD: LeaderboardUser[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=BlockBuilder",
     level: 16,
     totalXp: 12400,
+    spotXp: 5000,
+    legoXp: 7400,
     weeklyXp: 620,
     tier: "expert",
     change: -3,
@@ -250,6 +276,8 @@ export const MOCK_GLOBAL_LEADERBOARD: LeaderboardUser[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=demo",
     level: 5,
     totalXp: 2565,
+    spotXp: 1000,
+    legoXp: 1565,
     weeklyXp: 450,
     tier: "beginner",
     change: 8,

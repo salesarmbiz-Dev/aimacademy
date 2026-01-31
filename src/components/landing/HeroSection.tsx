@@ -1,77 +1,234 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, PlayCircle, ChevronDown } from 'lucide-react';
+import { GraduationCap, Sparkles, Gamepad2, ChevronDown, Eye, Puzzle, ArrowRight, Star, Users, CheckCircle, Brain, Lightbulb, LogIn } from 'lucide-react';
+import GuestModeModal from '@/components/modals/GuestModeModal';
 
 interface HeroSectionProps {
   onScrollToHowItWorks: () => void;
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToHowItWorks }) => {
+  const [isGuestModalOpen, setIsGuestModalOpen] = useState(false);
+
   return (
     <section className="min-h-screen gradient-hero flex flex-col items-center justify-center relative px-4 pt-20">
-      <div className="text-center max-w-4xl mx-auto animate-fade-in">
+      <div className="text-center max-w-5xl mx-auto animate-fade-in">
         {/* Badge */}
         <div className="inline-block px-4 py-2 bg-tennessee/20 border border-tennessee text-tennessee text-sm font-semibold rounded-full mb-6">
           🎮 AI Learning by Gamification
         </div>
 
-        {/* Main Headline */}
-        <h1 className="mt-6">
-          <span className="block text-turquoise font-bold text-3xl md:text-5xl">Prompt Lego</span>
-          <span className="block text-foreground font-bold text-2xl md:text-4xl mt-2">ถอด Prompt ออกเป็นชิ้นๆ</span>
-          <span className="block text-foreground font-medium text-lg md:text-2xl mt-2">แล้วประกอบใหม่ให้มีประสิทธิภาพสูงสุด</span>
+        {/* Logo & Main Headline */}
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <GraduationCap className="w-10 h-10 md:w-14 md:h-14 text-turquoise" />
+          <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-tennessee" />
+        </div>
+        <h1 className="mt-4">
+          <span className="block text-turquoise font-bold text-4xl md:text-6xl">AIM Academy</span>
+          <span className="block text-foreground font-bold text-xl md:text-3xl mt-3">เรียนรู้ AI Prompting แบบ Gamification</span>
+          <span className="block text-rackley font-medium text-base md:text-xl mt-3">
+            ฝึกทักษะ AI ผ่านเกมสนุกๆ - ไม่ต้องเขียนโค้ด ไม่ต้องมีพื้นฐาน
+          </span>
         </h1>
-
-        {/* Subheadline */}
-        <p className="text-rackley text-lg mt-6">
-          เลิก 'เดา' แล้วเริ่ม 'เล่น' กับโครงสร้างของ AI
-        </p>
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
-          <Link
-            to="/register"
-            className="flex items-center gap-2 px-8 py-4 bg-tennessee text-foreground font-semibold rounded-lg text-lg hover:opacity-90 transition-all hover:scale-105"
-          >
-            เริ่มเล่นฟรี
-            <ArrowRight className="h-5 w-5" />
-          </Link>
           <button
-            onClick={onScrollToHowItWorks}
+            onClick={() => setIsGuestModalOpen(true)}
+            className="flex items-center gap-2 px-8 py-4 bg-tennessee text-foreground font-semibold rounded-lg text-lg hover:opacity-90 transition-all hover:scale-105 btn-press"
+          >
+            <Gamepad2 className="h-5 w-5" />
+            ลองเล่นฟรี
+          </button>
+          <Link
+            to="/login"
             className="flex items-center gap-2 px-8 py-4 bg-transparent border-2 border-turquoise text-turquoise font-semibold rounded-lg text-lg hover:bg-turquoise/10 transition-all"
           >
-            <PlayCircle className="h-5 w-5" />
-            ดูวิธีการทำงาน
-          </button>
+            <LogIn className="h-5 w-5" />
+            เข้าสู่ระบบ
+          </Link>
         </div>
+      </div>
 
-        {/* Hero Visual - Lego Blocks */}
-        <div className="mt-16 flex flex-col items-center">
-          <div className="relative">
-            {/* Block 1 - ROLE */}
-            <div className="lego-block bg-turquoise text-oxford-blue px-8 py-4 rounded-lg font-bold shadow-lg animate-float-slow">
-              <div className="flex gap-2 absolute -top-2 left-4">
-                <div className="w-3 h-3 bg-turquoise rounded-full border-2 border-oxford-blue/30"></div>
-                <div className="w-3 h-3 bg-turquoise rounded-full border-2 border-oxford-blue/30"></div>
+      {/* Game Showcase Section */}
+      <div className="mt-20 w-full max-w-5xl mx-auto px-4">
+        <h2 className="text-center text-2xl md:text-3xl font-bold text-foreground mb-8">
+          🎮 เลือกเกมที่ใช่สำหรับคุณ
+        </h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* Spot the Difference Card */}
+          <div className="bg-card border-2 border-turquoise/30 rounded-2xl p-6 hover:border-turquoise hover:shadow-[0_0_30px_rgba(5,242,242,0.2)] transition-all duration-300 group">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 bg-turquoise/20 rounded-xl">
+                <Eye className="w-8 h-8 text-turquoise" />
               </div>
-              ROLE
+              <span className="px-3 py-1 bg-turquoise/20 text-turquoise text-xs font-semibold rounded-full">
+                แนะนำสำหรับมือใหม่
+              </span>
             </div>
-            {/* Block 2 - TASK */}
-            <div className="lego-block bg-turquoise/70 text-oxford-blue px-8 py-4 rounded-lg font-bold shadow-lg -mt-1 ml-4 animate-float-medium">
-              <div className="flex gap-2 absolute -top-2 left-4">
-                <div className="w-3 h-3 bg-turquoise/70 rounded-full border-2 border-oxford-blue/30"></div>
-                <div className="w-3 h-3 bg-turquoise/70 rounded-full border-2 border-oxford-blue/30"></div>
+            <h3 className="text-xl font-bold text-foreground mb-2">🎯 Spot the Difference</h3>
+            <p className="text-rackley text-sm mb-3">จับผิด 2 Prompts - อันไหนดีกว่า?</p>
+            <p className="text-rackley/80 text-sm mb-4">
+              ฝึกตาให้แม่น ดู Prompt แล้วเลือกอันที่ดีกว่า ไม่ต้องเขียนเอง แค่ดูและเลือก
+            </p>
+            <div className="flex items-center gap-1 mb-4">
+              <span className="text-xs text-rackley">Beginner Friendly</span>
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-3 h-3 text-tennessee fill-tennessee" />
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-2 mb-5">
+              {['Role Detection', 'Context Clarity', 'Tone Matching'].map((skill) => (
+                <span key={skill} className="px-2 py-1 bg-oxford-blue text-rackley text-xs rounded-md">
+                  {skill}
+                </span>
+              ))}
+            </div>
+            <button
+              onClick={() => setIsGuestModalOpen(true)}
+              className="w-full py-3 bg-turquoise/20 text-turquoise font-semibold rounded-lg hover:bg-turquoise hover:text-oxford-blue transition-all"
+            >
+              ลองเล่น
+            </button>
+          </div>
+
+          {/* Prompt Lego Card */}
+          <div className="bg-card border-2 border-tennessee/30 rounded-2xl p-6 hover:border-tennessee hover:shadow-[0_0_30px_rgba(242,116,5,0.2)] transition-all duration-300 group">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 bg-tennessee/20 rounded-xl">
+                <Puzzle className="w-8 h-8 text-tennessee" />
               </div>
-              TASK
+              <span className="px-3 py-1 bg-tennessee/20 text-tennessee text-xs font-semibold rounded-full">
+                Intermediate
+              </span>
             </div>
-            {/* Block 3 - TARGET */}
-            <div className="lego-block bg-tennessee text-foreground px-8 py-4 rounded-lg font-bold shadow-lg -mt-1 ml-8 animate-float-fast">
-              <div className="flex gap-2 absolute -top-2 left-4">
-                <div className="w-3 h-3 bg-tennessee rounded-full border-2 border-foreground/30"></div>
-                <div className="w-3 h-3 bg-tennessee rounded-full border-2 border-foreground/30"></div>
-              </div>
-              TARGET
+            <h3 className="text-xl font-bold text-foreground mb-2">🧱 Prompt Lego</h3>
+            <p className="text-rackley text-sm mb-3">ประกอบ Prompt เหมือนต่อ LEGO</p>
+            <p className="text-rackley/80 text-sm mb-4">
+              ลงมือสร้าง Prompt ด้วยตัวเอง ลองเพิ่ม ลบ สลับ Blocks แล้วดูผลลัพธ์เปลี่ยน
+            </p>
+            <div className="flex items-center gap-1 mb-4">
+              <span className="text-xs text-rackley">Intermediate</span>
+              {[...Array(3)].map((_, i) => (
+                <Star key={i} className="w-3 h-3 text-tennessee fill-tennessee" />
+              ))}
+              {[...Array(2)].map((_, i) => (
+                <Star key={i} className="w-3 h-3 text-rackley" />
+              ))}
             </div>
+            <div className="flex flex-wrap gap-2 mb-5">
+              {['Prompt Building', 'Experimentation', 'Optimization'].map((skill) => (
+                <span key={skill} className="px-2 py-1 bg-oxford-blue text-rackley text-xs rounded-md">
+                  {skill}
+                </span>
+              ))}
+            </div>
+            <Link
+              to="/login"
+              className="block w-full py-3 bg-tennessee/20 text-tennessee font-semibold rounded-lg hover:bg-tennessee hover:text-foreground transition-all text-center"
+            >
+              เริ่มเล่น
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Learning Path Section */}
+      <div className="mt-20 w-full max-w-4xl mx-auto px-4">
+        <h2 className="text-center text-2xl md:text-3xl font-bold text-foreground mb-10">
+          🚀 เส้นทางการเรียนรู้
+        </h2>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          {/* Step 1 */}
+          <div className="flex-1 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-turquoise/20 flex items-center justify-center">
+              <Eye className="w-8 h-8 text-turquoise" />
+            </div>
+            <p className="font-bold text-foreground">Spot the Difference</p>
+            <p className="text-rackley text-sm">ฝึกตา 👀</p>
+          </div>
+          
+          {/* Arrow */}
+          <ArrowRight className="w-8 h-8 text-rackley hidden md:block" />
+          <ChevronDown className="w-8 h-8 text-rackley md:hidden" />
+          
+          {/* Step 2 */}
+          <div className="flex-1 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-tennessee/20 flex items-center justify-center">
+              <Puzzle className="w-8 h-8 text-tennessee" />
+            </div>
+            <p className="font-bold text-foreground">Prompt Lego</p>
+            <p className="text-rackley text-sm">ฝึกมือ 🤲</p>
+          </div>
+          
+          {/* Arrow */}
+          <ArrowRight className="w-8 h-8 text-rackley hidden md:block" />
+          <ChevronDown className="w-8 h-8 text-rackley md:hidden" />
+          
+          {/* Step 3 */}
+          <div className="flex-1 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-turquoise to-tennessee flex items-center justify-center">
+              <GraduationCap className="w-8 h-8 text-oxford-blue" />
+            </div>
+            <p className="font-bold text-foreground">AI Master</p>
+            <p className="text-rackley text-sm">เก่ง AI 🏆</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Section */}
+      <div className="mt-20 w-full max-w-4xl mx-auto px-4">
+        <div className="grid grid-cols-3 gap-6 text-center">
+          <div>
+            <div className="flex items-center justify-center gap-2">
+              <Users className="w-6 h-6 text-turquoise" />
+              <span className="text-3xl md:text-4xl font-bold text-foreground">10,000+</span>
+            </div>
+            <p className="text-rackley text-sm mt-1">ผู้เรียน</p>
+          </div>
+          <div>
+            <div className="flex items-center justify-center gap-2">
+              <CheckCircle className="w-6 h-6 text-tennessee" />
+              <span className="text-3xl md:text-4xl font-bold text-foreground">50,000+</span>
+            </div>
+            <p className="text-rackley text-sm mt-1">Challenges Completed</p>
+          </div>
+          <div>
+            <div className="flex items-center justify-center gap-2">
+              <Star className="w-6 h-6 text-turquoise" />
+              <span className="text-3xl md:text-4xl font-bold text-foreground">98%</span>
+            </div>
+            <p className="text-rackley text-sm mt-1">อยากแนะนำเพื่อน</p>
+          </div>
+        </div>
+      </div>
+
+      {/* How It Works Section */}
+      <div className="mt-20 w-full max-w-5xl mx-auto px-4 pb-20">
+        <h2 className="text-center text-2xl md:text-3xl font-bold text-foreground mb-10">
+          ⚡ ง่ายแค่ 3 ขั้นตอน
+        </h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-turquoise/20 flex items-center justify-center">
+              <Gamepad2 className="w-8 h-8 text-turquoise" />
+            </div>
+            <h3 className="font-bold text-foreground mb-2">1. เลือกเกม</h3>
+            <p className="text-rackley text-sm">เริ่มจาก Spot the Difference ถ้าเป็นมือใหม่</p>
+          </div>
+          <div className="text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-tennessee/20 flex items-center justify-center">
+              <Brain className="w-8 h-8 text-tennessee" />
+            </div>
+            <h3 className="font-bold text-foreground mb-2">2. เล่นและเรียนรู้</h3>
+            <p className="text-rackley text-sm">ทุกข้อมี feedback ทันที พร้อมอธิบายเหตุผล</p>
+          </div>
+          <div className="text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-turquoise/20 flex items-center justify-center">
+              <Lightbulb className="w-8 h-8 text-turquoise" />
+            </div>
+            <h3 className="font-bold text-foreground mb-2">3. สะสม Insights</h3>
+            <p className="text-rackley text-sm">เก็บ Pattern ที่เรียนรู้ไว้ใช้ตลอดไป</p>
           </div>
         </div>
       </div>
@@ -81,6 +238,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToHowItWorks }) => {
         <ChevronDown className="h-6 w-6 text-rackley" />
         <span className="text-rackley text-sm">เลื่อนลงเพื่อดูเพิ่มเติม</span>
       </div>
+
+      {/* Guest Mode Modal */}
+      <GuestModeModal 
+        isOpen={isGuestModalOpen} 
+        onClose={() => setIsGuestModalOpen(false)} 
+      />
     </section>
   );
 };
