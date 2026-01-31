@@ -1,85 +1,81 @@
 import React from 'react';
-import { Zap, Trophy, FlaskConical, Award } from 'lucide-react';
 import { useUser } from '@/contexts/UserContext';
-import { useProgress } from '@/contexts/ProgressContext';
+import WelcomeHeader from '@/components/dashboard/WelcomeHeader';
+import StatsCards from '@/components/dashboard/StatsCards';
+import QuickActions from '@/components/dashboard/QuickActions';
+import RecentActivity from '@/components/dashboard/RecentActivity';
+import DailyStreak from '@/components/dashboard/DailyStreak';
+import ProgressChart from '@/components/dashboard/ProgressChart';
+import InsightsPreview from '@/components/dashboard/InsightsPreview';
+import BadgesShowcase from '@/components/dashboard/BadgesShowcase';
+import FloatingActionButton from '@/components/dashboard/FloatingActionButton';
 
 const Dashboard: React.FC = () => {
-  const { profile, stats } = useUser();
-  const { getStats } = useProgress();
-  const progressStats = getStats();
+  const { profile, stats, loading } = useUser();
 
-  const statCards = [
-    {
-      title: 'Level',
-      value: stats.level,
-      icon: Award,
-      borderColor: 'border-turquoise',
-      iconColor: 'text-turquoise',
-    },
-    {
-      title: 'XP',
-      value: `${stats.currentXp}/${stats.totalXpForNextLevel}`,
-      icon: Zap,
-      borderColor: 'border-tennessee',
-      iconColor: 'text-tennessee',
-    },
-    {
-      title: 'Experiments',
-      value: progressStats.totalExperiments,
-      icon: FlaskConical,
-      borderColor: 'border-rackley',
-      iconColor: 'text-rackley',
-    },
-    {
-      title: 'Challenges',
-      value: progressStats.totalChallenges,
-      icon: Trophy,
-      borderColor: 'border-turquoise',
-      iconColor: 'text-turquoise',
-    },
-  ];
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background p-4 md:p-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Skeleton Header */}
+          <div className="mb-8">
+            <div className="h-8 bg-rackley/20 rounded w-64 animate-shimmer" />
+            <div className="h-4 bg-rackley/20 rounded w-48 mt-2 animate-shimmer" />
+          </div>
+          {/* Skeleton Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-32 bg-rackley/20 rounded-xl animate-shimmer" />
+            ))}
+          </div>
+          {/* Skeleton Content */}
+          <div className="grid md:grid-cols-5 gap-6">
+            <div className="md:col-span-3 h-96 bg-rackley/20 rounded-2xl animate-shimmer" />
+            <div className="md:col-span-2 h-96 bg-rackley/20 rounded-2xl animate-shimmer" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-8">
-      {/* Welcome Section */}
-      <div className="animate-fade-in">
-        <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
-          สวัสดี, {profile?.name || 'User'}!
-        </h1>
-        <p className="text-rackley">
-          ยินดีต้อนรับกลับมา พร้อมเรียนรู้ AI วันนี้หรือยัง?
-        </p>
-      </div>
+    <div className="min-h-screen bg-background p-4 md:p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Welcome Header */}
+        <WelcomeHeader userName={profile.name} />
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {statCards.map((card, index) => (
-          <div
-            key={card.title}
-            className={`bg-oxford border-2 ${card.borderColor} rounded-lg p-4 md:p-6 animate-fade-in`}
-            style={{ animationDelay: `${index * 100}ms` }}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <card.icon className={`h-6 w-6 ${card.iconColor}`} />
-            </div>
-            <p className="text-rackley text-sm mb-1">{card.title}</p>
-            <p className="text-white text-2xl md:text-3xl font-bold">{card.value}</p>
+        {/* Stats Overview Cards */}
+        <StatsCards
+          level={stats.level}
+          currentXp={stats.currentXp}
+          totalXpForNextLevel={stats.totalXpForNextLevel}
+          experimentsCount={stats.experimentsCount}
+          challengesCompleted={stats.challengesCompleted}
+          insightsDiscovered={stats.insightsDiscovered}
+        />
+
+        {/* Quick Actions */}
+        <QuickActions />
+
+        {/* Main Content Grid */}
+        <div className="grid md:grid-cols-5 gap-6">
+          {/* Left Column (60%) */}
+          <div className="md:col-span-3">
+            <RecentActivity />
+            <DailyStreak streak={5} />
           </div>
-        ))}
+
+          {/* Right Column (40%) */}
+          <div className="md:col-span-2">
+            <ProgressChart />
+            <InsightsPreview count={stats.insightsDiscovered || 12} />
+            <BadgesShowcase />
+          </div>
+        </div>
       </div>
 
-      {/* Coming Soon Content */}
-      <div className="bg-oxford rounded-lg p-8 text-center">
-        <span className="inline-block px-4 py-2 bg-tennessee text-white text-sm font-semibold rounded-md mb-4">
-          Coming Soon
-        </span>
-        <h2 className="text-white text-xl font-semibold mb-2">
-          เนื้อหาเพิ่มเติมกำลังมา
-        </h2>
-        <p className="text-rackley">
-          กำลังพัฒนาแดชบอร์ดพร้อมสถิติและข้อมูลการเรียนรู้ที่ครบถ้วน
-        </p>
-      </div>
+      {/* Mobile Floating Action Button */}
+      <FloatingActionButton />
     </div>
   );
 };

@@ -1,0 +1,56 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Play, Target, Library, Medal } from 'lucide-react';
+
+const QuickActions: React.FC = () => {
+  const navigate = useNavigate();
+
+  const actions = [
+    {
+      icon: Play,
+      text: 'เริ่ม Experiment ใหม่',
+      path: '/prompt-lego',
+      primary: true,
+      style: 'bg-gradient-to-r from-tennessee to-tennessee/80 text-foreground hover:shadow-lg hover:shadow-tennessee/30',
+    },
+    {
+      icon: Target,
+      text: 'ทำ Challenge',
+      path: '/challenges',
+      primary: false,
+      style: 'bg-card border-2 border-turquoise text-turquoise hover:bg-turquoise/10',
+    },
+    {
+      icon: Library,
+      text: 'Block Library',
+      path: '/library',
+      primary: false,
+      style: 'bg-card border-2 border-rackley text-foreground hover:bg-rackley/10',
+    },
+    {
+      icon: Medal,
+      text: 'Leaderboard',
+      path: '/leaderboard',
+      primary: false,
+      style: 'bg-card border-2 border-rackley text-foreground hover:bg-rackley/10',
+    },
+  ];
+
+  return (
+    <div className="flex gap-4 mb-8 overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0">
+      {actions.map((action, index) => (
+        <button
+          key={action.path}
+          onClick={() => navigate(action.path)}
+          className={`flex items-center gap-3 px-6 py-4 rounded-xl font-semibold whitespace-nowrap transition-all duration-200 hover:scale-102 min-w-[180px] md:min-w-0 ${action.style} animate-fade-in`}
+          style={{ animationDelay: `${index * 50}ms` }}
+        >
+          <action.icon className="h-5 w-5" />
+          {action.text}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+export default QuickActions;
