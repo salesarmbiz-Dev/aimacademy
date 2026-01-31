@@ -25,7 +25,10 @@ const Challenges = lazy(() => import('@/pages/Challenges'));
 const Library = lazy(() => import('@/pages/Library'));
 const Profile = lazy(() => import('@/pages/Profile'));
 const Leaderboard = lazy(() => import('@/pages/Leaderboard'));
-const SpotTheDifference = lazy(() => import('@/pages/SpotTheDifference'));
+const SpotHub = lazy(() => import('@/pages/spot/SpotHub'));
+const SpotGamePlay = lazy(() => import('@/pages/spot/SpotGamePlay'));
+const PatternLibrary = lazy(() => import('@/pages/spot/PatternLibrary'));
+const SpotLeaderboard = lazy(() => import('@/pages/spot/SpotLeaderboard'));
 const Insights = lazy(() => import('@/pages/Insights'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
 
@@ -85,7 +88,10 @@ const App = () => (
                         <Route path="/library" element={<Library />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/leaderboard" element={<Leaderboard />} />
-                        <Route path="/spot" element={<SpotTheDifference />} />
+                        <Route path="/spot" element={<SpotHub />} />
+                        <Route path="/spot/play/:categoryId" element={<SpotGamePlay />} />
+                        <Route path="/spot/patterns" element={<PatternLibrary />} />
+                        <Route path="/spot/leaderboard" element={<SpotLeaderboard />} />
                         <Route path="/insights" element={<Insights />} />
                       </Route>
 
