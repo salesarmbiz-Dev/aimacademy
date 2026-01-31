@@ -7,6 +7,7 @@ import BlockCard from '@/components/prompt-lego/BlockCard';
 import BlockLibrary from '@/components/prompt-lego/BlockLibrary';
 import InstructionsPanel from '@/components/prompt-lego/InstructionsPanel';
 import { EditBlockModal, AddBlockModal, DeleteConfirmModal } from '@/components/prompt-lego/Modals';
+import ExperimentResultsModal from '@/components/prompt-lego/results/ExperimentResultsModal';
 import {
   PromptBlock,
   BlockType,
@@ -16,8 +17,8 @@ import {
 } from '@/components/prompt-lego/types';
 
 const PromptLego: React.FC = () => {
-  const { saveExperiment, addInsight } = useProgress();
-  const { addXp } = useUser();
+  const { getStats } = useProgress();
+  const progressStats = getStats();
 
   // State
   const [selectedPromptId, setSelectedPromptId] = useState(MOCK_PROMPTS[0].id);
@@ -31,6 +32,7 @@ const PromptLego: React.FC = () => {
   const [editingBlock, setEditingBlock] = useState<PromptBlock | null>(null);
   const [deletingBlock, setDeletingBlock] = useState<PromptBlock | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showResultsModal, setShowResultsModal] = useState(false);
 
   const selectedPrompt = MOCK_PROMPTS.find(p => p.id === selectedPromptId) || MOCK_PROMPTS[0];
   const currentScore = calculateScore(currentBlocks);
@@ -114,37 +116,20 @@ const PromptLego: React.FC = () => {
   };
 
   const handleGenerate = () => {
-    // Build the prompt string from blocks
-    const promptString = currentBlocks.map(b => b.content).join(' ');
-    
-    // Save experiment
-    saveExperiment({
-      prompt: promptString,
-      result: `Score: ${currentScore}/100 (Original: ${selectedPrompt.originalScore})`,
-      timestamp: new Date().toISOString(),
-    });
+    setShowResultsModal(true);
+  };
 
-    // Add XP
-    addXp(15);
+  const handleResultsClose = () => {
+    setShowResultsModal(false);
+  };
 
-    // Check for insights
-    if (currentScore < selectedPrompt.originalScore - 20) {
-      const removedBlocks = selectedPrompt.blocks.filter(
-        ob => !currentBlocks.find(cb => cb.type === ob.type)
-      );
-      if (removedBlocks.length > 0) {
-        const criticalRemoved = removedBlocks.find(b => b.priority === 'critical');
-        if (criticalRemoved) {
-          addInsight({
-            content: `${criticalRemoved.type} คือ Block ที่สำคัญมาก ลบแล้วเสียคะแนนเยอะ`,
-            discovered_at: new Date().toISOString(),
-          });
-          addXp(30);
-        }
-      }
-    }
+  const handleTryAgain = () => {
+    setShowResultsModal(false);
+  };
 
-    alert(`✨ Generated! คะแนน: ${currentScore}/100\n\nPrompt ที่ประกอบ:\n${promptString}`);
+  const handleResetFromResults = () => {
+    setCurrentBlocks([...selectedPrompt.blocks]);
+    setShowResultsModal(false);
   };
 
   return (
@@ -310,6 +295,18 @@ const PromptLego: React.FC = () => {
         isOpen={!!deletingBlock}
         onClose={() => setDeletingBlock(null)}
         onConfirm={confirmDelete}
+      />
+
+      <ExperimentResultsModal
+        isOpen={showResultsModal}
+        onClose={handleResultsClose}
+        onTryAgain={handleTryAgain}
+        onReset={handleResetFromResults}
+        originalBlocks={selectedPrompt.blocks}
+        modifiedBlocks={currentBlocks}
+        originalScore={selectedPrompt.originalScore}
+        modifiedScore={currentScore}
+        experimentNumber={progressStats.totalExperiments + 1}
       />
     </div>
   );
