@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, GraduationCap, Sparkles } from 'lucide-react';
 
 interface LandingNavProps {
   onScrollTo: (id: string) => void;
@@ -33,8 +33,10 @@ const LandingNav: React.FC<LandingNavProps> = ({ onScrollTo }) => {
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="text-turquoise font-bold text-xl">
-            Prompt Lego
+          <Link to="/" className="flex items-center gap-2">
+            <GraduationCap className="w-7 h-7 text-turquoise" />
+            <Sparkles className="w-4 h-4 text-tennessee" />
+            <span className="text-turquoise font-bold text-xl">AIM Academy</span>
           </Link>
 
           {/* Desktop Menu */}

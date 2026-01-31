@@ -36,6 +36,8 @@ const Leaderboard: React.FC = () => {
 
   const tabs: { id: LeaderboardTab; label: string; count: string }[] = [
     { id: 'global', label: '🌍 Global', count: '1.2k' },
+    { id: 'spot', label: '🎯 Spot', count: '890' },
+    { id: 'lego', label: '🧱 Lego', count: '650' },
     { id: 'weekly', label: '📅 Weekly', count: '890' },
     { id: 'minimize', label: '✨ Minimize', count: '456' },
     { id: 'maximize', label: '📈 Maximize', count: '234' },
@@ -44,14 +46,22 @@ const Leaderboard: React.FC = () => {
   ];
 
   const isChallenge = ['minimize', 'maximize', 'fix', 'build'].includes(activeTab);
+  const isGameTab = activeTab === 'spot' || activeTab === 'lego';
 
   const leaderboardData = useMemo(() => {
     let data: (LeaderboardUser | ChallengeLeaderboardUser)[];
     
-    if (activeTab === 'global' || activeTab === 'weekly') {
+    if (activeTab === 'global' || activeTab === 'weekly' || activeTab === 'spot' || activeTab === 'lego') {
       data = [...MOCK_GLOBAL_LEADERBOARD];
+      
       if (activeTab === 'weekly') {
         data = (data as LeaderboardUser[]).sort((a, b) => b.weeklyXp - a.weeklyXp);
+        data = data.map((user, index) => ({ ...user, rank: index + 1 }));
+      } else if (activeTab === 'spot') {
+        data = (data as LeaderboardUser[]).sort((a, b) => b.spotXp - a.spotXp);
+        data = data.map((user, index) => ({ ...user, rank: index + 1 }));
+      } else if (activeTab === 'lego') {
+        data = (data as LeaderboardUser[]).sort((a, b) => b.legoXp - a.legoXp);
         data = data.map((user, index) => ({ ...user, rank: index + 1 }));
       }
     } else {
@@ -81,7 +91,7 @@ const Leaderboard: React.FC = () => {
     }, 100);
   };
 
-  const valueKey = activeTab === 'weekly' ? 'weeklyXp' : isChallenge ? 'bestScore' : 'totalXp';
+  const valueKey = activeTab === 'weekly' ? 'weeklyXp' : activeTab === 'spot' ? 'spotXp' : activeTab === 'lego' ? 'legoXp' : isChallenge ? 'bestScore' : 'totalXp';
   const valueLabel = isChallenge ? '' : 'XP';
 
   return (

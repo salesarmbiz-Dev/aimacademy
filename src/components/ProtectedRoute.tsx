@@ -8,14 +8,15 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, isGuestMode, loading } = useAuth();
   const location = useLocation();
 
   if (loading) {
     return <PageLoader />;
   }
 
-  if (!isAuthenticated) {
+  // Allow access if authenticated OR in guest mode
+  if (!isAuthenticated && !isGuestMode) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

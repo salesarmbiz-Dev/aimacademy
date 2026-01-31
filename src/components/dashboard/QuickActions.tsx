@@ -1,29 +1,29 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Play, Target, Library, Medal } from 'lucide-react';
+import { Eye, Puzzle, Trophy, Medal } from 'lucide-react';
 
 const QuickActions: React.FC = () => {
   const navigate = useNavigate();
 
   const actions = [
     {
-      icon: Play,
-      text: 'เริ่ม Experiment ใหม่',
+      icon: Eye,
+      text: 'Spot the Difference',
+      path: '/spot',
+      primary: false,
+      style: 'bg-card border-2 border-turquoise text-turquoise hover:bg-turquoise/10',
+    },
+    {
+      icon: Puzzle,
+      text: 'Prompt Lego',
       path: '/prompt-lego',
       primary: true,
       style: 'bg-gradient-to-r from-tennessee to-tennessee/80 text-foreground hover:shadow-lg hover:shadow-tennessee/30',
     },
     {
-      icon: Target,
-      text: 'ทำ Challenge',
+      icon: Trophy,
+      text: 'Challenges',
       path: '/challenges',
-      primary: false,
-      style: 'bg-card border-2 border-turquoise text-turquoise hover:bg-turquoise/10',
-    },
-    {
-      icon: Library,
-      text: 'Block Library',
-      path: '/library',
       primary: false,
       style: 'bg-card border-2 border-rackley text-foreground hover:bg-rackley/10',
     },
