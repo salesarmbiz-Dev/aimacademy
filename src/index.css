@@ -120,6 +120,26 @@
   .animate-spin-slow {
     animation: spin 1s linear infinite;
   }
+
+  .animate-float-slow {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-float-medium {
+    animation: float 3s ease-in-out infinite 0.5s;
+  }
+
+  .animate-float-fast {
+    animation: float 3s ease-in-out infinite 1s;
+  }
+
+  .lego-block {
+    position: relative;
+  }
+
+  .hover\:scale-102:hover {
+    transform: scale(1.02);
+  }
 }
 
 @keyframes fadeIn {
@@ -159,5 +179,14 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
   }
 }
