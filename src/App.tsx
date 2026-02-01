@@ -19,6 +19,8 @@ import { PageLoader } from '@/components/LoadingSpinner';
 const Landing = lazy(() => import('@/pages/Landing'));
 const Login = lazy(() => import('@/pages/Login'));
 const Register = lazy(() => import('@/pages/Register'));
+const Terms = lazy(() => import('@/pages/Terms'));
+const Privacy = lazy(() => import('@/pages/Privacy'));
 const Dashboard = lazy(() => import('@/pages/Dashboard'));
 const PromptLego = lazy(() => import('@/pages/PromptLego'));
 const Challenges = lazy(() => import('@/pages/Challenges'));
@@ -70,6 +72,22 @@ const App = () => (
                         element={
                           <PublicRoute>
                             <Register />
+                          </PublicRoute>
+                        }
+                      />
+                      <Route
+                        path="/terms"
+                        element={
+                          <PublicRoute>
+                            <Terms />
+                          </PublicRoute>
+                        }
+                      />
+                      <Route
+                        path="/privacy"
+                        element={
+                          <PublicRoute>
+                            <Privacy />
                           </PublicRoute>
                         }
                       />
