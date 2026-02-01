@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { GraduationCap, Sparkles, Gamepad2, ChevronDown, Eye, Puzzle, ArrowRight, Star, Users, CheckCircle, Brain, Lightbulb, LogIn } from 'lucide-react';
+import { GraduationCap, Sparkles, Gamepad2, ChevronDown, Eye, Blocks, ArrowRight, Star, Users, CheckCircle, Brain, Lightbulb, LogIn } from 'lucide-react';
 import GuestModeModal from '@/components/modals/GuestModeModal';
 
 interface HeroSectionProps {
@@ -30,104 +30,145 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToHowItWorks }) => {
             ฝึกทักษะ AI ผ่านเกมสนุกๆ - ไม่ต้องเขียนโค้ด ไม่ต้องมีพื้นฐาน
           </span>
         </h1>
-
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
-          <button
-            onClick={() => setIsGuestModalOpen(true)}
-            className="flex items-center gap-2 px-8 py-4 bg-tennessee text-foreground font-semibold rounded-lg text-lg hover:opacity-90 transition-all hover:scale-105 btn-press"
-          >
-            <Gamepad2 className="h-5 w-5" />
-            ลองเล่นฟรี
-          </button>
-          <Link
-            to="/login"
-            className="flex items-center gap-2 px-8 py-4 bg-transparent border-2 border-turquoise text-turquoise font-semibold rounded-lg text-lg hover:bg-turquoise/10 transition-all"
-          >
-            <LogIn className="h-5 w-5" />
-            เข้าสู่ระบบ
-          </Link>
-        </div>
       </div>
 
       {/* Game Showcase Section */}
-      <div className="mt-20 w-full max-w-5xl mx-auto px-4">
+      <div className="mt-16 w-full max-w-5xl mx-auto px-4">
         <h2 className="text-center text-2xl md:text-3xl font-bold text-foreground mb-8">
           🎮 เลือกเกมที่ใช่สำหรับคุณ
         </h2>
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-8">
           {/* Spot the Difference Card */}
-          <div className="bg-card border-2 border-turquoise/30 rounded-2xl p-6 hover:border-turquoise hover:shadow-[0_0_30px_rgba(5,242,242,0.2)] transition-all duration-300 group">
+          <div className="bg-card/80 backdrop-blur-sm border-2 border-turquoise/30 rounded-2xl p-5 md:p-8 hover:border-turquoise hover:shadow-[0_0_30px_rgba(5,242,242,0.2)] transition-all duration-300 hover:scale-[1.02] shadow-lg">
+            {/* Icon Container */}
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-3 bg-turquoise/20 rounded-xl">
-                <Eye className="w-8 h-8 text-turquoise" />
+              <div className="w-16 h-16 bg-turquoise/15 rounded-xl flex items-center justify-center">
+                <Eye className="w-10 h-10 text-turquoise" />
               </div>
-              <span className="px-3 py-1 bg-turquoise/20 text-turquoise text-xs font-semibold rounded-full">
+              <span className="px-3.5 py-1.5 bg-tennessee text-white text-xs font-semibold rounded-full">
                 แนะนำสำหรับมือใหม่
               </span>
             </div>
-            <h3 className="text-xl font-bold text-foreground mb-2">🎯 Spot the Difference</h3>
-            <p className="text-rackley text-sm mb-3">จับผิด 2 Prompts - อันไหนดีกว่า?</p>
-            <p className="text-rackley/80 text-sm mb-4">
+            
+            {/* Title */}
+            <h3 className="text-2xl md:text-[28px] font-bold text-turquoise mb-2">🎯 Spot the Difference</h3>
+            
+            {/* Subtitle */}
+            <p className="text-base md:text-lg font-medium text-tennessee mb-3">จับผิด 2 Prompts - อันไหนดีกว่า?</p>
+            
+            {/* Description */}
+            <p className="text-sm md:text-[15px] font-normal text-gray-200 leading-relaxed mb-4">
               ฝึกตาให้แม่น ดู Prompt แล้วเลือกอันที่ดีกว่า ไม่ต้องเขียนเอง แค่ดูและเลือก
             </p>
-            <div className="flex items-center gap-1 mb-4">
-              <span className="text-xs text-rackley">Beginner Friendly</span>
+            
+            {/* Difficulty */}
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-[13px] font-medium text-tennessee">Beginner Friendly</span>
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-3 h-3 text-tennessee fill-tennessee" />
+                <Star key={i} className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
               ))}
             </div>
-            <div className="flex flex-wrap gap-2 mb-5">
+            
+            {/* Skill Tags */}
+            <div className="flex flex-wrap gap-2 mb-6">
               {['Role Detection', 'Context Clarity', 'Tone Matching'].map((skill) => (
-                <span key={skill} className="px-2 py-1 bg-oxford-blue text-rackley text-xs rounded-md">
+                <span 
+                  key={skill} 
+                  className="px-3 py-1 bg-turquoise/10 border border-turquoise/30 text-turquoise text-xs rounded-full"
+                >
                   {skill}
                 </span>
               ))}
             </div>
+            
+            {/* Button */}
             <button
               onClick={() => setIsGuestModalOpen(true)}
-              className="w-full py-3 bg-turquoise/20 text-turquoise font-semibold rounded-lg hover:bg-turquoise hover:text-oxford-blue transition-all"
+              className="w-full py-3 bg-turquoise text-white font-semibold text-base rounded-lg hover:bg-turquoise/90 hover:scale-[1.02] transition-all shadow-md"
+              style={{ textShadow: '0 1px 2px rgba(0,0,0,0.2)' }}
             >
               ลองเล่น
             </button>
           </div>
 
           {/* Prompt Lego Card */}
-          <div className="bg-card border-2 border-tennessee/30 rounded-2xl p-6 hover:border-tennessee hover:shadow-[0_0_30px_rgba(242,116,5,0.2)] transition-all duration-300 group">
+          <div className="bg-card/80 backdrop-blur-sm border-2 border-tennessee/30 rounded-2xl p-5 md:p-8 hover:border-tennessee hover:shadow-[0_0_30px_rgba(242,116,5,0.2)] transition-all duration-300 hover:scale-[1.02] shadow-lg">
+            {/* Icon Container */}
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-3 bg-tennessee/20 rounded-xl">
-                <Puzzle className="w-8 h-8 text-tennessee" />
+              <div className="w-16 h-16 bg-tennessee/15 rounded-xl flex items-center justify-center">
+                <Blocks className="w-10 h-10 text-tennessee" />
               </div>
-              <span className="px-3 py-1 bg-tennessee/20 text-tennessee text-xs font-semibold rounded-full">
+              <span className="px-3.5 py-1.5 bg-tennessee text-white text-xs font-semibold rounded-full">
                 Intermediate
               </span>
             </div>
-            <h3 className="text-xl font-bold text-foreground mb-2">🧱 Prompt Lego</h3>
-            <p className="text-rackley text-sm mb-3">ประกอบ Prompt เหมือนต่อ LEGO</p>
-            <p className="text-rackley/80 text-sm mb-4">
+            
+            {/* Title */}
+            <h3 className="text-2xl md:text-[28px] font-bold text-tennessee mb-2">🧱 Prompt Lego</h3>
+            
+            {/* Subtitle */}
+            <p className="text-base md:text-lg font-medium text-turquoise mb-3">ประกอบ Prompt เหมือนต่อ LEGO</p>
+            
+            {/* Description */}
+            <p className="text-sm md:text-[15px] font-normal text-gray-200 leading-relaxed mb-4">
               ลงมือสร้าง Prompt ด้วยตัวเอง ลองเพิ่ม ลบ สลับ Blocks แล้วดูผลลัพธ์เปลี่ยน
             </p>
-            <div className="flex items-center gap-1 mb-4">
-              <span className="text-xs text-rackley">Intermediate</span>
+            
+            {/* Difficulty */}
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-[13px] font-medium text-tennessee">Intermediate</span>
               {[...Array(3)].map((_, i) => (
-                <Star key={i} className="w-3 h-3 text-tennessee fill-tennessee" />
+                <Star key={i} className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
               ))}
               {[...Array(2)].map((_, i) => (
-                <Star key={i} className="w-3 h-3 text-rackley" />
+                <Star key={i} className="w-3.5 h-3.5 text-rackley" />
               ))}
             </div>
-            <div className="flex flex-wrap gap-2 mb-5">
+            
+            {/* Skill Tags */}
+            <div className="flex flex-wrap gap-2 mb-6">
               {['Prompt Building', 'Experimentation', 'Optimization'].map((skill) => (
-                <span key={skill} className="px-2 py-1 bg-oxford-blue text-rackley text-xs rounded-md">
+                <span 
+                  key={skill} 
+                  className="px-3 py-1 bg-tennessee/10 border border-tennessee/30 text-tennessee text-xs rounded-full"
+                >
                   {skill}
                 </span>
               ))}
             </div>
+            
+            {/* Button */}
             <Link
               to="/login"
-              className="block w-full py-3 bg-tennessee/20 text-tennessee font-semibold rounded-lg hover:bg-tennessee hover:text-foreground transition-all text-center"
+              className="block w-full py-3 bg-tennessee text-white font-semibold text-base rounded-lg hover:bg-tennessee/90 hover:scale-[1.02] transition-all text-center shadow-md"
+              style={{ textShadow: '0 1px 2px rgba(0,0,0,0.2)' }}
             >
               เริ่มเล่น
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* CTA Buttons Section - Moved below Game Cards */}
+      <div className="mt-12 w-full max-w-2xl mx-auto px-4">
+        <div className="bg-gradient-to-r from-oxford-blue/80 to-root-beer/40 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-turquoise/20">
+          <p className="text-center text-lg md:text-xl font-medium text-foreground mb-6">
+            พร้อมเริ่มเรียนรู้แล้วหรือยัง?
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button
+              onClick={() => setIsGuestModalOpen(true)}
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-tennessee text-white font-semibold rounded-lg text-lg hover:opacity-90 transition-all hover:scale-105 btn-press shadow-lg"
+            >
+              <Gamepad2 className="h-5 w-5" />
+              ลองเล่นฟรี
+            </button>
+            <Link
+              to="/login"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-transparent border-2 border-turquoise text-turquoise font-semibold rounded-lg text-lg hover:bg-turquoise/10 transition-all"
+            >
+              <LogIn className="h-5 w-5" />
+              เข้าสู่ระบบ
             </Link>
           </div>
         </div>
@@ -155,7 +196,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToHowItWorks }) => {
           {/* Step 2 */}
           <div className="flex-1 text-center">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-tennessee/20 flex items-center justify-center">
-              <Puzzle className="w-8 h-8 text-tennessee" />
+              <Blocks className="w-8 h-8 text-tennessee" />
             </div>
             <p className="font-bold text-foreground">Prompt Lego</p>
             <p className="text-rackley text-sm">ฝึกมือ 🤲</p>
