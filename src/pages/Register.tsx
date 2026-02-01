@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { ConsentCheckbox } from '@/components/register/ConsentCheckbox';
+import { LegalModal } from '@/components/register/LegalModal';
+import { supabase } from '@/integrations/supabase/client';
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -15,13 +18,26 @@ const Register: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  
+  // Consent states
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [marketingConsent, setMarketingConsent] = useState(false);
+  
+  // Modal states
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  
   const [errors, setErrors] = useState<{
     name?: string;
     email?: string;
     password?: string;
     confirmPassword?: string;
+    consent?: string;
     general?: string;
   }>({});
+
+  const isConsentValid = termsAccepted && privacyAccepted;
 
   const validateForm = () => {
     const newErrors: typeof errors = {};
@@ -49,9 +65,27 @@ const Register: React.FC = () => {
     } else if (password !== confirmPassword) {
       newErrors.confirmPassword = 'รหัสผ่านไม่ตรงกัน';
     }
+
+    if (!isConsentValid) {
+      newErrors.consent = 'กรุณายอมรับข้อกำหนดและนโยบายก่อนสมัคร';
+    }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const saveConsent = async (userId: string) => {
+    const now = new Date().toISOString();
+    await supabase.from('user_consents').insert({
+      user_id: userId,
+      terms_accepted: true,
+      terms_accepted_at: now,
+      privacy_accepted: true,
+      privacy_accepted_at: now,
+      marketing_consent: marketingConsent,
+      marketing_consent_at: marketingConsent ? now : null,
+      user_agent: navigator.userAgent
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -62,12 +96,16 @@ const Register: React.FC = () => {
     setLoading(true);
     setErrors({});
     
-    const { error } = await signUp(email, password, name);
+    const { error, data } = await signUp(email, password, name);
     
     if (error) {
       setErrors({ general: error });
       setLoading(false);
     } else {
+      // Save consent after successful signup
+      if (data?.user?.id) {
+        await saveConsent(data.user.id);
+      }
       setSuccess(true);
       setLoading(false);
     }
@@ -204,10 +242,60 @@ const Register: React.FC = () => {
             )}
           </div>
 
+          {/* Consent Checkboxes */}
+          <div className="space-y-3 pt-2">
+            <ConsentCheckbox
+              id="terms"
+              checked={termsAccepted}
+              onChange={setTermsAccepted}
+              error={!!errors.consent && !termsAccepted}
+            >
+              ฉันยอมรับ{' '}
+              <button
+                type="button"
+                onClick={() => setShowTermsModal(true)}
+                className="text-turquoise underline hover:text-turquoise/80 transition-colors"
+              >
+                ข้อกำหนดการใช้งาน
+              </button>{' '}
+              และ{' '}
+              <button
+                type="button"
+                onClick={() => setShowPrivacyModal(true)}
+                className="text-turquoise underline hover:text-turquoise/80 transition-colors"
+              >
+                นโยบายความเป็นส่วนตัว
+              </button>
+            </ConsentCheckbox>
+
+            <ConsentCheckbox
+              id="privacy"
+              checked={privacyAccepted}
+              onChange={setPrivacyAccepted}
+              error={!!errors.consent && !privacyAccepted}
+            >
+              ฉันยินยอมให้เก็บและใช้ข้อมูลส่วนบุคคลของฉันตามที่ระบุในนโยบายความเป็นส่วนตัว{' '}
+              <span className="text-tennessee">(จำเป็น)</span>
+            </ConsentCheckbox>
+
+            <ConsentCheckbox
+              id="marketing"
+              checked={marketingConsent}
+              onChange={setMarketingConsent}
+            >
+              ฉันต้องการรับข่าวสาร โปรโมชัน และอัปเดตจาก AIM Academy{' '}
+              <span className="text-rackley">(ไม่บังคับ)</span>
+            </ConsentCheckbox>
+
+            {errors.consent && (
+              <p className="text-tennessee text-sm">{errors.consent}</p>
+            )}
+          </div>
+
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !isConsentValid}
             className="w-full h-12 bg-tennessee text-white font-semibold rounded-md hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
           >
             {loading ? (
@@ -226,6 +314,18 @@ const Register: React.FC = () => {
           </Link>
         </p>
       </div>
+
+      {/* Legal Modals */}
+      <LegalModal
+        open={showTermsModal}
+        onOpenChange={setShowTermsModal}
+        type="terms"
+      />
+      <LegalModal
+        open={showPrivacyModal}
+        onOpenChange={setShowPrivacyModal}
+        type="privacy"
+      />
     </div>
   );
 };

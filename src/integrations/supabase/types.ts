@@ -14,7 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      user_consents: {
+        Row: {
+          created_at: string
+          id: string
+          ip_address: string | null
+          marketing_consent: boolean | null
+          marketing_consent_at: string | null
+          privacy_accepted: boolean
+          privacy_accepted_at: string | null
+          terms_accepted: boolean
+          terms_accepted_at: string | null
+          updated_at: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          marketing_consent?: boolean | null
+          marketing_consent_at?: string | null
+          privacy_accepted?: boolean
+          privacy_accepted_at?: string | null
+          terms_accepted?: boolean
+          terms_accepted_at?: string | null
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          marketing_consent?: boolean | null
+          marketing_consent_at?: string | null
+          privacy_accepted?: boolean
+          privacy_accepted_at?: string | null
+          terms_accepted?: boolean
+          terms_accepted_at?: string | null
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

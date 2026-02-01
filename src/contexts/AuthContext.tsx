@@ -6,7 +6,7 @@ interface AuthContextValue extends AuthState {
   isGuestMode: boolean;
   guestChallengesRemaining: number;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
-  signUp: (email: string, password: string, name: string) => Promise<{ error: string | null }>;
+  signUp: (email: string, password: string, name: string) => Promise<{ error: string | null; data?: { user: { id: string } | null } }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: string | null }>;
   startGuestMode: () => void;
@@ -107,7 +107,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signUp = useCallback(async (email: string, password: string, name: string) => {
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -127,7 +127,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { error: 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง' };
     }
     
-    return { error: null };
+    return { error: null, data: { user: data.user ? { id: data.user.id } : null } };
   }, []);
 
   const signOut = useCallback(async () => {
