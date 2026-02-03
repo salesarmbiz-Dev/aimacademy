@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      certificates: {
+        Row: {
+          certificate_type: string
+          created_at: string | null
+          description: string | null
+          id: string
+          issued_at: string | null
+          metadata: Json | null
+          skills_snapshot: Json | null
+          title: string
+          user_id: string
+          user_name: string
+          verify_code: string
+        }
+        Insert: {
+          certificate_type: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          issued_at?: string | null
+          metadata?: Json | null
+          skills_snapshot?: Json | null
+          title: string
+          user_id: string
+          user_name: string
+          verify_code: string
+        }
+        Update: {
+          certificate_type?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          issued_at?: string | null
+          metadata?: Json | null
+          skills_snapshot?: Json | null
+          title?: string
+          user_id?: string
+          user_name?: string
+          verify_code?: string
+        }
+        Relationships: []
+      }
       user_consents: {
         Row: {
           created_at: string
