@@ -32,6 +32,9 @@ const SpotGamePlay = lazy(() => import('@/pages/spot/SpotGamePlay'));
 const PatternLibrary = lazy(() => import('@/pages/spot/PatternLibrary'));
 const SpotLeaderboard = lazy(() => import('@/pages/spot/SpotLeaderboard'));
 const Insights = lazy(() => import('@/pages/Insights'));
+const Certificates = lazy(() => import('@/pages/Certificates'));
+const CertificateView = lazy(() => import('@/pages/CertificateView'));
+const VerifyCertificate = lazy(() => import('@/pages/VerifyCertificate'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
 
 const queryClient = new QueryClient();
@@ -111,7 +114,12 @@ const App = () => (
                         <Route path="/spot/patterns" element={<PatternLibrary />} />
                         <Route path="/spot/leaderboard" element={<SpotLeaderboard />} />
                         <Route path="/insights" element={<Insights />} />
+                        <Route path="/certificates" element={<Certificates />} />
+                        <Route path="/certificate/:id" element={<CertificateView />} />
                       </Route>
+
+                      {/* Public Verification Route */}
+                      <Route path="/verify/:code" element={<VerifyCertificate />} />
 
                       {/* 404 Route */}
                       <Route path="*" element={<NotFound />} />

@@ -18,6 +18,7 @@ import {
   UserPlus,
   GraduationCap,
   Sparkles,
+  Award,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUser } from '@/contexts/UserContext';
@@ -233,6 +234,14 @@ export const Header: React.FC = () => {
                           >
                             <User className="h-4 w-4" />
                             <span>Profile</span>
+                          </Link>
+                          <Link
+                            to="/certificates"
+                            className="flex items-center gap-2 px-4 py-3 text-white hover:bg-background transition-colors"
+                            onClick={() => setDropdownOpen(false)}
+                          >
+                            <Award className="h-4 w-4" />
+                            <span>ใบรับรอง</span>
                           </Link>
                           <Link
                             to="/insights"
