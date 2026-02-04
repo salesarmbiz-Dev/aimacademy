@@ -33,10 +33,10 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="text-foreground font-semibold mb-4">Company</h4>
             <ul className="space-y-2">
+              <li><Link to="/for-business" className="text-rackley hover:text-turquoise transition-colors text-sm">สำหรับองค์กร</Link></li>
               <li><a href="#" className="text-rackley hover:text-turquoise transition-colors text-sm">About Us</a></li>
               <li><a href="#" className="text-rackley hover:text-turquoise transition-colors text-sm">Contact</a></li>
               <li><a href="#" className="text-rackley hover:text-turquoise transition-colors text-sm">Blog</a></li>
-              <li><a href="#" className="text-rackley hover:text-turquoise transition-colors text-sm">Careers</a></li>
             </ul>
           </div>
 

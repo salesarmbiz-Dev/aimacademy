@@ -1,0 +1,154 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Check } from 'lucide-react';
+
+const pricingPlans = [
+  {
+    tag: 'ทดลองฟรี',
+    tagStyle: 'bg-turquoise/10 text-turquoise',
+    price: '฿0',
+    priceUnit: '',
+    subPrice: 'สำหรับ 5 คนแรก',
+    features: [
+      'ทดลองใช้ 14 วัน',
+      'เกมทั้งหมด',
+      'Pre-test / Post-test',
+      'ใบรับรองพื้นฐาน',
+    ],
+    cta: 'เริ่มทดลอง',
+    ctaStyle: 'border border-turquoise text-turquoise hover:bg-turquoise/10',
+    link: '/register',
+    highlighted: false,
+  },
+  {
+    tag: 'แนะนำ',
+    tagStyle: 'bg-tennessee-orange text-white',
+    price: '฿199',
+    priceUnit: '/คน/เดือน',
+    subPrice: 'ขั้นต่ำ 10 คน',
+    features: [
+      { text: 'ทุกอย่างใน Free +', highlight: true },
+      'HR Dashboard',
+      'Export Report (PDF/CSV)',
+      'ใบรับรองทุกระดับ',
+      'Invite Code สำหรับทีม',
+      'Email Support',
+    ],
+    cta: 'เริ่มใช้งาน',
+    ctaStyle: 'bg-tennessee-orange text-white hover:brightness-110 hover:-translate-y-0.5',
+    link: '/register',
+    highlighted: true,
+  },
+  {
+    tag: 'องค์กรขนาดใหญ่',
+    tagStyle: 'bg-rackley/10 text-rackley',
+    price: 'ติดต่อเรา',
+    priceUnit: '',
+    subPrice: 'ปรับแต่งตามความต้องการ',
+    features: [
+      { text: 'ทุกอย่างใน Team +', highlight: true },
+      'Custom Challenges',
+      'White-label Branding',
+      'API Integration (LMS)',
+      'Dedicated Account Manager',
+      'Priority Support',
+    ],
+    cta: 'ติดต่อทีมงาน',
+    ctaStyle: 'border border-turquoise text-turquoise hover:bg-turquoise/10',
+    link: 'mailto:support@aimacademy.co',
+    highlighted: false,
+  },
+];
+
+const B2BPricingSection: React.FC = () => {
+  return (
+    <section className="bg-oxford-blue py-12 md:py-20">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-8">
+        {/* Section Title */}
+        <h2 className="text-2xl md:text-[32px] font-bold text-white text-center">
+          ราคาที่คุ้มกว่าจ้าง Trainer
+        </h2>
+        <p className="text-base text-rackley text-center mt-3 mb-12">
+          ลงทุนน้อยกว่าค่าอบรม 1 วัน แต่ได้ผลลัพธ์ที่วัดได้ตลอดทั้งปี
+        </p>
+
+        {/* Pricing Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+          {pricingPlans.map((plan, index) => (
+            <div
+              key={index}
+              className={`relative flex flex-col bg-oxford-blue/80 rounded-[20px] p-8 ${
+                plan.highlighted
+                  ? 'border-2 border-tennessee-orange scale-100 md:scale-105 shadow-[0_0_30px_rgba(242,116,5,0.15)]'
+                  : 'border border-rackley/30'
+              }`}
+            >
+              {/* Tag */}
+              <span className={`inline-block self-start px-4 py-1 rounded-full text-[13px] ${plan.tagStyle}`}>
+                {plan.tag}
+              </span>
+
+              {/* Price */}
+              <div className="mt-5 mb-5">
+                <span className={`font-bold text-white ${plan.price === 'ติดต่อเรา' ? 'text-4xl' : 'text-5xl'}`}>
+                  {plan.price}
+                </span>
+                {plan.priceUnit && (
+                  <span className="text-base text-rackley">{plan.priceUnit}</span>
+                )}
+                <div className="text-[15px] text-rackley mt-1">{plan.subPrice}</div>
+              </div>
+
+              {/* Features */}
+              <ul className="space-y-3 flex-1">
+                {plan.features.map((feature, i) => {
+                  const isObject = typeof feature === 'object';
+                  const text = isObject ? feature.text : feature;
+                  const highlight = isObject ? feature.highlight : false;
+                  
+                  return (
+                    <li key={i} className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-turquoise flex-shrink-0 mt-0.5" />
+                      <span className={highlight ? 'text-tennessee-orange' : 'text-white'}>
+                        {text}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+
+              {/* CTA Button */}
+              {plan.link.startsWith('mailto:') ? (
+                <a
+                  href={plan.link}
+                  className={`mt-8 w-full text-center py-3.5 rounded-xl font-semibold transition-all duration-200 ${plan.ctaStyle}`}
+                >
+                  {plan.cta}
+                </a>
+              ) : (
+                <Link
+                  to={plan.link}
+                  className={`mt-8 w-full text-center py-3.5 rounded-xl font-semibold transition-all duration-200 ${plan.ctaStyle}`}
+                >
+                  {plan.cta}
+                </Link>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Comparison Note */}
+        <div className="max-w-[700px] mx-auto mt-8 bg-tennessee-orange/[0.08] border border-tennessee-orange/20 rounded-xl py-4 px-6 text-center">
+          <p className="text-[15px] text-white">
+            💡 เทียบกับค่าจ้าง Trainer 1 วัน: <span className="text-rackley">30,000-80,000 บาท</span>
+          </p>
+          <p className="text-[15px] text-white mt-1">
+            20 คน × AIM Academy Team 1 เดือน = <span className="text-tennessee-orange font-semibold">3,980 บาท</span>
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default B2BPricingSection;
