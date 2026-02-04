@@ -357,6 +357,7 @@ export type Database = {
           created_at: string | null
           id: string
           invite_code: string
+          is_demo: boolean | null
           logo_url: string | null
           max_members: number | null
           name: string
@@ -368,6 +369,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           invite_code: string
+          is_demo?: boolean | null
           logo_url?: string | null
           max_members?: number | null
           name: string
@@ -379,6 +381,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           invite_code?: string
+          is_demo?: boolean | null
           logo_url?: string | null
           max_members?: number | null
           name?: string
