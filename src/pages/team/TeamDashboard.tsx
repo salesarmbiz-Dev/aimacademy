@@ -4,41 +4,30 @@ import { Helmet } from 'react-helmet-async';
 import { LayoutDashboard, ArrowLeft, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTeam } from '@/hooks/useTeam';
+import { useDemoTeamData } from '@/hooks/useDemoTeamData';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import StatsCards from '@/components/team/StatsCards';
 import EngagementChart from '@/components/team/EngagementChart';
 import SkillRadarChart from '@/components/team/SkillRadarChart';
 import MembersTable from '@/components/team/MembersTable';
-import { 
-  TeamStats, 
-  MOCK_MEMBERS, 
-  MOCK_ENGAGEMENT_DATA, 
-  MOCK_SKILL_AVERAGES 
-} from '@/components/team/types';
 
 const TeamDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { organization, canManage, loading } = useTeam();
+  const { organization, canManage, loading: teamLoading } = useTeam();
+  const { members, stats, engagementData, skillAverages, loading: dataLoading } = useDemoTeamData(organization?.id);
   const [timeRange, setTimeRange] = useState<'7d' | '30d'>('7d');
-  
-  // Use mock data for demo
-  const [stats] = useState<TeamStats>({
-    totalMembers: 24,
-    completedMembers: 15,
-    activeThisWeek: 18,
-    averageImprovement: 23,
-  });
+
+  const loading = teamLoading || dataLoading;
 
   useEffect(() => {
-    if (!loading && !canManage) {
+    if (!teamLoading && !canManage) {
       navigate('/team');
     }
-  }, [loading, canManage, navigate]);
+  }, [teamLoading, canManage, navigate]);
 
   const handleExportCSV = () => {
-    // Generate CSV content
     const headers = ['ชื่อ', 'Level', 'Pre Test %', 'Post Test %', 'เปลี่ยนแปลง %'];
-    const rows = MOCK_MEMBERS.map(m => [
+    const rows = members.map(m => [
       m.display_name,
       m.level,
       m.pre_test_score ?? 'N/A',
@@ -59,7 +48,6 @@ const TeamDashboard: React.FC = () => {
   };
 
   const handleExportPDF = () => {
-    // Simple print-based PDF export
     window.print();
   };
 
@@ -74,6 +62,11 @@ const TeamDashboard: React.FC = () => {
   if (!organization) {
     return null;
   }
+
+  // Filter engagement data based on time range
+  const filteredEngagementData = timeRange === '7d' 
+    ? engagementData.slice(-7) 
+    : engagementData;
 
   return (
     <>
@@ -111,16 +104,16 @@ const TeamDashboard: React.FC = () => {
         {/* Charts Row */}
         <div className="grid lg:grid-cols-2 gap-6 mb-6">
           <EngagementChart
-            data={MOCK_ENGAGEMENT_DATA}
+            data={filteredEngagementData}
             timeRange={timeRange}
             onTimeRangeChange={setTimeRange}
           />
-          <SkillRadarChart data={MOCK_SKILL_AVERAGES} />
+          <SkillRadarChart data={skillAverages} />
         </div>
 
         {/* Members Table */}
         <MembersTable
-          members={MOCK_MEMBERS}
+          members={members}
           onExportCSV={handleExportCSV}
           onExportPDF={handleExportPDF}
         />
