@@ -21,6 +21,7 @@ const Login = lazy(() => import('@/pages/Login'));
 const Register = lazy(() => import('@/pages/Register'));
 const Terms = lazy(() => import('@/pages/Terms'));
 const Privacy = lazy(() => import('@/pages/Privacy'));
+const ForBusiness = lazy(() => import('@/pages/ForBusiness'));
 const Dashboard = lazy(() => import('@/pages/Dashboard'));
 const PromptLego = lazy(() => import('@/pages/PromptLego'));
 const Challenges = lazy(() => import('@/pages/Challenges'));
@@ -91,6 +92,14 @@ const App = () => (
                         element={
                           <PublicRoute>
                             <Privacy />
+                          </PublicRoute>
+                        }
+                      />
+                      <Route
+                        path="/for-business"
+                        element={
+                          <PublicRoute>
+                            <ForBusiness />
                           </PublicRoute>
                         }
                       />
