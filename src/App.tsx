@@ -37,6 +37,7 @@ const Insights = lazy(() => import('@/pages/Insights'));
 const Certificates = lazy(() => import('@/pages/Certificates'));
 const CertificateView = lazy(() => import('@/pages/CertificateView'));
 const VerifyCertificate = lazy(() => import('@/pages/VerifyCertificate'));
+const Assessment = lazy(() => import('@/pages/Assessment'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
 
 const queryClient = new QueryClient();
@@ -127,6 +128,9 @@ const App = () => (
                         <Route path="/insights" element={<Insights />} />
                         <Route path="/certificates" element={<Certificates />} />
                         <Route path="/certificate/:id" element={<CertificateView />} />
+                        <Route path="/assessment" element={<Assessment />} />
+                        <Route path="/assessment/test" element={<Assessment />} />
+                        <Route path="/assessment/results" element={<Assessment />} />
                       </Route>
 
                       {/* Public Verification Route */}

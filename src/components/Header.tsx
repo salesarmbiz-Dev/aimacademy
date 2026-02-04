@@ -19,6 +19,7 @@ import {
   GraduationCap,
   Sparkles,
   Award,
+  ClipboardCheck,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUser } from '@/contexts/UserContext';
@@ -28,6 +29,7 @@ const navItems = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/spot', label: 'Spot the Difference', icon: Eye },
   { path: '/prompt-lego', label: 'Prompt Lego', icon: Puzzle },
+  { path: '/assessment', label: 'ประเมินทักษะ', icon: ClipboardCheck },
   { path: '/leaderboard', label: 'Leaderboard', icon: Medal },
 ];
 
