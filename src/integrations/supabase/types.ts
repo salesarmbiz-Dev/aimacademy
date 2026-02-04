@@ -200,6 +200,74 @@ export type Database = {
         }
         Relationships: []
       }
+      org_members: {
+        Row: {
+          id: string
+          joined_at: string | null
+          org_id: string
+          role: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          joined_at?: string | null
+          org_id: string
+          role?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          joined_at?: string | null
+          org_id?: string
+          role?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_members_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          admin_user_id: string
+          created_at: string | null
+          id: string
+          invite_code: string
+          logo_url: string | null
+          max_members: number | null
+          name: string
+          plan: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          admin_user_id: string
+          created_at?: string | null
+          id?: string
+          invite_code: string
+          logo_url?: string | null
+          max_members?: number | null
+          name: string
+          plan?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          admin_user_id?: string
+          created_at?: string | null
+          id?: string
+          invite_code?: string
+          logo_url?: string | null
+          max_members?: number | null
+          name?: string
+          plan?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       user_activity_log: {
         Row: {
           activity_data: Json | null
@@ -277,7 +345,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_org_id: { Args: { _user_id: string }; Returns: string }
+      is_org_admin_or_manager: {
+        Args: { _org_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_org_member: {
+        Args: { _org_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
