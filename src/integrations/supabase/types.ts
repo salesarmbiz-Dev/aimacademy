@@ -14,6 +14,150 @@ export type Database = {
   }
   public: {
     Tables: {
+      assessment_answers: {
+        Row: {
+          attempt_id: string
+          created_at: string | null
+          id: string
+          is_correct: boolean | null
+          question_id: string
+          time_spent_seconds: number | null
+          user_answer: string | null
+        }
+        Insert: {
+          attempt_id: string
+          created_at?: string | null
+          id?: string
+          is_correct?: boolean | null
+          question_id: string
+          time_spent_seconds?: number | null
+          user_answer?: string | null
+        }
+        Update: {
+          attempt_id?: string
+          created_at?: string | null
+          id?: string
+          is_correct?: boolean | null
+          question_id?: string
+          time_spent_seconds?: number | null
+          user_answer?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessment_answers_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: false
+            referencedRelation: "assessment_attempts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assessment_answers_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "assessment_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assessment_attempts: {
+        Row: {
+          assessment_type: string
+          completed_at: string | null
+          correct_answers: number | null
+          created_at: string | null
+          id: string
+          max_score: number
+          percentage: number | null
+          skill_scores: Json | null
+          started_at: string | null
+          status: string | null
+          time_spent_seconds: number | null
+          total_questions: number
+          total_score: number | null
+          user_id: string
+        }
+        Insert: {
+          assessment_type: string
+          completed_at?: string | null
+          correct_answers?: number | null
+          created_at?: string | null
+          id?: string
+          max_score: number
+          percentage?: number | null
+          skill_scores?: Json | null
+          started_at?: string | null
+          status?: string | null
+          time_spent_seconds?: number | null
+          total_questions: number
+          total_score?: number | null
+          user_id: string
+        }
+        Update: {
+          assessment_type?: string
+          completed_at?: string | null
+          correct_answers?: number | null
+          created_at?: string | null
+          id?: string
+          max_score?: number
+          percentage?: number | null
+          skill_scores?: Json | null
+          started_at?: string | null
+          status?: string | null
+          time_spent_seconds?: number | null
+          total_questions?: number
+          total_score?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      assessment_questions: {
+        Row: {
+          correct_answer: string
+          created_at: string | null
+          difficulty: string
+          explanation: string | null
+          explanation_th: string | null
+          id: string
+          is_active: boolean | null
+          options: Json
+          points: number | null
+          question_text: string
+          question_text_th: string
+          question_type: string
+          skill_category: string
+        }
+        Insert: {
+          correct_answer: string
+          created_at?: string | null
+          difficulty: string
+          explanation?: string | null
+          explanation_th?: string | null
+          id?: string
+          is_active?: boolean | null
+          options: Json
+          points?: number | null
+          question_text: string
+          question_text_th: string
+          question_type: string
+          skill_category: string
+        }
+        Update: {
+          correct_answer?: string
+          created_at?: string | null
+          difficulty?: string
+          explanation?: string | null
+          explanation_th?: string | null
+          id?: string
+          is_active?: boolean | null
+          options?: Json
+          points?: number | null
+          question_text?: string
+          question_text_th?: string
+          question_type?: string
+          skill_category?: string
+        }
+        Relationships: []
+      }
       certificates: {
         Row: {
           certificate_type: string
@@ -53,6 +197,33 @@ export type Database = {
           user_id?: string
           user_name?: string
           verify_code?: string
+        }
+        Relationships: []
+      }
+      user_activity_log: {
+        Row: {
+          activity_data: Json | null
+          activity_type: string
+          created_at: string | null
+          id: string
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          activity_data?: Json | null
+          activity_type: string
+          created_at?: string | null
+          id?: string
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          activity_data?: Json | null
+          activity_type?: string
+          created_at?: string | null
+          id?: string
+          session_id?: string | null
+          user_id?: string
         }
         Relationships: []
       }

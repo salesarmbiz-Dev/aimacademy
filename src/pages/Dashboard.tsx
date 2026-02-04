@@ -15,6 +15,7 @@ import FloatingActionButton from '@/components/dashboard/FloatingActionButton';
 import GameProgressCards from '@/components/dashboard/GameProgressCards';
 import RecommendedNext from '@/components/dashboard/RecommendedNext';
 import CertificatesPreview from '@/components/dashboard/CertificatesPreview';
+import AssessmentPreview from '@/components/dashboard/AssessmentPreview';
 import { Card, CardContent } from '@/components/ui/card';
 import { Zap, Trophy, Lightbulb, Flame, TrendingUp } from 'lucide-react';
 
@@ -161,6 +162,7 @@ const Dashboard: React.FC = () => {
 
           {/* Right Column (40%) */}
           <div className="md:col-span-2 space-y-6">
+            <AssessmentPreview />
             <ProgressChart />
             <CertificatesPreview />
             <InsightsPreview count={totalInsights} />
