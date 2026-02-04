@@ -200,6 +200,125 @@ export type Database = {
         }
         Relationships: []
       }
+      demo_activity_log: {
+        Row: {
+          activity_data: Json | null
+          activity_type: string
+          created_at: string | null
+          id: string
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          activity_data?: Json | null
+          activity_type: string
+          created_at?: string | null
+          id?: string
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          activity_data?: Json | null
+          activity_type?: string
+          created_at?: string | null
+          id?: string
+          session_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      demo_assessment_attempts: {
+        Row: {
+          assessment_type: string
+          completed_at: string | null
+          correct_answers: number | null
+          created_at: string | null
+          id: string
+          max_score: number
+          percentage: number | null
+          skill_scores: Json | null
+          started_at: string | null
+          status: string | null
+          time_spent_seconds: number | null
+          total_questions: number
+          total_score: number | null
+          user_id: string
+        }
+        Insert: {
+          assessment_type: string
+          completed_at?: string | null
+          correct_answers?: number | null
+          created_at?: string | null
+          id?: string
+          max_score: number
+          percentage?: number | null
+          skill_scores?: Json | null
+          started_at?: string | null
+          status?: string | null
+          time_spent_seconds?: number | null
+          total_questions: number
+          total_score?: number | null
+          user_id: string
+        }
+        Update: {
+          assessment_type?: string
+          completed_at?: string | null
+          correct_answers?: number | null
+          created_at?: string | null
+          id?: string
+          max_score?: number
+          percentage?: number | null
+          skill_scores?: Json | null
+          started_at?: string | null
+          status?: string | null
+          time_spent_seconds?: number | null
+          total_questions?: number
+          total_score?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      demo_users: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          display_name: string
+          id: string
+          is_demo: boolean | null
+          level: number | null
+          org_id: string | null
+          xp: number | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          display_name: string
+          id?: string
+          is_demo?: boolean | null
+          level?: number | null
+          org_id?: string | null
+          xp?: number | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          display_name?: string
+          id?: string
+          is_demo?: boolean | null
+          level?: number | null
+          org_id?: string | null
+          xp?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "demo_users_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       org_members: {
         Row: {
           id: string
