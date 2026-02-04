@@ -59,6 +59,12 @@ const LandingNav: React.FC<LandingNavProps> = ({ onScrollTo }) => {
             >
               Pricing
             </button>
+            <Link 
+              to="/for-business" 
+              className="text-foreground hover:text-turquoise transition-colors text-sm"
+            >
+              สำหรับองค์กร
+            </Link>
             <Link to="/login" className="text-foreground hover:text-turquoise transition-colors text-sm">
               Login
             </Link>
@@ -102,6 +108,12 @@ const LandingNav: React.FC<LandingNavProps> = ({ onScrollTo }) => {
             >
               Pricing
             </button>
+            <Link 
+              to="/for-business" 
+              className="block w-full text-left text-foreground hover:text-turquoise transition-colors py-2"
+            >
+              สำหรับองค์กร
+            </Link>
             <Link to="/login" className="block text-foreground hover:text-turquoise transition-colors py-2">
               Login
             </Link>
