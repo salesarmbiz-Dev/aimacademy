@@ -20,6 +20,7 @@ import {
   Sparkles,
   Award,
   ClipboardCheck,
+  Users,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUser } from '@/contexts/UserContext';
@@ -252,6 +253,14 @@ export const Header: React.FC = () => {
                           >
                             <Lightbulb className="h-4 w-4" />
                             <span>Insights</span>
+                          </Link>
+                          <Link
+                            to="/team"
+                            className="flex items-center gap-2 px-4 py-3 text-white hover:bg-background transition-colors"
+                            onClick={() => setDropdownOpen(false)}
+                          >
+                            <Users className="h-4 w-4" />
+                            <span>ทีมของฉัน</span>
                           </Link>
                           <Link
                             to="/profile"

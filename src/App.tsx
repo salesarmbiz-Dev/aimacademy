@@ -40,6 +40,12 @@ const VerifyCertificate = lazy(() => import('@/pages/VerifyCertificate'));
 const Assessment = lazy(() => import('@/pages/Assessment'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
 
+// Team pages
+const TeamHub = lazy(() => import('@/pages/team/TeamHub'));
+const TeamDashboard = lazy(() => import('@/pages/team/TeamDashboard'));
+const TeamInvite = lazy(() => import('@/pages/team/TeamInvite'));
+const JoinTeam = lazy(() => import('@/pages/team/JoinTeam'));
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -131,7 +137,15 @@ const App = () => (
                         <Route path="/assessment" element={<Assessment />} />
                         <Route path="/assessment/test" element={<Assessment />} />
                         <Route path="/assessment/results" element={<Assessment />} />
+                        
+                        {/* Team Routes */}
+                        <Route path="/team" element={<TeamHub />} />
+                        <Route path="/team/dashboard" element={<TeamDashboard />} />
+                        <Route path="/team/invite" element={<TeamInvite />} />
                       </Route>
+
+                      {/* Public Join Team Route */}
+                      <Route path="/join/:code" element={<JoinTeam />} />
 
                       {/* Public Verification Route */}
                       <Route path="/verify/:code" element={<VerifyCertificate />} />
