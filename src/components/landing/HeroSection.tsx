@@ -12,7 +12,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToDemo, onScrollToGam
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Column - Text Content */}
-          <div className="space-y-8">
+          <div className="space-y-8 animate-fade-in">
             {/* Eyebrow */}
             <p className="text-tennessee text-sm font-semibold uppercase tracking-wide">
               AI Training ที่ได้มากกว่า 'ความรู้'
@@ -34,7 +34,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToDemo, onScrollToGam
             <div className="flex flex-col sm:flex-row gap-4">
               <button 
                 onClick={onScrollToDemo}
-                className="btn-primary text-base px-8 py-3"
+                className="btn-primary btn-shimmer text-base px-8 py-3"
               >
                 นัดสาธิตฟรี
               </button>
@@ -67,8 +67,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToDemo, onScrollToGam
           <div className="hidden lg:block relative h-[400px]">
             {/* Card 1 - Gamified Learning */}
             <div 
-              className="absolute top-0 left-0 bg-oxford-blue/80 border border-border/30 rounded-2xl p-6 backdrop-blur w-72 animate-fade-in"
-              style={{ animationDelay: '0.1s' }}
+              className="absolute top-0 left-0 bg-oxford-blue/80 border border-border/30 rounded-2xl p-6 backdrop-blur w-72 animate-fade-in hover-lift"
+              style={{ animationDelay: '0.2s' }}
             >
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-xl bg-tennessee/10 flex items-center justify-center">
@@ -84,8 +84,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToDemo, onScrollToGam
 
             {/* Card 2 - Real Deliverables */}
             <div 
-              className="absolute top-28 left-16 bg-oxford-blue/80 border border-border/30 rounded-2xl p-6 backdrop-blur w-72 z-10 animate-fade-in"
-              style={{ animationDelay: '0.3s' }}
+              className="absolute top-28 left-16 bg-oxford-blue/80 border border-border/30 rounded-2xl p-6 backdrop-blur w-72 z-10 animate-fade-in hover-lift"
+              style={{ animationDelay: '0.4s' }}
             >
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-xl bg-tennessee/10 flex items-center justify-center">
@@ -101,8 +101,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToDemo, onScrollToGam
 
             {/* Card 3 - HR Analytics */}
             <div 
-              className="absolute top-56 left-32 bg-oxford-blue/80 border border-border/30 rounded-2xl p-6 backdrop-blur w-72 z-20 animate-fade-in"
-              style={{ animationDelay: '0.5s' }}
+              className="absolute top-56 left-32 bg-oxford-blue/80 border border-border/30 rounded-2xl p-6 backdrop-blur w-72 z-20 animate-fade-in hover-lift"
+              style={{ animationDelay: '0.6s' }}
             >
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-xl bg-tennessee/10 flex items-center justify-center">

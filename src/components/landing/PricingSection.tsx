@@ -1,11 +1,17 @@
 import React from 'react';
 import { Check } from 'lucide-react';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 interface PricingSectionProps {
   onContactClick: () => void;
 }
 
 const PricingSection: React.FC<PricingSectionProps> = ({ onContactClick }) => {
+  const headerRef = useScrollReveal();
+  const card1Ref = useScrollReveal();
+  const card2Ref = useScrollReveal();
+  const card3Ref = useScrollReveal();
+
   const plans = [
     {
       name: 'Starter',
@@ -59,11 +65,15 @@ const PricingSection: React.FC<PricingSectionProps> = ({ onContactClick }) => {
     },
   ];
 
+  // Center card (Professional) animates first, then sides
+  const cardRefs = [card1Ref, card2Ref, card3Ref];
+  const delayClasses = ['scroll-reveal-delay-2', '', 'scroll-reveal-delay-2'];
+
   return (
     <section id="pricing" className="bg-oxford-blue py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div ref={headerRef} className="text-center mb-12 scroll-reveal">
           <p className="text-tennessee text-sm font-semibold uppercase tracking-wide mb-2">
             แพ็กเกจ
           </p>
@@ -77,7 +87,8 @@ const PricingSection: React.FC<PricingSectionProps> = ({ onContactClick }) => {
           {plans.map((plan, index) => (
             <div
               key={index}
-              className={`bg-card rounded-2xl p-8 border ${plan.cardStyle} flex flex-col relative`}
+              ref={cardRefs[index]}
+              className={`bg-card rounded-2xl p-8 border ${plan.cardStyle} flex flex-col relative hover-lift scroll-reveal ${delayClasses[index]}`}
             >
               {/* Featured Badge */}
               {plan.badge && (

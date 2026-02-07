@@ -1,6 +1,12 @@
 import React from 'react';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 const GameSystemSection: React.FC = () => {
+  const headerRef = useScrollReveal();
+  const set1Ref = useScrollReveal();
+  const set2Ref = useScrollReveal();
+  const set3Ref = useScrollReveal();
+
   const sets = [
     {
       badge: { text: 'All Employees', style: 'bg-rackley/20 text-rackley' },
@@ -29,11 +35,13 @@ const GameSystemSection: React.FC = () => {
     },
   ];
 
+  const setRefs = [set1Ref, set2Ref, set3Ref];
+
   return (
     <section id="game-system" className="bg-background py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div ref={headerRef} className="text-center mb-12 scroll-reveal">
           <p className="text-tennessee text-sm font-semibold uppercase tracking-wide mb-2">
             ระบบเกมที่ออกแบบมาเพื่อองค์กร
           </p>
@@ -48,7 +56,8 @@ const GameSystemSection: React.FC = () => {
             <React.Fragment key={index}>
               {/* Set Card */}
               <div
-                className={`bg-card rounded-2xl p-6 md:p-8 border ${
+                ref={setRefs[index]}
+                className={`bg-card rounded-2xl p-6 md:p-8 border hover-lift scroll-reveal scroll-reveal-delay-${index + 1} ${
                   set.highlight 
                     ? 'border-tennessee/50' 
                     : 'border-border/30'
@@ -79,7 +88,7 @@ const GameSystemSection: React.FC = () => {
                   {set.games.map((game, gameIndex) => (
                     <span
                       key={gameIndex}
-                      className="bg-oxford-blue/50 text-foreground px-4 py-2 rounded-xl text-sm"
+                      className="bg-oxford-blue/50 text-foreground px-4 py-2 rounded-xl text-sm hover-scale cursor-default"
                     >
                       {game}
                     </span>

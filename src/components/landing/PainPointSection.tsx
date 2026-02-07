@@ -1,7 +1,14 @@
 import React from 'react';
 import { Brain, FileX, BarChart3 } from 'lucide-react';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 const PainPointSection: React.FC = () => {
+  const headerRef = useScrollReveal();
+  const card1Ref = useScrollReveal();
+  const card2Ref = useScrollReveal();
+  const card3Ref = useScrollReveal();
+  const quoteRef = useScrollReveal();
+
   const painPoints = [
     {
       icon: Brain,
@@ -20,11 +27,13 @@ const PainPointSection: React.FC = () => {
     },
   ];
 
+  const cardRefs = [card1Ref, card2Ref, card3Ref];
+
   return (
     <section id="pain-points" className="bg-background py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div ref={headerRef} className="text-center mb-12 scroll-reveal">
           <p className="text-tennessee text-sm font-semibold uppercase tracking-wide mb-2">
             ปัญหาที่องค์กรไทยเจอ
           </p>
@@ -38,7 +47,8 @@ const PainPointSection: React.FC = () => {
           {painPoints.map((point, index) => (
             <div
               key={index}
-              className="bg-card rounded-2xl p-8 border border-border/30 hover:border-tennessee/30 transition-colors"
+              ref={cardRefs[index]}
+              className={`bg-card rounded-2xl p-8 border border-border/30 hover:border-tennessee/30 transition-colors hover-lift scroll-reveal scroll-reveal-delay-${index + 1}`}
             >
               <div className="w-12 h-12 rounded-xl bg-tennessee/10 flex items-center justify-center mb-4">
                 <point.icon className="w-6 h-6 text-tennessee" />
@@ -54,7 +64,7 @@ const PainPointSection: React.FC = () => {
         </div>
 
         {/* Bottom Quote */}
-        <div className="text-center max-w-3xl mx-auto">
+        <div ref={quoteRef} className="text-center max-w-3xl mx-auto scroll-reveal">
           <p className="text-muted-foreground text-lg italic">
             "McKinsey/Big 4 คิด ฿15-50M+ — Freelancer ไม่มี framework — Online course ไม่ customize — แล้วองค์กรที่มี budget ฿300K-3M จะไปหาใคร?"
           </p>
