@@ -20,6 +20,7 @@ import {
   Award,
   ClipboardCheck,
   Users,
+  BookOpen,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUser } from '@/contexts/UserContext';
@@ -28,6 +29,7 @@ import { cn } from '@/lib/utils';
 const navItems = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/games', label: 'เกมทั้งหมด', icon: Gamepad2 },
+  { path: '/assets', label: 'คลังความรู้', icon: BookOpen },
   { path: '/assessment', label: 'ประเมินทักษะ', icon: ClipboardCheck },
   { path: '/leaderboard', label: 'Leaderboard', icon: Medal },
 ];

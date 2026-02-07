@@ -40,6 +40,7 @@ const CertificateView = lazy(() => import('@/pages/CertificateView'));
 const VerifyCertificate = lazy(() => import('@/pages/VerifyCertificate'));
 const Assessment = lazy(() => import('@/pages/Assessment'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
+const AssetLibrary = lazy(() => import('@/pages/AssetLibrary'));
 const GamesHub = lazy(() => import('@/pages/GamesHub'));
 const PromptDebugger = lazy(() => import('@/pages/games/PromptDebugger'));
 const SOPMachine = lazy(() => import('@/pages/games/SOPMachine'));
@@ -133,6 +134,7 @@ const App = () => (
                         <Route path="/prompt-lego" element={<PromptLego />} />
                         <Route path="/challenges" element={<Challenges />} />
                         <Route path="/library" element={<Library />} />
+                        <Route path="/assets" element={<AssetLibrary />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/leaderboard" element={<Leaderboard />} />
                         <Route path="/spot" element={<SpotHub />} />
