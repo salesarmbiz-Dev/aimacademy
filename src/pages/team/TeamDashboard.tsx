@@ -1,71 +1,92 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, RefreshCw, Download, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTeam } from '@/hooks/useTeam';
+import { useAuth } from '@/contexts/AuthContext';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { Skeleton } from '@/components/ui/skeleton';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+import {
+  getOrganizationOverview,
+  getSkillAssessmentData,
+  getUsageAnalytics,
+  getGamePerformance,
+  getSurveyResults,
+  getAssetLibraryStats,
+  type OrganizationOverview,
+  type SkillAssessmentData,
+  type UsageAnalytics,
+  type GamePerformance,
+  type SurveyResults,
+  type AssetLibraryStats,
+} from '@/services/hrDashboardService';
+import { cn } from '@/lib/utils';
 
-// Mock data for team members
-const teamMembers = [
-  { name: 'สมชาย', pre: 45, post: 68, lastActive: '2 ชม.', sessions: 12, assets: 24, status: 'active' },
-  { name: 'สมหญิง', pre: 52, post: 75, lastActive: '1 วัน', sessions: 8, assets: 18, status: 'active' },
-  { name: 'วิชัย', pre: 38, post: 61, lastActive: '3 ชม.', sessions: 10, assets: 21, status: 'active' },
-  { name: 'สุนิสา', pre: 60, post: 82, lastActive: '5 ชม.', sessions: 15, assets: 32, status: 'active' },
-  { name: 'ธนพล', pre: 42, post: 58, lastActive: '3 วัน', sessions: 4, assets: 12, status: 'moderate' },
-  { name: 'พิมพ์ใจ', pre: 55, post: 78, lastActive: '6 ชม.', sessions: 9, assets: 19, status: 'active' },
-  { name: 'กิตติ', pre: 35, post: 50, lastActive: '8 วัน', sessions: 2, assets: 6, status: 'dormant' },
-  { name: 'นภาพร', pre: 48, post: 70, lastActive: '1 วัน', sessions: 7, assets: 14, status: 'moderate' },
-];
+// Admin email whitelist (MVP)
+const HR_EMAILS = ['theera.stw@gmail.com', 'hr@example.com', 'admin@aimacademy.com'];
 
-// Quality scoring data
-const qualityScores = [
-  { name: 'สุนิสา', clarity: 9, relevance: 8, completeness: 9, isTop: true },
-  { name: 'พิมพ์ใจ', clarity: 8, relevance: 9, completeness: 8, isTop: false },
-  { name: 'สมหญิง', clarity: 8, relevance: 7, completeness: 8, isTop: false },
-  { name: 'นภาพร', clarity: 7, relevance: 8, completeness: 7, isTop: false },
-  { name: 'สมชาย', clarity: 7, relevance: 7, completeness: 7, isTop: false },
-  { name: 'วิชัย', clarity: 6, relevance: 7, completeness: 6, isTop: false },
-  { name: 'ธนพล', clarity: 6, relevance: 5, completeness: 6, isTop: false },
-  { name: 'กิตติ', clarity: 5, relevance: 5, completeness: 5, isTop: false },
-];
-
-// Competency data
-const competencies = [
-  { name: 'Role Setting', score: 72 },
-  { name: 'Context Design', score: 58 },
-  { name: 'Task Specification', score: 78 },
-  { name: 'Output Formatting', score: 65 },
-  { name: 'Constraint Setting', score: 35 },
-  { name: 'Iteration & Refinement', score: 50 },
-];
-
-// Gap analysis data
-const gapAnalysis = [
-  { skill: 'Constraint Setting', current: 35, target: 70, priority: 'high' },
-  { skill: 'Iteration & Refinement', current: 50, target: 80, priority: 'high' },
-  { skill: 'Context Design', current: 58, target: 75, priority: 'medium' },
-  { skill: 'Output Formatting', current: 65, target: 80, priority: 'medium' },
-  { skill: 'Role Setting', current: 72, target: 85, priority: 'low' },
-  { skill: 'Task Specification', current: 78, target: 90, priority: 'low' },
-];
-
-// Audit log
-const auditLog = [
-  { date: '7 ก.พ. 2026', user: 'สุนิสา', action: 'ยอมรับ AI Usage Policy', status: 'สำเร็จ' },
-  { date: '6 ก.พ. 2026', user: 'สมชาย', action: 'เสร็จสิ้น Data Handling Training', status: 'สำเร็จ' },
-  { date: '5 ก.พ. 2026', user: 'พิมพ์ใจ', action: 'ยอมรับ AI Usage Policy', status: 'สำเร็จ' },
-  { date: '4 ก.พ. 2026', user: 'ธนพล', action: 'เริ่ม Prompt Safety Training', status: 'กำลังดำเนินการ' },
-  { date: '3 ก.พ. 2026', user: 'วิชัย', action: 'เสร็จสิ้น Prompt Safety Training', status: 'สำเร็จ' },
-];
-
-type TabType = 'skill' | 'usage' | 'quality' | 'competency' | 'gap' | 'compliance';
+type TabType = 'overview' | 'skill' | 'usage' | 'games' | 'survey' | 'assets';
 
 const TeamDashboard: React.FC = () => {
   const navigate = useNavigate();
   const { organization, canManage, loading: teamLoading } = useTeam();
-  const [activeTab, setActiveTab] = useState<TabType>('skill');
-  const [timeRange, setTimeRange] = useState('30d');
+  const { user } = useAuth();
+  
+  const [activeTab, setActiveTab] = useState<TabType>('overview');
+  const [timeRange, setTimeRange] = useState('all');
+  const [loading, setLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  
+  // Data states
+  const [overview, setOverview] = useState<OrganizationOverview | null>(null);
+  const [skills, setSkills] = useState<SkillAssessmentData | null>(null);
+  const [usage, setUsage] = useState<UsageAnalytics | null>(null);
+  const [games, setGames] = useState<GamePerformance | null>(null);
+  const [survey, setSurvey] = useState<SurveyResults | null>(null);
+  const [assets, setAssets] = useState<AssetLibraryStats | null>(null);
+
+  // Check access
+  const hasAccess = user?.email && HR_EMAILS.includes(user.email);
+
+  const loadDashboardData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [ov, sk, us, gm, sv, as] = await Promise.all([
+        getOrganizationOverview(),
+        getSkillAssessmentData(),
+        getUsageAnalytics(),
+        getGamePerformance(),
+        getSurveyResults(),
+        getAssetLibraryStats(),
+      ]);
+      setOverview(ov);
+      setSkills(sk);
+      setUsage(us);
+      setGames(gm);
+      setSurvey(sv);
+      setAssets(as);
+      setLastUpdated(new Date());
+    } catch (error) {
+      console.error('Error loading dashboard data:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (hasAccess) {
+      loadDashboardData();
+    }
+  }, [hasAccess, loadDashboardData]);
+
+  // Auto-refresh every 5 minutes
+  useEffect(() => {
+    if (!hasAccess) return;
+    const interval = setInterval(loadDashboardData, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [hasAccess, loadDashboardData]);
 
   if (teamLoading) {
     return (
@@ -75,39 +96,75 @@ const TeamDashboard: React.FC = () => {
     );
   }
 
-  const orgName = organization?.name || 'บริษัท AI Solutions จำกัด';
+  // Access denied
+  if (!hasAccess) {
+    return (
+      <div className="p-4 md:p-6 max-w-4xl mx-auto text-center">
+        <div className="bg-destructive/10 border border-destructive/30 rounded-xl p-8">
+          <h2 className="text-2xl font-bold text-destructive mb-2">🔒 ต้องเป็น HR/Admin เท่านั้น</h2>
+          <p className="text-muted-foreground mb-4">
+            คุณไม่มีสิทธิ์เข้าถึงหน้านี้ กรุณาติดต่อผู้ดูแลระบบ
+          </p>
+          <Button onClick={() => navigate('/dashboard')}>กลับ Dashboard</Button>
+        </div>
+      </div>
+    );
+  }
+
+  const orgName = organization?.name || 'AIM Academy';
 
   const tabs: { id: TabType; label: string }[] = [
-    { id: 'skill', label: 'Skill Assessment' },
-    { id: 'usage', label: 'Usage Analytics' },
-    { id: 'quality', label: 'Quality Scoring' },
-    { id: 'competency', label: 'Competency Map' },
-    { id: 'gap', label: 'Gap Analysis' },
-    { id: 'compliance', label: 'Compliance' },
+    { id: 'overview', label: '📊 Overview' },
+    { id: 'skill', label: '📈 Skills' },
+    { id: 'usage', label: '⏱ Usage' },
+    { id: 'games', label: '🎮 Games' },
+    { id: 'survey', label: '📝 Survey' },
+    { id: 'assets', label: '📄 Assets' },
   ];
 
   const getScoreColor = (score: number) => {
-    if (score >= 71) return { bar: 'bg-green-500', text: 'text-green-400' };
-    if (score >= 41) return { bar: 'bg-yellow-500', text: 'text-yellow-400' };
-    return { bar: 'bg-red-500', text: 'text-red-400' };
+    if (score >= 71) return 'text-green-500';
+    if (score >= 41) return 'text-yellow-500';
+    return 'text-red-500';
   };
 
-  const getStatusIndicator = (status: string) => {
+  const getStatusBadge = (status: 'active' | 'at_risk' | 'dormant') => {
     switch (status) {
       case 'active':
-        return <><span className="w-2 h-2 rounded-full bg-green-500 inline-block mr-2" />Active</>;
-      case 'moderate':
-        return <><span className="w-2 h-2 rounded-full bg-yellow-500 inline-block mr-2" />Moderate</>;
+        return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">🟢 Active</span>;
+      case 'at_risk':
+        return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">🟡 At Risk</span>;
       case 'dormant':
-        return <><span className="w-2 h-2 rounded-full bg-red-500 inline-block mr-2" />Dormant</>;
-      default:
-        return null;
+        return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">🔴 Dormant</span>;
     }
   };
 
-  const avgImprovement = Math.round(
-    teamMembers.reduce((acc, m) => acc + (m.post - m.pre), 0) / teamMembers.length
-  );
+  const formatTimeAgo = (date: Date) => {
+    const minutes = Math.floor((Date.now() - date.getTime()) / 60000);
+    if (minutes < 1) return 'เมื่อสักครู่';
+    if (minutes < 60) return `${minutes} นาทีที่แล้ว`;
+    return `${Math.floor(minutes / 60)} ชม.ที่แล้ว`;
+  };
+
+  const handleExport = () => {
+    // Simple CSV export
+    const csvData = [
+      ['Metric', 'Value'],
+      ['Total Users', overview?.totalUsers || 0],
+      ['Active Users', overview?.activeUsers || 0],
+      ['Completion Rate', `${overview?.avgCompletionRate || 0}%`],
+      ['Total Time Learning', `${overview?.totalTimeLearning || 0} hours`],
+      ['Assets Created', overview?.totalAssetsCreated || 0],
+      ['NPS Score', overview?.avgNPS || 0],
+    ];
+    const csvContent = csvData.map(row => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `AIM_Academy_Report_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+  };
 
   return (
     <>
@@ -131,41 +188,42 @@ const TeamDashboard: React.FC = () => {
             <h1 className="text-foreground text-2xl md:text-3xl font-bold">HR Analytics Dashboard</h1>
             <p className="text-muted-foreground text-sm mt-1">{orgName}</p>
           </div>
-          <div className="flex items-center gap-3">
-            <select 
-              value={timeRange}
-              onChange={(e) => setTimeRange(e.target.value)}
-              className="bg-card border border-border/30 rounded-lg px-3 py-2 text-sm text-foreground"
-            >
-              <option value="30d">30 วันล่าสุด</option>
-              <option value="90d">90 วัน</option>
-              <option value="all">ทั้งหมด</option>
-            </select>
-            <button className="btn-ghost text-sm">📥 Export Report</button>
-          </div>
-        </div>
-
-        {/* Summary Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-card rounded-xl p-5 border border-border/30">
-            <p className="text-muted-foreground text-sm">Active Users</p>
-            <p className="text-tennessee text-3xl font-bold mt-1">24/30</p>
-            <p className="text-xs mt-1 text-green-400">↑ 3 จากเดือนก่อน</p>
-          </div>
-          <div className="bg-card rounded-xl p-5 border border-border/30">
-            <p className="text-muted-foreground text-sm">Avg Skill Score</p>
-            <p className="text-tennessee text-3xl font-bold mt-1">72/100</p>
-            <p className="text-xs mt-1 text-green-400">↑ +8 points</p>
-          </div>
-          <div className="bg-card rounded-xl p-5 border border-border/30">
-            <p className="text-muted-foreground text-sm">Assets Created</p>
-            <p className="text-tennessee text-3xl font-bold mt-1">156</p>
-            <p className="text-xs mt-1 text-green-400">+23 สัปดาห์นี้</p>
-          </div>
-          <div className="bg-card rounded-xl p-5 border border-border/30">
-            <p className="text-muted-foreground text-sm">Training Completion</p>
-            <p className="text-tennessee text-3xl font-bold mt-1">85%</p>
-            <p className="text-xs mt-1 text-green-400">↑ จาก 72%</p>
+          <div className="flex items-center gap-3 flex-wrap">
+            {/* Time range filter */}
+            <div className="flex gap-1 bg-muted rounded-full p-1">
+              {['7d', '30d', 'all'].map(range => (
+                <button
+                  key={range}
+                  onClick={() => setTimeRange(range)}
+                  className={cn(
+                    'px-3 py-1.5 text-sm rounded-full transition-colors',
+                    timeRange === range 
+                      ? 'bg-primary text-primary-foreground' 
+                      : 'text-muted-foreground hover:text-foreground'
+                  )}
+                >
+                  {range === '7d' ? '7 วัน' : range === '30d' ? '30 วัน' : 'ทั้งหมด'}
+                </button>
+              ))}
+            </div>
+            
+            {/* Last updated */}
+            {lastUpdated && (
+              <span className="text-xs text-muted-foreground flex items-center gap-1">
+                <Clock className="w-3 h-3" />
+                {formatTimeAgo(lastUpdated)}
+              </span>
+            )}
+            
+            <Button variant="outline" size="sm" onClick={loadDashboardData} disabled={loading}>
+              <RefreshCw className={cn("w-4 h-4 mr-1", loading && "animate-spin")} />
+              Refresh
+            </Button>
+            
+            <Button variant="outline" size="sm" onClick={handleExport}>
+              <Download className="w-4 h-4 mr-1" />
+              Export
+            </Button>
           </div>
         </div>
 
@@ -175,267 +233,581 @@ const TeamDashboard: React.FC = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-3 text-sm whitespace-nowrap border-b-2 transition-colors ${
+              className={cn(
+                'px-4 py-3 text-sm whitespace-nowrap border-b-2 transition-colors',
                 activeTab === tab.id
-                  ? 'border-b-tennessee text-tennessee font-semibold'
+                  ? 'border-b-primary text-primary font-semibold'
                   : 'border-b-transparent text-muted-foreground hover:text-foreground'
-              }`}
+              )}
             >
               {tab.label}
             </button>
           ))}
         </div>
 
-        {/* Module Content */}
+        {/* Content */}
         <div className="min-h-[400px]">
-          {/* Module 1: Skill Assessment */}
-          {activeTab === 'skill' && (
-            <div className="space-y-4">
-              {teamMembers.map((member) => (
-                <div key={member.name} className="bg-card rounded-xl p-4 border border-border/30">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-foreground font-medium">{member.name}</span>
-                    <span className="text-green-400 text-sm font-semibold">+{member.post - member.pre} points</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-muted-foreground text-xs w-8">Pre</span>
-                    <div className="flex-1 bg-oxford-blue/50 rounded-full h-3">
-                      <div className="bg-rackley rounded-full h-3" style={{ width: `${member.pre}%` }} />
+          {/* OVERVIEW TAB */}
+          {activeTab === 'overview' && (
+            <div className="space-y-6">
+              {/* Summary Cards */}
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {loading ? (
+                  Array(6).fill(0).map((_, i) => (
+                    <Skeleton key={i} className="h-24 rounded-xl" />
+                  ))
+                ) : (
+                  <>
+                    <div className="bg-card rounded-xl p-4 border border-border/30">
+                      <p className="text-muted-foreground text-xs">👥 ผู้ใช้ทั้งหมด</p>
+                      <p className="text-primary text-2xl font-bold mt-1">{overview?.totalUsers || 0} คน</p>
+                      <p className="text-xs text-green-500 mt-1">Active: {overview?.activeUsers || 0}</p>
                     </div>
-                    <span className="text-muted-foreground text-xs w-6">{member.pre}</span>
-                  </div>
-                  <div className="flex items-center gap-3 mt-1">
-                    <span className="text-muted-foreground text-xs w-8">Post</span>
-                    <div className="flex-1 bg-oxford-blue/50 rounded-full h-3">
-                      <div className="bg-tennessee rounded-full h-3" style={{ width: `${member.post}%` }} />
+                    <div className="bg-card rounded-xl p-4 border border-border/30">
+                      <p className="text-muted-foreground text-xs">✅ Completion Rate</p>
+                      <p className={cn("text-2xl font-bold mt-1", getScoreColor(overview?.avgCompletionRate || 0))}>
+                        {overview?.avgCompletionRate || 0}%
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">SET 1 (70%+)</p>
                     </div>
-                    <span className="text-tennessee text-xs w-6 font-semibold">{member.post}</span>
-                  </div>
-                </div>
-              ))}
-              <div className="bg-tennessee/10 rounded-xl p-4 mt-6 text-center">
-                <p className="text-tennessee font-semibold">Average improvement: +{avgImprovement} points (24%)</p>
+                    <div className="bg-card rounded-xl p-4 border border-border/30">
+                      <p className="text-muted-foreground text-xs">⏱ เวลาเรียนรู้รวม</p>
+                      <p className="text-primary text-2xl font-bold mt-1">{overview?.totalTimeLearning || 0} ชม.</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        เฉลี่ย {overview && overview.totalUsers > 0 ? (overview.totalTimeLearning / overview.totalUsers).toFixed(1) : 0} ชม./คน
+                      </p>
+                    </div>
+                    <div className="bg-card rounded-xl p-4 border border-border/30">
+                      <p className="text-muted-foreground text-xs">📄 Assets สร้างแล้ว</p>
+                      <p className="text-primary text-2xl font-bold mt-1">{overview?.totalAssetsCreated || 0} ชิ้น</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        ~฿{assets?.estimatedValue?.toLocaleString() || 0}
+                      </p>
+                    </div>
+                    <div className="bg-card rounded-xl p-4 border border-border/30">
+                      <p className="text-muted-foreground text-xs">📊 NPS Score</p>
+                      <p className={cn(
+                        "text-2xl font-bold mt-1",
+                        (overview?.avgNPS || 0) >= 50 ? 'text-green-500' :
+                        (overview?.avgNPS || 0) >= 0 ? 'text-yellow-500' : 'text-red-500'
+                      )}>
+                        {overview?.avgNPS || 0}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">{survey?.totalResponses || 0} responses</p>
+                    </div>
+                    <div className="bg-card rounded-xl p-4 border border-border/30">
+                      <p className="text-muted-foreground text-xs">🔥 Active Rate</p>
+                      <p className={cn(
+                        "text-2xl font-bold mt-1",
+                        getScoreColor(overview && overview.totalUsers > 0 
+                          ? Math.round((overview.activeUsers / overview.totalUsers) * 100) 
+                          : 0)
+                      )}>
+                        {overview && overview.totalUsers > 0 
+                          ? Math.round((overview.activeUsers / overview.totalUsers) * 100) 
+                          : 0}%
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">ใน 7 วันที่ผ่านมา</p>
+                    </div>
+                  </>
+                )}
               </div>
-            </div>
-          )}
 
-          {/* Module 2: Usage Analytics */}
-          {activeTab === 'usage' && (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-border/30 text-left text-muted-foreground text-sm">
-                    <th className="py-3 px-4">ชื่อ</th>
-                    <th className="py-3 px-4">ใช้ล่าสุด</th>
-                    <th className="py-3 px-4">Sessions/สัปดาห์</th>
-                    <th className="py-3 px-4">Assets ที่ใช้</th>
-                    <th className="py-3 px-4">สถานะ</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[...teamMembers].sort((a, b) => b.sessions - a.sessions).map((member) => (
-                    <tr 
-                      key={member.name} 
-                      className={`border-b border-border/20 ${member.status === 'dormant' ? 'bg-red-500/5' : ''}`}
-                    >
-                      <td className="py-3 px-4 text-foreground">{member.name}</td>
-                      <td className="py-3 px-4 text-muted-foreground">{member.lastActive}</td>
-                      <td className="py-3 px-4 text-foreground">{member.sessions}</td>
-                      <td className="py-3 px-4 text-foreground">{member.assets}</td>
-                      <td className="py-3 px-4 text-sm">
-                        {getStatusIndicator(member.status)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          {/* Module 3: Quality Scoring */}
-          {activeTab === 'quality' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {qualityScores.map((person) => {
-                const overall = ((person.clarity + person.relevance + person.completeness) / 3).toFixed(1);
-                return (
-                  <div key={person.name} className="bg-card rounded-xl p-4 border border-border/30">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-foreground font-medium">
-                        {person.name}
-                        {person.isTop && (
-                          <span className="bg-tennessee text-white text-xs px-2 py-0.5 rounded-full ml-2">Top</span>
-                        )}
-                      </span>
-                      <span className="text-tennessee font-bold">{overall}/10</span>
+              {/* Charts Row */}
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Daily Active Users Chart */}
+                <div className="bg-card rounded-xl p-4 border border-border/30">
+                  <h3 className="font-semibold text-foreground mb-4">Daily Active Users (30 วัน)</h3>
+                  {loading ? (
+                    <Skeleton className="h-48" />
+                  ) : usage?.dailyActiveUsers && usage.dailyActiveUsers.length > 0 ? (
+                    <ResponsiveContainer width="100%" height={200}>
+                      <LineChart data={usage.dailyActiveUsers}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                        <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" />
+                        <YAxis tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" />
+                        <Tooltip 
+                          contentStyle={{ 
+                            background: 'hsl(var(--card))', 
+                            border: '1px solid hsl(var(--border))',
+                            borderRadius: '8px'
+                          }} 
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="count" 
+                          stroke="hsl(var(--accent))" 
+                          strokeWidth={2}
+                          dot={false}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-48 flex items-center justify-center border-2 border-dashed border-border rounded-lg">
+                      <p className="text-muted-foreground text-sm">ยังไม่มีข้อมูล</p>
                     </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-3">
-                        <span className="text-muted-foreground text-xs w-24">Clarity</span>
-                        <div className="flex-1 bg-oxford-blue/50 rounded-full h-2">
-                          <div className="bg-tennessee rounded-full h-2" style={{ width: `${person.clarity * 10}%` }} />
-                        </div>
-                        <span className="text-xs w-6 text-right">{person.clarity}</span>
+                  )}
+                </div>
+
+                {/* Asset Creation Trend */}
+                <div className="bg-card rounded-xl p-4 border border-border/30">
+                  <h3 className="font-semibold text-foreground mb-4">Asset Creation (30 วัน)</h3>
+                  {loading ? (
+                    <Skeleton className="h-48" />
+                  ) : assets?.assetCreationTrend && assets.assetCreationTrend.some(d => d.count > 0) ? (
+                    <ResponsiveContainer width="100%" height={200}>
+                      <BarChart data={assets.assetCreationTrend}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                        <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" />
+                        <YAxis tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" />
+                        <Tooltip 
+                          contentStyle={{ 
+                            background: 'hsl(var(--card))', 
+                            border: '1px solid hsl(var(--border))',
+                            borderRadius: '8px'
+                          }} 
+                        />
+                        <Bar dataKey="count" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-48 flex items-center justify-center border-2 border-dashed border-border rounded-lg">
+                      <p className="text-muted-foreground text-sm">ยังไม่มีข้อมูล</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Low data warning */}
+              {!loading && (overview?.totalUsers || 0) < 3 && (overview?.totalUsers || 0) > 0 && (
+                <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4 text-center">
+                  <p className="text-yellow-700 dark:text-yellow-300 text-sm">
+                    ⚠️ ข้อมูลยังน้อย — จะแม่นยำขึ้นเมื่อมีผู้ใช้เพิ่ม ({overview?.totalUsers} คน)
+                  </p>
+                </div>
+              )}
+
+              {/* Empty state */}
+              {!loading && overview?.totalUsers === 0 && (
+                <div className="bg-muted/50 border border-dashed border-border rounded-xl p-8 text-center">
+                  <p className="text-muted-foreground">ยังไม่มีข้อมูล — รอ test users เข้าใช้งาน</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* SKILLS TAB */}
+          {activeTab === 'skill' && (
+            <div className="space-y-6">
+              {loading ? (
+                <div className="space-y-4">
+                  {Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-20 rounded-xl" />)}
+                </div>
+              ) : skills && skills.users.length > 0 ? (
+                <>
+                  {/* Summary */}
+                  <div className="bg-primary/10 rounded-xl p-4 text-center">
+                    <p className="text-primary font-semibold text-lg">
+                      📈 คะแนนเฉลี่ยเพิ่มขึ้น: +{skills.avgImprovement} คะแนน
+                    </p>
+                    <p className="text-muted-foreground text-sm mt-1">
+                      {skills.avgPreScore} → {skills.avgPostScore}
+                      {skills.topImprover && (
+                        <span className="ml-4">🏆 พัฒนามากที่สุด: {skills.topImprover.name} (+{skills.topImprover.delta})</span>
+                      )}
+                    </p>
+                  </div>
+
+                  {/* User list */}
+                  {skills.users.map((user) => (
+                    <div key={user.userId} className="bg-card rounded-xl p-4 border border-border/30">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-foreground font-medium">{user.userName}</span>
+                        <span className={cn(
+                          "text-sm font-semibold",
+                          (user.improvement || 0) > 0 ? 'text-green-500' :
+                          (user.improvement || 0) < 0 ? 'text-red-500' : 'text-muted-foreground'
+                        )}>
+                          {user.improvement !== null ? (
+                            user.improvement > 0 ? `+${user.improvement}` : user.improvement
+                          ) : '—'}
+                        </span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-muted-foreground text-xs w-24">Relevance</span>
-                        <div className="flex-1 bg-oxford-blue/50 rounded-full h-2">
-                          <div className="bg-tennessee rounded-full h-2" style={{ width: `${person.relevance * 10}%` }} />
+                        <span className="text-muted-foreground text-xs w-8">Pre</span>
+                        <div className="flex-1 bg-muted rounded-full h-3">
+                          <div 
+                            className="bg-muted-foreground/50 rounded-full h-3 transition-all" 
+                            style={{ width: `${user.preScore || 0}%` }} 
+                          />
                         </div>
-                        <span className="text-xs w-6 text-right">{person.relevance}</span>
+                        <span className="text-muted-foreground text-xs w-8">{user.preScore ?? '—'}</span>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-muted-foreground text-xs w-24">Completeness</span>
-                        <div className="flex-1 bg-oxford-blue/50 rounded-full h-2">
-                          <div className="bg-tennessee rounded-full h-2" style={{ width: `${person.completeness * 10}%` }} />
+                      <div className="flex items-center gap-3 mt-1">
+                        <span className="text-muted-foreground text-xs w-8">Post</span>
+                        <div className="flex-1 bg-muted rounded-full h-3">
+                          <div 
+                            className="bg-primary rounded-full h-3 transition-all" 
+                            style={{ width: `${user.postScore || 0}%` }} 
+                          />
                         </div>
-                        <span className="text-xs w-6 text-right">{person.completeness}</span>
+                        <span className="text-primary text-xs w-8 font-semibold">{user.postScore ?? '—'}</span>
                       </div>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <div className="bg-muted/50 border border-dashed border-border rounded-xl p-8 text-center">
+                  <p className="text-muted-foreground">ยังไม่มีข้อมูล Assessment</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* USAGE TAB */}
+          {activeTab === 'usage' && (
+            <div className="space-y-6">
+              {loading ? (
+                <Skeleton className="h-64 rounded-xl" />
+              ) : (
+                <>
+                  {/* Quick stats */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-card rounded-xl p-4 border border-border/30">
+                      <p className="text-muted-foreground text-xs">Avg Session</p>
+                      <p className="text-primary text-xl font-bold">{usage?.avgSessionDuration || 0} นาที</p>
+                    </div>
+                    <div className="bg-card rounded-xl p-4 border border-border/30">
+                      <p className="text-muted-foreground text-xs">Sessions/สัปดาห์</p>
+                      <p className="text-primary text-xl font-bold">{usage?.avgSessionsPerWeek || 0}</p>
+                    </div>
+                    <div className="bg-card rounded-xl p-4 border border-border/30">
+                      <p className="text-muted-foreground text-xs">ช่วงเวลายอดนิยม</p>
+                      <p className="text-primary text-xl font-bold">
+                        {usage?.peakUsageHours[0]?.hour ?? '--'}:00 น.
+                      </p>
+                    </div>
+                    <div className="bg-card rounded-xl p-4 border border-border/30">
+                      <p className="text-muted-foreground text-xs">อุปกรณ์</p>
+                      <p className="text-foreground text-sm mt-1">
+                        📱 {usage?.deviceBreakdown.mobile || 0} | 💻 {usage?.deviceBreakdown.desktop || 0}
+                      </p>
                     </div>
                   </div>
-                );
-              })}
+
+                  {/* User Engagement Table */}
+                  {usage && usage.userEngagement.length > 0 ? (
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b border-border/30 text-left text-muted-foreground text-sm">
+                            <th className="py-3 px-4">ชื่อ</th>
+                            <th className="py-3 px-4">Sessions</th>
+                            <th className="py-3 px-4">เวลารวม</th>
+                            <th className="py-3 px-4">Active ล่าสุด</th>
+                            <th className="py-3 px-4">สถานะ</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {usage.userEngagement.slice(0, 20).map((user) => (
+                            <tr 
+                              key={user.userId} 
+                              className={cn(
+                                "border-b border-border/20",
+                                user.status === 'dormant' && 'bg-red-500/5'
+                              )}
+                            >
+                              <td className="py-3 px-4 text-foreground">{user.userName}</td>
+                              <td className="py-3 px-4 text-foreground">{user.totalSessions}</td>
+                              <td className="py-3 px-4 text-foreground">{user.totalTimeMinutes} นาที</td>
+                              <td className="py-3 px-4 text-muted-foreground">
+                                {user.lastActive 
+                                  ? new Date(user.lastActive).toLocaleDateString('th-TH')
+                                  : '—'}
+                              </td>
+                              <td className="py-3 px-4">{getStatusBadge(user.status)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <div className="bg-muted/50 border border-dashed border-border rounded-xl p-8 text-center">
+                      <p className="text-muted-foreground">ยังไม่มีข้อมูล Session</p>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           )}
 
-          {/* Module 4: Competency Map */}
-          {activeTab === 'competency' && (
-            <div className="space-y-2">
-              {competencies.map((comp) => {
-                const colors = getScoreColor(comp.score);
-                return (
-                  <div key={comp.name} className="flex items-center gap-4 py-3">
-                    <span className="text-foreground text-sm w-40 shrink-0">{comp.name}</span>
-                    <div className="flex-1 bg-oxford-blue/50 rounded-full h-4">
+          {/* GAMES TAB */}
+          {activeTab === 'games' && (
+            <div className="space-y-6">
+              {loading ? (
+                <div className="grid md:grid-cols-2 gap-4">
+                  {Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-32 rounded-xl" />)}
+                </div>
+              ) : games && games.games.length > 0 ? (
+                <>
+                  {/* Game cards */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {games.games.map((game) => (
+                      <div key={game.gameId} className="bg-card rounded-xl p-4 border border-border/30">
+                        <h4 className="font-semibold text-foreground mb-3">{game.gameName}</h4>
+                        <div className="grid grid-cols-2 gap-2 text-sm">
+                          <div>
+                            <span className="text-muted-foreground">Total plays:</span>
+                            <span className="ml-2 text-foreground font-medium">{game.totalPlays}</span>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Unique players:</span>
+                            <span className="ml-2 text-foreground font-medium">{game.uniquePlayers}</span>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Avg score:</span>
+                            <span className={cn("ml-2 font-medium", getScoreColor(game.avgScore))}>{game.avgScore}%</span>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Completion:</span>
+                            <span className={cn("ml-2 font-medium", getScoreColor(game.completionRate))}>{game.completionRate}%</span>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Avg time:</span>
+                            <span className="ml-2 text-foreground font-medium">{game.avgTimeMinutes} นาที</span>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Total XP:</span>
+                            <span className="ml-2 text-primary font-medium">{game.totalXpAwarded.toLocaleString()}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Top Scorers */}
+                  {games.topScorers.length > 0 && (
+                    <div className="bg-card rounded-xl p-4 border border-border/30">
+                      <h4 className="font-semibold text-foreground mb-3">🏆 Top Scorers</h4>
+                      <div className="space-y-2">
+                        {games.topScorers.slice(0, 5).map((scorer, i) => (
+                          <div key={i} className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <span className={cn(
+                                "w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold",
+                                i === 0 ? 'bg-yellow-400 text-yellow-900' :
+                                i === 1 ? 'bg-gray-300 text-gray-700' :
+                                i === 2 ? 'bg-orange-400 text-orange-900' :
+                                'bg-muted text-muted-foreground'
+                              )}>
+                                {i + 1}
+                              </span>
+                              <span className="text-foreground">{scorer.userName}</span>
+                              <span className="text-muted-foreground text-xs">({scorer.gameId})</span>
+                            </div>
+                            <span className="text-primary font-semibold">{scorer.score}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="bg-muted/50 border border-dashed border-border rounded-xl p-8 text-center">
+                  <p className="text-muted-foreground">ยังไม่มีข้อมูล Game Performance</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* SURVEY TAB */}
+          {activeTab === 'survey' && (
+            <div className="space-y-6">
+              {loading ? (
+                <Skeleton className="h-64 rounded-xl" />
+              ) : survey && survey.totalResponses > 0 ? (
+                <>
+                  {/* NPS Score */}
+                  <div className="bg-card rounded-xl p-6 border border-border/30 text-center">
+                    <p className="text-muted-foreground text-sm mb-2">Net Promoter Score</p>
+                    <p className={cn(
+                      "text-5xl font-bold",
+                      survey.npsScore >= 50 ? 'text-green-500' :
+                      survey.npsScore >= 0 ? 'text-yellow-500' : 'text-red-500'
+                    )}>
+                      {survey.npsScore}
+                    </p>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      {survey.npsScore >= 50 ? '🟢 Excellent' :
+                       survey.npsScore >= 0 ? '🟡 Good' : '🔴 Needs Improvement'}
+                    </p>
+                    
+                    {/* NPS Breakdown bar */}
+                    <div className="flex mt-4 h-4 rounded-full overflow-hidden">
                       <div 
-                        className={`${colors.bar} rounded-full h-4 transition-all`} 
-                        style={{ width: `${comp.score}%` }} 
+                        className="bg-green-500" 
+                        style={{ width: `${survey.totalResponses > 0 ? (survey.npsBreakdown.promoters / survey.totalResponses) * 100 : 0}%` }}
+                      />
+                      <div 
+                        className="bg-yellow-500" 
+                        style={{ width: `${survey.totalResponses > 0 ? (survey.npsBreakdown.passives / survey.totalResponses) * 100 : 0}%` }}
+                      />
+                      <div 
+                        className="bg-red-500" 
+                        style={{ width: `${survey.totalResponses > 0 ? (survey.npsBreakdown.detractors / survey.totalResponses) * 100 : 0}%` }}
                       />
                     </div>
-                    <span className={`text-sm w-12 text-right font-semibold ${colors.text}`}>
-                      {comp.score}/100
-                    </span>
+                    <div className="flex justify-between text-xs mt-2 text-muted-foreground">
+                      <span>Promoters: {survey.npsBreakdown.promoters}</span>
+                      <span>Passives: {survey.npsBreakdown.passives}</span>
+                      <span>Detractors: {survey.npsBreakdown.detractors}</span>
+                    </div>
+                    
+                    {survey.totalResponses < 5 && (
+                      <p className="text-xs text-yellow-600 mt-3">
+                        ⚠️ จาก {survey.totalResponses} คำตอบ (ยังน้อยสำหรับ statistical significance)
+                      </p>
+                    )}
                   </div>
-                );
-              })}
-              <div className="flex gap-4 justify-center mt-6 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1"><span className="w-3 h-3 bg-red-500 rounded" /> 0-40 Weak</span>
-                <span className="flex items-center gap-1"><span className="w-3 h-3 bg-yellow-500 rounded" /> 41-70 Developing</span>
-                <span className="flex items-center gap-1"><span className="w-3 h-3 bg-green-500 rounded" /> 71-100 Strong</span>
-              </div>
+
+                  {/* Ratings */}
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <div className="bg-card rounded-xl p-4 border border-border/30 text-center">
+                      <p className="text-2xl mb-1">🎮</p>
+                      <p className="text-muted-foreground text-sm">ความสนุก</p>
+                      <p className="text-primary text-xl font-bold">{survey.avgRatings.fun}/5</p>
+                    </div>
+                    <div className="bg-card rounded-xl p-4 border border-border/30 text-center">
+                      <p className="text-2xl mb-1">📊</p>
+                      <p className="text-muted-foreground text-sm">ความยากง่าย</p>
+                      <p className="text-primary text-xl font-bold">{survey.avgRatings.difficulty}/5</p>
+                    </div>
+                    <div className="bg-card rounded-xl p-4 border border-border/30 text-center">
+                      <p className="text-2xl mb-1">💼</p>
+                      <p className="text-muted-foreground text-sm">ความมีประโยชน์</p>
+                      <p className="text-primary text-xl font-bold">{survey.avgRatings.usefulness}/5</p>
+                    </div>
+                  </div>
+
+                  {/* Continue Interest */}
+                  <div className="bg-card rounded-xl p-4 border border-border/30">
+                    <h4 className="font-semibold text-foreground mb-3">ต้องการเล่น SET 2 ต่อ</h4>
+                    <div className="flex gap-4">
+                      <div className="flex-1 bg-green-100 dark:bg-green-900/30 rounded-lg p-3 text-center">
+                        <p className="text-green-600 dark:text-green-400 text-xl font-bold">{survey.continueInterest.yes}</p>
+                        <p className="text-xs text-green-700 dark:text-green-300">อยากเล่น</p>
+                      </div>
+                      <div className="flex-1 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg p-3 text-center">
+                        <p className="text-yellow-600 dark:text-yellow-400 text-xl font-bold">{survey.continueInterest.maybe}</p>
+                        <p className="text-xs text-yellow-700 dark:text-yellow-300">อาจจะ</p>
+                      </div>
+                      <div className="flex-1 bg-red-100 dark:bg-red-900/30 rounded-lg p-3 text-center">
+                        <p className="text-red-600 dark:text-red-400 text-xl font-bold">{survey.continueInterest.no}</p>
+                        <p className="text-xs text-red-700 dark:text-red-300">ไม่สนใจ</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Recent Feedback */}
+                  {survey.recentFeedback.length > 0 && (
+                    <div className="bg-card rounded-xl p-4 border border-border/30">
+                      <h4 className="font-semibold text-foreground mb-3">💬 Feedback ล่าสุด</h4>
+                      <div className="space-y-3 max-h-64 overflow-y-auto">
+                        {survey.recentFeedback.map((fb, i) => (
+                          <div key={i} className="bg-muted/50 rounded-lg p-3">
+                            <p className="text-foreground text-sm">{fb.text}</p>
+                            <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+                              <span className={cn(
+                                "px-2 py-0.5 rounded",
+                                fb.nps >= 9 ? 'bg-green-100 text-green-700' :
+                                fb.nps >= 7 ? 'bg-yellow-100 text-yellow-700' :
+                                'bg-red-100 text-red-700'
+                              )}>
+                                NPS: {fb.nps}
+                              </span>
+                              <span>{new Date(fb.date).toLocaleDateString('th-TH')}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="bg-muted/50 border border-dashed border-border rounded-xl p-8 text-center">
+                  <p className="text-muted-foreground">ยังไม่มีข้อมูล Survey</p>
+                </div>
+              )}
             </div>
           )}
 
-          {/* Module 5: Gap Analysis */}
-          {activeTab === 'gap' && (
-            <>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-border/30 text-left text-muted-foreground text-sm">
-                      <th className="py-3 px-4">Priority</th>
-                      <th className="py-3 px-4">Skill Gap</th>
-                      <th className="py-3 px-4">Current</th>
-                      <th className="py-3 px-4">Target</th>
-                      <th className="py-3 px-4">Priority Level</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {gapAnalysis.map((item, index) => (
-                      <tr key={item.skill} className="border-b border-border/20">
-                        <td className="py-3 px-4 text-foreground font-semibold">{index + 1}</td>
-                        <td className="py-3 px-4 text-foreground">{item.skill}</td>
-                        <td className="py-3 px-4 text-muted-foreground">{item.current}</td>
-                        <td className="py-3 px-4 text-tennessee font-semibold">{item.target}</td>
-                        <td className="py-3 px-4">
-                          <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                            item.priority === 'high' ? 'bg-red-500/10 text-red-400' :
-                            item.priority === 'medium' ? 'bg-yellow-500/10 text-yellow-400' :
-                            'bg-green-500/10 text-green-400'
-                          }`}>
-                            {item.priority.toUpperCase()}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div className="bg-tennessee/10 border border-tennessee/30 rounded-xl p-6 mt-6">
-                <p className="text-tennessee font-semibold mb-2">📋 คำแนะนำ</p>
-                <p className="text-foreground">
-                  เริ่ม Constraint Setting Workshop จาก SET 2 เพื่อปิด skill gap ที่สำคัญที่สุด — ตามด้วย Iteration & Refinement training
-                </p>
-              </div>
-            </>
-          )}
-
-          {/* Module 6: Compliance */}
-          {activeTab === 'compliance' && (
-            <>
-              {/* Compliance Score Ring */}
-              <div className="flex justify-center mb-8">
-                <div className="relative w-32 h-32 rounded-full border-8 border-border/30 flex items-center justify-center"
-                  style={{
-                    background: `conic-gradient(#F27405 0deg ${95 * 3.6}deg, transparent ${95 * 3.6}deg 360deg)`,
-                    WebkitMask: 'radial-gradient(farthest-side, transparent calc(100% - 8px), #fff calc(100% - 8px))',
-                    mask: 'radial-gradient(farthest-side, transparent calc(100% - 8px), #fff calc(100% - 8px))',
-                  }}
-                >
-                  <div className="absolute inset-2 rounded-full bg-background flex items-center justify-center">
-                    <span className="text-tennessee text-3xl font-bold">95%</span>
+          {/* ASSETS TAB */}
+          {activeTab === 'assets' && (
+            <div className="space-y-6">
+              {loading ? (
+                <div className="grid md:grid-cols-4 gap-4">
+                  {Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-24 rounded-xl" />)}
+                </div>
+              ) : assets && assets.totalAssets > 0 ? (
+                <>
+                  {/* Stats */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-card rounded-xl p-4 border border-border/30">
+                      <p className="text-muted-foreground text-xs">Total Assets</p>
+                      <p className="text-primary text-2xl font-bold">{assets.totalAssets}</p>
+                    </div>
+                    <div className="bg-card rounded-xl p-4 border border-border/30">
+                      <p className="text-muted-foreground text-xs">By Category</p>
+                      <p className="text-foreground text-sm mt-1">
+                        📝 {assets.assetsByCategory.prompts} | 📋 {assets.assetsByCategory.sops} | 🔍 {assets.assetsByCategory.patterns}
+                      </p>
+                    </div>
+                    <div className="bg-card rounded-xl p-4 border border-border/30">
+                      <p className="text-muted-foreground text-xs">Avg Quality</p>
+                      <p className={cn("text-2xl font-bold", getScoreColor(assets.avgQualityScore))}>
+                        {assets.avgQualityScore}/100
+                      </p>
+                    </div>
+                    <div className="bg-card rounded-xl p-4 border border-border/30">
+                      <p className="text-muted-foreground text-xs">Estimated Value</p>
+                      <p className="text-primary text-2xl font-bold">฿{assets.estimatedValue.toLocaleString()}</p>
+                    </div>
                   </div>
-                </div>
-              </div>
 
-              {/* Checklist */}
-              <div className="space-y-3 max-w-xl mx-auto mb-8">
-                <div className="flex items-center justify-between p-3 bg-card rounded-lg border border-border/30">
-                  <span className="text-foreground">✅ AI Usage Policy acknowledged</span>
-                  <span className="text-green-400 text-sm">28/30 (93%)</span>
+                  {/* Top Quality Assets */}
+                  {assets.topQualityAssets.length > 0 && (
+                    <div className="bg-card rounded-xl p-4 border border-border/30">
+                      <h4 className="font-semibold text-foreground mb-3">⭐ Top Quality Assets</h4>
+                      <div className="space-y-2">
+                        {assets.topQualityAssets.map((asset, i) => (
+                          <div key={i} className="flex items-center justify-between py-2 border-b border-border/20 last:border-0">
+                            <div>
+                              <span className="text-foreground">{asset.title}</span>
+                              <span className="ml-2 text-xs text-muted-foreground">({asset.category})</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-muted-foreground">{asset.creator}</span>
+                              <span className={cn(
+                                "px-2 py-0.5 rounded text-xs font-medium",
+                                asset.score >= 90 ? 'bg-green-100 text-green-700' :
+                                asset.score >= 70 ? 'bg-yellow-100 text-yellow-700' :
+                                'bg-muted text-muted-foreground'
+                              )}>
+                                {asset.score >= 90 ? '⭐ Excellent' : asset.score >= 70 ? 'Good' : 'Average'}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="bg-muted/50 border border-dashed border-border rounded-xl p-8 text-center">
+                  <p className="text-muted-foreground">ยังไม่มีข้อมูล Assets</p>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-card rounded-lg border border-border/30">
-                  <span className="text-foreground">✅ Data handling guidelines</span>
-                  <span className="text-green-400 text-sm">30/30 (100%)</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-card rounded-lg border border-border/30">
-                  <span className="text-foreground">✅ Prompt safety training</span>
-                  <span className="text-yellow-400 text-sm">25/30 (83%)</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-card rounded-lg border border-border/30">
-                  <span className="text-muted-foreground">⬜ Advanced governance</span>
-                  <span className="text-muted-foreground text-sm">0/30 (0%)</span>
-                </div>
-              </div>
-
-              {/* Audit Log */}
-              <h3 className="text-foreground font-semibold mb-4">Audit Log</h3>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-border/30 text-left text-muted-foreground text-sm">
-                      <th className="py-3 px-4">Date</th>
-                      <th className="py-3 px-4">User</th>
-                      <th className="py-3 px-4">Action</th>
-                      <th className="py-3 px-4">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {auditLog.map((log, index) => (
-                      <tr key={index} className="border-b border-border/20">
-                        <td className="py-3 px-4 text-muted-foreground">{log.date}</td>
-                        <td className="py-3 px-4 text-foreground">{log.user}</td>
-                        <td className="py-3 px-4 text-foreground">{log.action}</td>
-                        <td className="py-3 px-4">
-                          <span className={`text-sm ${log.status === 'สำเร็จ' ? 'text-green-400' : 'text-yellow-400'}`}>
-                            {log.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </>
+              )}
+            </div>
           )}
         </div>
       </div>
