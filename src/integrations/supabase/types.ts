@@ -441,6 +441,87 @@ export type Database = {
         }
         Relationships: []
       }
+      sop_assets: {
+        Row: {
+          company_name: string
+          content_json: Json
+          created_at: string
+          department: string | null
+          id: string
+          quality_score: number | null
+          status: string | null
+          template_type: string
+          title: string
+          updated_at: string
+          user_id: string
+          version: number | null
+        }
+        Insert: {
+          company_name: string
+          content_json?: Json
+          created_at?: string
+          department?: string | null
+          id?: string
+          quality_score?: number | null
+          status?: string | null
+          template_type: string
+          title: string
+          updated_at?: string
+          user_id: string
+          version?: number | null
+        }
+        Update: {
+          company_name?: string
+          content_json?: Json
+          created_at?: string
+          department?: string | null
+          id?: string
+          quality_score?: number | null
+          status?: string | null
+          template_type?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+          version?: number | null
+        }
+        Relationships: []
+      }
+      sop_machine_sessions: {
+        Row: {
+          completed_at: string
+          context_inputs: Json | null
+          created_at: string
+          id: string
+          quality_score: number | null
+          template_type: string
+          time_seconds: number | null
+          user_id: string
+          xp_earned: number | null
+        }
+        Insert: {
+          completed_at?: string
+          context_inputs?: Json | null
+          created_at?: string
+          id?: string
+          quality_score?: number | null
+          template_type: string
+          time_seconds?: number | null
+          user_id: string
+          xp_earned?: number | null
+        }
+        Update: {
+          completed_at?: string
+          context_inputs?: Json | null
+          created_at?: string
+          id?: string
+          quality_score?: number | null
+          template_type?: string
+          time_seconds?: number | null
+          user_id?: string
+          xp_earned?: number | null
+        }
+        Relationships: []
+      }
       user_activity_log: {
         Row: {
           activity_data: Json | null
