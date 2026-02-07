@@ -462,6 +462,51 @@ export type Database = {
         }
         Relationships: []
       }
+      user_game_progress: {
+        Row: {
+          attempts: number | null
+          best_score: number | null
+          created_at: string
+          first_played_at: string | null
+          game_id: string
+          id: string
+          last_played_at: string | null
+          status: Database["public"]["Enums"]["game_status"] | null
+          total_time_seconds: number | null
+          updated_at: string
+          user_id: string
+          xp_earned: number | null
+        }
+        Insert: {
+          attempts?: number | null
+          best_score?: number | null
+          created_at?: string
+          first_played_at?: string | null
+          game_id: string
+          id?: string
+          last_played_at?: string | null
+          status?: Database["public"]["Enums"]["game_status"] | null
+          total_time_seconds?: number | null
+          updated_at?: string
+          user_id: string
+          xp_earned?: number | null
+        }
+        Update: {
+          attempts?: number | null
+          best_score?: number | null
+          created_at?: string
+          first_played_at?: string | null
+          game_id?: string
+          id?: string
+          last_played_at?: string | null
+          status?: Database["public"]["Enums"]["game_status"] | null
+          total_time_seconds?: number | null
+          updated_at?: string
+          user_id?: string
+          xp_earned?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -478,7 +523,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      game_status: "locked" | "unlocked" | "in_progress" | "completed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -605,6 +650,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      game_status: ["locked", "unlocked", "in_progress", "completed"],
+    },
   },
 } as const
