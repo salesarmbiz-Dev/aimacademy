@@ -818,6 +818,51 @@ export type Database = {
         }
         Relationships: []
       }
+      user_profiles: {
+        Row: {
+          ai_experience_level: number | null
+          created_at: string | null
+          department: string | null
+          display_name: string | null
+          id: string
+          job_title: string | null
+          onboarding_completed: boolean | null
+          onboarding_completed_at: string | null
+          pre_assessment_skipped: boolean | null
+          selected_goals: string[] | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          ai_experience_level?: number | null
+          created_at?: string | null
+          department?: string | null
+          display_name?: string | null
+          id?: string
+          job_title?: string | null
+          onboarding_completed?: boolean | null
+          onboarding_completed_at?: string | null
+          pre_assessment_skipped?: boolean | null
+          selected_goals?: string[] | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          ai_experience_level?: number | null
+          created_at?: string | null
+          department?: string | null
+          display_name?: string | null
+          id?: string
+          job_title?: string | null
+          onboarding_completed?: boolean | null
+          onboarding_completed_at?: string | null
+          pre_assessment_skipped?: boolean | null
+          selected_goals?: string[] | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_sessions: {
         Row: {
           created_at: string | null

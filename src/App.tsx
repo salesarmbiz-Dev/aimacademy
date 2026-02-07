@@ -46,6 +46,7 @@ const AssetLibrary = lazy(() => import('@/pages/AssetLibrary'));
 const GamesHub = lazy(() => import('@/pages/GamesHub'));
 const PromptDebugger = lazy(() => import('@/pages/games/PromptDebugger'));
 const SOPMachine = lazy(() => import('@/pages/games/SOPMachine'));
+const Onboarding = lazy(() => import('@/pages/Onboarding'));
 
 // Team pages
 const TeamHub = lazy(() => import('@/pages/team/TeamHub'));
@@ -120,6 +121,16 @@ const App = () => (
                           <PublicRoute>
                             <ForBusiness />
                           </PublicRoute>
+                        }
+                      />
+
+                      {/* Onboarding Route - Protected but without layout */}
+                      <Route
+                        path="/onboarding"
+                        element={
+                          <ProtectedRoute>
+                            <Onboarding />
+                          </ProtectedRoute>
                         }
                       />
 
