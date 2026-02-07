@@ -42,6 +42,7 @@ const Assessment = lazy(() => import('@/pages/Assessment'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
 const GamesHub = lazy(() => import('@/pages/GamesHub'));
 const PromptDebugger = lazy(() => import('@/pages/games/PromptDebugger'));
+const SOPMachine = lazy(() => import('@/pages/games/SOPMachine'));
 
 // Team pages
 const TeamHub = lazy(() => import('@/pages/team/TeamHub'));
@@ -128,6 +129,7 @@ const App = () => (
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/games" element={<GamesHub />} />
                         <Route path="/games/debugger" element={<PromptDebugger />} />
+                        <Route path="/games/sop-machine" element={<SOPMachine />} />
                         <Route path="/prompt-lego" element={<PromptLego />} />
                         <Route path="/challenges" element={<Challenges />} />
                         <Route path="/library" element={<Library />} />
