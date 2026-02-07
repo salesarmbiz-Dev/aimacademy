@@ -1,127 +1,119 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Check, X } from 'lucide-react';
+import { Check } from 'lucide-react';
 
-const plans = [
-  {
-    name: 'Free',
-    price: '฿0',
-    period: '/เดือน',
-    features: [
-      { text: '5 Experiments ต่อวัน', included: true },
-      { text: 'Basic Blocks', included: true },
-      { text: '2 Challenge Modes', included: true },
-      { text: 'Full Block Library', included: false },
-      { text: 'Insights History', included: false },
-    ],
-    buttonText: 'เริ่มใช้ฟรี',
-    buttonStyle: 'btn-ghost border border-border/30 hover:border-tennessee/40',
-    cardStyle: 'border-border/30',
-    headerBg: 'bg-rackley/20',
-    nameColor: 'text-foreground',
-    highlighted: false,
-  },
-  {
-    name: 'Pro',
-    price: '฿350',
-    period: '/เดือน',
-    features: [
-      { text: 'Unlimited Experiments', included: true },
-      { text: 'Full Block Library', included: true },
-      { text: 'All Challenge Modes', included: true },
-      { text: 'Insights History', included: true },
-      { text: 'Priority Support', included: true },
-    ],
-    buttonText: 'สมัคร Pro',
-    buttonStyle: 'btn-primary',
-    cardStyle: 'border-tennessee border-2',
-    headerBg: 'bg-tennessee/20',
-    nameColor: 'text-tennessee',
-    highlighted: true,
-    badge: 'แนะนำ',
-  },
-  {
-    name: 'Team',
-    price: '฿690',
-    period: '/user/เดือน',
-    features: [
-      { text: 'ทุกอย่างใน Pro', included: true },
-      { text: 'Shared Experiments', included: true },
-      { text: 'Team Analytics Dashboard', included: true },
-      { text: 'Admin Controls', included: true },
-      { text: 'Dedicated Support', included: true },
-    ],
-    buttonText: 'ติดต่อทีมขาย',
-    buttonStyle: 'btn-secondary',
-    cardStyle: 'border-border/30',
-    headerBg: 'bg-tennessee/20',
-    nameColor: 'text-tennessee',
-    highlighted: false,
-  },
-];
+interface PricingSectionProps {
+  onContactClick: () => void;
+}
 
-const PricingSection: React.FC = () => {
+const PricingSection: React.FC<PricingSectionProps> = ({ onContactClick }) => {
+  const plans = [
+    {
+      name: 'Starter',
+      price: '฿150-200K',
+      period: 'ต่อองค์กร',
+      features: [
+        'SET 1 (3 เกมพื้นฐาน)',
+        'Basic HR Dashboard',
+        'สูงสุด 30 คน',
+        'Certificate',
+      ],
+      buttonText: 'ปรึกษาเรา',
+      buttonStyle: 'btn-secondary',
+      cardStyle: 'border-border/30',
+      featured: false,
+    },
+    {
+      name: 'Professional',
+      price: '฿400-500K',
+      period: 'ต่อองค์กร',
+      features: [
+        'SET 1-2 (6 เกม)',
+        '2 Value-First Games',
+        'Full HR Dashboard',
+        'สูงสุด 100 คน',
+        'AI Asset Library',
+        'Dedicated Support',
+      ],
+      buttonText: 'นัดสาธิต',
+      buttonStyle: 'btn-primary',
+      cardStyle: 'border-2 border-tennessee',
+      featured: true,
+      badge: 'แนะนำ',
+    },
+    {
+      name: 'Enterprise',
+      price: '฿800K-1.5M',
+      period: 'ต่อองค์กร',
+      features: [
+        'ทุก SET (9+ เกม)',
+        'Custom Games',
+        'Full Dashboard + API',
+        'ไม่จำกัดจำนวนคน',
+        'AI Asset Library + Guardrails',
+        'Dedicated Success Manager',
+      ],
+      buttonText: 'ติดต่อทีมขาย',
+      buttonStyle: 'btn-secondary',
+      cardStyle: 'border-border/30',
+      featured: false,
+    },
+  ];
+
   return (
-    <section id="pricing" className="bg-gradient-to-b from-root-beer to-oxford-blue py-12 md:py-20 px-4">
-      <div className="max-w-6xl mx-auto">
+    <section id="pricing" className="bg-oxford-blue py-16 md:py-24">
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <span className="text-tennessee text-sm font-semibold uppercase tracking-wide">Pricing</span>
-          <h2 className="text-foreground text-3xl md:text-4xl font-bold mt-2">
-            เลือกแพลนที่เหมาะกับคุณ
+          <p className="text-tennessee text-sm font-semibold uppercase tracking-wide mb-2">
+            แพ็กเกจ
+          </p>
+          <h2 className="text-foreground text-3xl md:text-4xl font-bold">
+            เลือกแผนที่เหมาะกับองค์กรของคุณ
           </h2>
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto items-start">
-          {plans.map((plan) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-12">
+          {plans.map((plan, index) => (
             <div
-              key={plan.name}
-              className={`relative bg-oxford-blue border ${plan.cardStyle} rounded-2xl overflow-hidden transition-all duration-300 hover:border-tennessee/40 ${
-                plan.highlighted ? 'md:scale-105 shadow-xl shadow-tennessee/20' : ''
-              }`}
+              key={index}
+              className={`bg-card rounded-2xl p-8 border ${plan.cardStyle} flex flex-col relative`}
             >
-              {/* Badge */}
+              {/* Featured Badge */}
               {plan.badge && (
-                <div className="absolute top-0 right-0 bg-tennessee text-foreground text-xs font-semibold px-3 py-1 rounded-bl-lg">
-                  {plan.badge}
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span className="bg-tennessee text-white text-xs font-semibold px-4 py-1 rounded-full">
+                    {plan.badge}
+                  </span>
                 </div>
               )}
 
-              {/* Header */}
-              <div className={`${plan.headerBg} p-6 text-center`}>
-                <h3 className={`${plan.nameColor} text-2xl font-bold`}>{plan.name}</h3>
-                <div className="mt-4">
-                  <span className="text-foreground text-4xl font-bold">{plan.price}</span>
-                  <span className="text-muted-foreground">{plan.period}</span>
-                </div>
+              {/* Plan Name */}
+              <h3 className="text-foreground text-xl font-bold mb-4">{plan.name}</h3>
+
+              {/* Price */}
+              <div className="mb-6">
+                <span className="text-tennessee text-3xl md:text-4xl font-bold">{plan.price}</span>
+                <span className="text-muted-foreground text-sm ml-2">{plan.period}</span>
               </div>
 
               {/* Features */}
-              <div className="p-6">
-                <ul className="space-y-3">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-center gap-3">
-                      {feature.included ? (
-                        <Check className="h-5 w-5 text-tennessee flex-shrink-0" />
-                      ) : (
-                        <X className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                      )}
-                      <span className={feature.included ? 'text-foreground' : 'text-muted-foreground line-through'}>
-                        {feature.text}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+              <ul className="space-y-3 mb-8 flex-1">
+                {plan.features.map((feature, featureIndex) => (
+                  <li key={featureIndex} className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-tennessee flex-shrink-0 mt-0.5" />
+                    <span className="text-muted-foreground">{feature}</span>
+                  </li>
+                ))}
+              </ul>
 
-                {/* Button */}
-                <Link
-                  to="/register"
-                  className={`block w-full text-center py-3 rounded-lg mt-6 transition-all ${plan.buttonStyle}`}
-                >
-                  {plan.buttonText}
-                </Link>
-              </div>
+              {/* CTA Button */}
+              <button
+                onClick={onContactClick}
+                className={`w-full py-3 ${plan.buttonStyle}`}
+              >
+                {plan.buttonText}
+              </button>
             </div>
           ))}
         </div>

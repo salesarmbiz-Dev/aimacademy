@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import B2BNav from '@/components/b2b/B2BNav';
 import B2BHeroSection from '@/components/b2b/B2BHeroSection';
@@ -32,6 +32,13 @@ const ForBusiness: React.FC = () => {
     sections?.forEach((section) => observer.observe(section));
 
     return () => observer.disconnect();
+  }, []);
+
+  const scrollToSection = useCallback((id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   }, []);
 
   return (
@@ -87,7 +94,7 @@ const ForBusiness: React.FC = () => {
         </div>
 
         {/* Footer */}
-        <Footer />
+        <Footer onScrollTo={scrollToSection} />
       </div>
     </>
   );
