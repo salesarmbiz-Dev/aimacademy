@@ -99,7 +99,8 @@ const Register: React.FC = () => {
       
       setLoading(false);
       toast.success('สมัครสมาชิกสำเร็จ!');
-      navigate('/dashboard');
+      // Redirect to onboarding instead of dashboard
+      navigate('/onboarding');
     }, 1500);
   };
 
