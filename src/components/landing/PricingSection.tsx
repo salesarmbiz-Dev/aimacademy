@@ -15,8 +15,8 @@ const plans = [
       { text: 'Insights History', included: false },
     ],
     buttonText: 'เริ่มใช้ฟรี',
-    buttonStyle: 'border border-rackley text-rackley hover:bg-rackley/20',
-    cardStyle: 'border-rackley',
+    buttonStyle: 'btn-ghost border border-border/30 hover:border-tennessee/40',
+    cardStyle: 'border-border/30',
     headerBg: 'bg-rackley/20',
     nameColor: 'text-foreground',
     highlighted: false,
@@ -33,10 +33,10 @@ const plans = [
       { text: 'Priority Support', included: true },
     ],
     buttonText: 'สมัคร Pro',
-    buttonStyle: 'bg-turquoise text-oxford-blue font-semibold hover:bg-turquoise/90',
-    cardStyle: 'border-turquoise border-2',
-    headerBg: 'bg-turquoise/20',
-    nameColor: 'text-turquoise',
+    buttonStyle: 'btn-primary',
+    cardStyle: 'border-tennessee border-2',
+    headerBg: 'bg-tennessee/20',
+    nameColor: 'text-tennessee',
     highlighted: true,
     badge: 'แนะนำ',
   },
@@ -52,8 +52,8 @@ const plans = [
       { text: 'Dedicated Support', included: true },
     ],
     buttonText: 'ติดต่อทีมขาย',
-    buttonStyle: 'border border-tennessee text-tennessee hover:bg-tennessee/20',
-    cardStyle: 'border-tennessee',
+    buttonStyle: 'btn-secondary',
+    cardStyle: 'border-border/30',
     headerBg: 'bg-tennessee/20',
     nameColor: 'text-tennessee',
     highlighted: false,
@@ -66,7 +66,7 @@ const PricingSection: React.FC = () => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <span className="text-tennessee text-sm font-semibold">Pricing</span>
+          <span className="text-tennessee text-sm font-semibold uppercase tracking-wide">Pricing</span>
           <h2 className="text-foreground text-3xl md:text-4xl font-bold mt-2">
             เลือกแพลนที่เหมาะกับคุณ
           </h2>
@@ -77,8 +77,8 @@ const PricingSection: React.FC = () => {
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`relative bg-oxford-blue ${plan.cardStyle} rounded-2xl overflow-hidden transition-all duration-300 hover:scale-102 ${
-                plan.highlighted ? 'md:scale-105 shadow-xl shadow-turquoise/20' : ''
+              className={`relative bg-oxford-blue border ${plan.cardStyle} rounded-2xl overflow-hidden transition-all duration-300 hover:border-tennessee/40 ${
+                plan.highlighted ? 'md:scale-105 shadow-xl shadow-tennessee/20' : ''
               }`}
             >
               {/* Badge */}
@@ -93,7 +93,7 @@ const PricingSection: React.FC = () => {
                 <h3 className={`${plan.nameColor} text-2xl font-bold`}>{plan.name}</h3>
                 <div className="mt-4">
                   <span className="text-foreground text-4xl font-bold">{plan.price}</span>
-                  <span className="text-rackley">{plan.period}</span>
+                  <span className="text-muted-foreground">{plan.period}</span>
                 </div>
               </div>
 
@@ -103,11 +103,11 @@ const PricingSection: React.FC = () => {
                   {plan.features.map((feature, index) => (
                     <li key={index} className="flex items-center gap-3">
                       {feature.included ? (
-                        <Check className="h-5 w-5 text-turquoise flex-shrink-0" />
+                        <Check className="h-5 w-5 text-tennessee flex-shrink-0" />
                       ) : (
-                        <X className="h-5 w-5 text-rackley flex-shrink-0" />
+                        <X className="h-5 w-5 text-muted-foreground flex-shrink-0" />
                       )}
-                      <span className={feature.included ? 'text-foreground' : 'text-rackley line-through'}>
+                      <span className={feature.included ? 'text-foreground' : 'text-muted-foreground line-through'}>
                         {feature.text}
                       </span>
                     </li>

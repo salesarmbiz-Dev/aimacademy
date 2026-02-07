@@ -1,5 +1,4 @@
 import React from 'react';
-import { Trophy, Star, Crown } from 'lucide-react';
 
 const badges = [
   { icon: '🔧', name: 'First Build', description: 'สร้าง Prompt แรก', color: 'bg-amber-700' },
@@ -26,11 +25,11 @@ const GamificationPreview: React.FC = () => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <span className="text-tennessee text-sm font-semibold">Gamification System</span>
+          <span className="text-tennessee text-sm font-semibold uppercase tracking-wide">Gamification System</span>
           <h2 className="text-foreground text-3xl md:text-4xl font-bold mt-2">
             เปลี่ยนการเรียนให้เป็นการเสพติด
           </h2>
-          <p className="text-rackley text-lg mt-2">XP, Badges, และ Insights ที่สะสมได้</p>
+          <p className="text-muted-foreground text-lg mt-2">XP, Badges, และ Insights ที่สะสมได้</p>
         </div>
 
         {/* 3 Columns */}
@@ -46,7 +45,7 @@ const GamificationPreview: React.FC = () => {
                   </div>
                   <div>
                     <p className="text-foreground font-semibold">{badge.name}</p>
-                    <p className="text-rackley text-sm">{badge.description}</p>
+                    <p className="text-muted-foreground text-sm">{badge.description}</p>
                   </div>
                 </div>
               ))}
@@ -68,8 +67,8 @@ const GamificationPreview: React.FC = () => {
             {/* Level Progress */}
             <div className="bg-oxford-blue rounded-xl p-4 mt-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-turquoise font-semibold">Level 5</span>
-                <span className="text-rackley text-sm">2500/3000 XP</span>
+                <span className="text-tennessee font-semibold">Level 5</span>
+                <span className="text-muted-foreground text-sm">2500/3000 XP</span>
               </div>
               <div className="h-2 bg-root-beer rounded-full overflow-hidden">
                 <div 
@@ -87,7 +86,7 @@ const GamificationPreview: React.FC = () => {
               {insights.map((insight, index) => (
                 <div 
                   key={index}
-                  className="bg-root-beer border-l-4 border-turquoise p-4 rounded-r-lg"
+                  className="bg-root-beer border-l-4 border-tennessee p-4 rounded-r-lg"
                 >
                   <p className="text-foreground text-sm">{insight}</p>
                 </div>

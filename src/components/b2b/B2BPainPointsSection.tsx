@@ -24,7 +24,7 @@ const B2BPainPointsSection: React.FC = () => {
     <section className="bg-oxford-blue py-12 md:py-20">
       <div className="max-w-[1200px] mx-auto px-6 md:px-8">
         {/* Section Title */}
-        <h2 className="text-2xl md:text-[32px] font-bold text-white text-center mb-12">
+        <h2 className="text-2xl md:text-[32px] font-bold text-foreground text-center mb-12">
           ปัญหาที่ HR เจอเมื่อ Upskill ทีมด้าน AI
         </h2>
 
@@ -33,13 +33,13 @@ const B2BPainPointsSection: React.FC = () => {
           {painPoints.map((point, index) => (
             <div
               key={index}
-              className="bg-oxford-blue/60 border border-rackley/20 rounded-2xl p-8 hover:border-tennessee-orange/30 hover:-translate-y-1 transition-all duration-300"
+              className="bg-oxford-blue/60 border border-border/30 rounded-2xl p-8 hover:border-tennessee/40 hover:-translate-y-1 transition-all duration-300"
             >
-              <point.icon className="w-10 h-10 text-tennessee-orange mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">
+              <point.icon className="w-10 h-10 text-tennessee mb-4" />
+              <h3 className="text-xl font-semibold text-foreground mb-2">
                 {point.title}
               </h3>
-              <p className="text-base text-rackley leading-relaxed">
+              <p className="text-base text-muted-foreground leading-relaxed">
                 {point.description}
               </p>
             </div>
@@ -48,8 +48,8 @@ const B2BPainPointsSection: React.FC = () => {
 
         {/* Transition Element */}
         <div className="flex flex-col items-center mt-12">
-          <ArrowDown className="w-6 h-6 text-tennessee-orange animate-bounce" />
-          <p className="text-lg text-turquoise font-medium mt-2">
+          <ArrowDown className="w-6 h-6 text-tennessee animate-bounce" />
+          <p className="text-lg text-tennessee font-medium mt-2">
             AIM Academy แก้ปัญหาเหล่านี้
           </p>
         </div>

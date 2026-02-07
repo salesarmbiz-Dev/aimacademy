@@ -17,10 +17,10 @@ const B2BCertificatesSection: React.FC = () => {
     >
       <div className="max-w-[1200px] mx-auto px-6 md:px-8">
         {/* Section Title */}
-        <h2 className="text-2xl md:text-[32px] font-bold text-white text-center">
+        <h2 className="text-2xl md:text-[32px] font-bold text-foreground text-center">
           ใบรับรองทักษะที่ตรวจสอบได้
         </h2>
-        <p className="text-base text-rackley text-center max-w-[600px] mx-auto mt-3">
+        <p className="text-base text-muted-foreground text-center max-w-[600px] mx-auto mt-3">
           พนักงานได้รับใบรับรองที่มี QR Code ตรวจสอบได้ แชร์บน LinkedIn ได้ ใช้ประกอบ Performance Review ได้
         </p>
 
@@ -33,7 +33,7 @@ const B2BCertificatesSection: React.FC = () => {
             }}
           >
             {/* Gradient border using pseudo element effect */}
-            <div className="absolute inset-0 rounded-2xl p-[2px] bg-gradient-to-br from-turquoise to-tennessee-orange -z-10" />
+            <div className="absolute inset-0 rounded-2xl p-[2px] bg-gradient-to-br from-tennessee to-tennessee/50 -z-10" />
             <div 
               className="absolute inset-[2px] rounded-[14px]"
               style={{
@@ -45,7 +45,7 @@ const B2BCertificatesSection: React.FC = () => {
             <div className="relative z-10 h-full flex flex-col items-center justify-between text-center">
               {/* Top */}
               <div>
-                <div className="text-xs text-turquoise tracking-[3px] font-medium">
+                <div className="text-xs text-tennessee tracking-[3px] font-medium">
                   AIM ACADEMY
                 </div>
               </div>
@@ -53,17 +53,17 @@ const B2BCertificatesSection: React.FC = () => {
               {/* Middle */}
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-xl font-bold text-white">Certificate of Completion</h3>
-                  <p className="text-xs text-rackley mt-1">ใบรับรองทักษะ AI Prompting</p>
+                  <h3 className="text-xl font-bold text-foreground">Certificate of Completion</h3>
+                  <p className="text-xs text-muted-foreground mt-1">ใบรับรองทักษะ AI Prompting</p>
                 </div>
 
                 {/* Divider */}
-                <div className="w-3/5 h-0.5 mx-auto bg-gradient-to-r from-turquoise to-tennessee-orange" />
+                <div className="w-3/5 h-0.5 mx-auto bg-gradient-to-r from-tennessee to-tennessee/50" />
 
                 {/* Name */}
                 <div>
-                  <div className="text-xl md:text-2xl font-semibold text-white">สมชาย ตัวอย่าง</div>
-                  <div className="text-sm text-tennessee-orange mt-1">Prompt Builder</div>
+                  <div className="text-xl md:text-2xl font-semibold text-foreground">สมชาย ตัวอย่าง</div>
+                  <div className="text-sm text-tennessee mt-1">Prompt Builder</div>
                 </div>
 
                 {/* Skill Badges */}
@@ -71,7 +71,7 @@ const B2BCertificatesSection: React.FC = () => {
                   {['Structure ✓', 'Context ✓', 'Output ✓'].map((skill, i) => (
                     <span 
                       key={i}
-                      className="text-[10px] bg-turquoise/10 text-turquoise px-2 py-0.5 rounded"
+                      className="text-[10px] bg-tennessee/10 text-tennessee px-2 py-0.5 rounded"
                     >
                       {skill}
                     </span>
@@ -82,11 +82,11 @@ const B2BCertificatesSection: React.FC = () => {
               {/* Bottom */}
               <div className="w-full flex items-end justify-between">
                 <div className="text-left">
-                  <div className="text-[11px] text-rackley">ออกเมื่อ 1 กุมภาพันธ์ 2026</div>
+                  <div className="text-[11px] text-muted-foreground">ออกเมื่อ 1 กุมภาพันธ์ 2026</div>
                 </div>
                 
                 {/* QR Code Placeholder */}
-                <div className="w-12 h-12 bg-white rounded p-1">
+                <div className="w-12 h-12 bg-foreground rounded p-1">
                   <div className="w-full h-full grid grid-cols-5 grid-rows-5 gap-[1px]">
                     {Array.from({ length: 25 }).map((_, i) => (
                       <div 
@@ -105,8 +105,8 @@ const B2BCertificatesSection: React.FC = () => {
         <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mt-8">
           {features.map((feature, index) => (
             <div key={index} className="flex items-center gap-2">
-              <feature.icon className="w-5 h-5 text-turquoise" />
-              <span className="text-[15px] text-white">{feature.text}</span>
+              <feature.icon className="w-5 h-5 text-tennessee" />
+              <span className="text-[15px] text-foreground">{feature.text}</span>
             </div>
           ))}
         </div>

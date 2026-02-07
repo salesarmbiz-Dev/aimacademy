@@ -20,13 +20,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToHowItWorks }) => {
 
         {/* Logo & Main Headline */}
         <div className="flex items-center justify-center gap-3 mb-4">
-          <GraduationCap className="w-10 h-10 md:w-14 md:h-14 text-turquoise" />
+          <GraduationCap className="w-10 h-10 md:w-14 md:h-14 text-tennessee" />
           <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-tennessee" />
         </div>
         <h1 className="mt-4">
-          <span className="block text-turquoise font-bold text-4xl md:text-6xl">AIM Academy</span>
+          <span className="block text-foreground font-bold text-4xl md:text-6xl">AIM Academy</span>
           <span className="block text-foreground font-bold text-xl md:text-3xl mt-3">เรียนรู้ AI Prompting แบบ Gamification</span>
-          <span className="block text-rackley font-medium text-base md:text-xl mt-3">
+          <span className="block text-muted-foreground font-medium text-base md:text-xl mt-3">
             ฝึกทักษะ AI ผ่านเกมสนุกๆ - ไม่ต้องเขียนโค้ด ไม่ต้องมีพื้นฐาน
           </span>
         </h1>
@@ -39,7 +39,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToHowItWorks }) => {
         </h2>
         <div className="grid md:grid-cols-2 gap-6 md:gap-8">
           {/* Spot the Difference Card */}
-          <div className="bg-card/80 backdrop-blur-sm border-2 border-turquoise/30 rounded-2xl p-5 md:p-8 hover:border-turquoise hover:shadow-[0_0_30px_rgba(5,242,242,0.2)] transition-all duration-300 hover:scale-[1.02] shadow-lg">
+          <div className="bg-card/80 backdrop-blur-sm border border-border/30 rounded-2xl p-5 md:p-8 hover:border-turquoise/40 transition-all duration-300 hover:scale-[1.02] shadow-lg">
             {/* Icon Container */}
             <div className="flex items-center gap-3 mb-4">
               <div className="w-16 h-16 bg-turquoise/15 rounded-xl flex items-center justify-center">
@@ -51,13 +51,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToHowItWorks }) => {
             </div>
             
             {/* Title */}
-            <h3 className="text-2xl md:text-[28px] font-bold text-turquoise mb-2">🎯 Spot the Difference</h3>
+            <h3 className="text-2xl md:text-[28px] font-bold text-foreground mb-2">🎯 Spot the Difference</h3>
             
             {/* Subtitle */}
             <p className="text-base md:text-lg font-medium text-tennessee mb-3">จับผิด 2 Prompts - อันไหนดีกว่า?</p>
             
             {/* Description */}
-            <p className="text-sm md:text-[15px] font-normal text-gray-200 leading-relaxed mb-4">
+            <p className="text-sm md:text-[15px] font-normal text-muted-foreground leading-relaxed mb-4">
               ฝึกตาให้แม่น ดู Prompt แล้วเลือกอันที่ดีกว่า ไม่ต้องเขียนเอง แค่ดูและเลือก
             </p>
             
@@ -74,7 +74,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToHowItWorks }) => {
               {['Role Detection', 'Context Clarity', 'Tone Matching'].map((skill) => (
                 <span 
                   key={skill} 
-                  className="px-3 py-1 bg-turquoise/10 border border-turquoise/30 text-turquoise text-xs rounded-full"
+                  className="px-3 py-1 bg-rackley/20 border border-rackley/30 text-rackley text-xs rounded-full"
                 >
                   {skill}
                 </span>
@@ -84,15 +84,14 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToHowItWorks }) => {
             {/* Button */}
             <button
               onClick={() => setIsGuestModalOpen(true)}
-              className="w-full py-3 bg-turquoise text-white font-semibold text-base rounded-lg hover:bg-turquoise/90 hover:scale-[1.02] transition-all shadow-md"
-              style={{ textShadow: '0 1px 2px rgba(0,0,0,0.2)' }}
+              className="w-full py-3 bg-turquoise text-oxford-blue font-semibold text-base rounded-lg hover:bg-turquoise/90 hover:scale-[1.02] transition-all shadow-md"
             >
               ลองเล่น
             </button>
           </div>
 
           {/* Prompt Lego Card */}
-          <div className="bg-card/80 backdrop-blur-sm border-2 border-tennessee/30 rounded-2xl p-5 md:p-8 hover:border-tennessee hover:shadow-[0_0_30px_rgba(242,116,5,0.2)] transition-all duration-300 hover:scale-[1.02] shadow-lg">
+          <div className="bg-card/80 backdrop-blur-sm border border-border/30 rounded-2xl p-5 md:p-8 hover:border-tennessee/40 transition-all duration-300 hover:scale-[1.02] shadow-lg">
             {/* Icon Container */}
             <div className="flex items-center gap-3 mb-4">
               <div className="w-16 h-16 bg-tennessee/15 rounded-xl flex items-center justify-center">
@@ -104,13 +103,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToHowItWorks }) => {
             </div>
             
             {/* Title */}
-            <h3 className="text-2xl md:text-[28px] font-bold text-tennessee mb-2">🧱 Prompt Lego</h3>
+            <h3 className="text-2xl md:text-[28px] font-bold text-foreground mb-2">🧱 Prompt Lego</h3>
             
             {/* Subtitle */}
-            <p className="text-base md:text-lg font-medium text-turquoise mb-3">ประกอบ Prompt เหมือนต่อ LEGO</p>
+            <p className="text-base md:text-lg font-medium text-tennessee mb-3">ประกอบ Prompt เหมือนต่อ LEGO</p>
             
             {/* Description */}
-            <p className="text-sm md:text-[15px] font-normal text-gray-200 leading-relaxed mb-4">
+            <p className="text-sm md:text-[15px] font-normal text-muted-foreground leading-relaxed mb-4">
               ลงมือสร้าง Prompt ด้วยตัวเอง ลองเพิ่ม ลบ สลับ Blocks แล้วดูผลลัพธ์เปลี่ยน
             </p>
             
@@ -140,8 +139,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToHowItWorks }) => {
             {/* Button */}
             <Link
               to="/login"
-              className="block w-full py-3 bg-tennessee text-white font-semibold text-base rounded-lg hover:bg-tennessee/90 hover:scale-[1.02] transition-all text-center shadow-md"
-              style={{ textShadow: '0 1px 2px rgba(0,0,0,0.2)' }}
+              className="block w-full py-3 btn-primary text-center rounded-lg"
             >
               เริ่มเล่น
             </Link>
@@ -151,21 +149,21 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToHowItWorks }) => {
 
       {/* CTA Buttons Section - Moved below Game Cards */}
       <div className="mt-12 w-full max-w-2xl mx-auto px-4">
-        <div className="bg-gradient-to-r from-oxford-blue/80 to-root-beer/40 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-turquoise/20">
+        <div className="bg-gradient-to-r from-oxford-blue/80 to-root-beer/40 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-border/30">
           <p className="text-center text-lg md:text-xl font-medium text-foreground mb-6">
             พร้อมเริ่มเรียนรู้แล้วหรือยัง?
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={() => setIsGuestModalOpen(true)}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-tennessee text-white font-semibold rounded-lg text-lg hover:opacity-90 transition-all hover:scale-105 btn-press shadow-lg"
+              className="w-full sm:w-auto btn-primary gap-2 py-4 text-lg"
             >
               <Gamepad2 className="h-5 w-5" />
               ลองเล่นฟรี
             </button>
             <Link
               to="/login"
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-transparent border-2 border-turquoise text-turquoise font-semibold rounded-lg text-lg hover:bg-turquoise/10 transition-all"
+              className="w-full sm:w-auto btn-secondary gap-2 py-4 text-lg"
             >
               <LogIn className="h-5 w-5" />
               เข้าสู่ระบบ
@@ -186,12 +184,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToHowItWorks }) => {
               <Eye className="w-8 h-8 text-turquoise" />
             </div>
             <p className="font-bold text-foreground">Spot the Difference</p>
-            <p className="text-rackley text-sm">ฝึกตา 👀</p>
+            <p className="text-muted-foreground text-sm">ฝึกตา 👀</p>
           </div>
           
           {/* Arrow */}
-          <ArrowRight className="w-8 h-8 text-rackley hidden md:block" />
-          <ChevronDown className="w-8 h-8 text-rackley md:hidden" />
+          <ArrowRight className="w-8 h-8 text-muted-foreground hidden md:block" />
+          <ChevronDown className="w-8 h-8 text-muted-foreground md:hidden" />
           
           {/* Step 2 */}
           <div className="flex-1 text-center">
@@ -199,12 +197,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToHowItWorks }) => {
               <Blocks className="w-8 h-8 text-tennessee" />
             </div>
             <p className="font-bold text-foreground">Prompt Lego</p>
-            <p className="text-rackley text-sm">ฝึกมือ 🤲</p>
+            <p className="text-muted-foreground text-sm">ฝึกมือ 🤲</p>
           </div>
           
           {/* Arrow */}
-          <ArrowRight className="w-8 h-8 text-rackley hidden md:block" />
-          <ChevronDown className="w-8 h-8 text-rackley md:hidden" />
+          <ArrowRight className="w-8 h-8 text-muted-foreground hidden md:block" />
+          <ChevronDown className="w-8 h-8 text-muted-foreground md:hidden" />
           
           {/* Step 3 */}
           <div className="flex-1 text-center">
@@ -212,7 +210,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToHowItWorks }) => {
               <GraduationCap className="w-8 h-8 text-oxford-blue" />
             </div>
             <p className="font-bold text-foreground">AI Master</p>
-            <p className="text-rackley text-sm">เก่ง AI 🏆</p>
+            <p className="text-muted-foreground text-sm">เก่ง AI 🏆</p>
           </div>
         </div>
       </div>
@@ -222,24 +220,24 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToHowItWorks }) => {
         <div className="grid grid-cols-3 gap-6 text-center">
           <div>
             <div className="flex items-center justify-center gap-2">
-              <Users className="w-6 h-6 text-turquoise" />
+              <Users className="w-6 h-6 text-tennessee" />
               <span className="text-3xl md:text-4xl font-bold text-foreground">10,000+</span>
             </div>
-            <p className="text-rackley text-sm mt-1">ผู้เรียน</p>
+            <p className="text-muted-foreground text-sm mt-1">ผู้เรียน</p>
           </div>
           <div>
             <div className="flex items-center justify-center gap-2">
               <CheckCircle className="w-6 h-6 text-tennessee" />
               <span className="text-3xl md:text-4xl font-bold text-foreground">50,000+</span>
             </div>
-            <p className="text-rackley text-sm mt-1">Challenges Completed</p>
+            <p className="text-muted-foreground text-sm mt-1">Challenges Completed</p>
           </div>
           <div>
             <div className="flex items-center justify-center gap-2">
-              <Star className="w-6 h-6 text-turquoise" />
+              <Star className="w-6 h-6 text-tennessee" />
               <span className="text-3xl md:text-4xl font-bold text-foreground">98%</span>
             </div>
-            <p className="text-rackley text-sm mt-1">อยากแนะนำเพื่อน</p>
+            <p className="text-muted-foreground text-sm mt-1">อยากแนะนำเพื่อน</p>
           </div>
         </div>
       </div>
@@ -255,29 +253,29 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToHowItWorks }) => {
               <Gamepad2 className="w-8 h-8 text-turquoise" />
             </div>
             <h3 className="font-bold text-foreground mb-2">1. เลือกเกม</h3>
-            <p className="text-rackley text-sm">เริ่มจาก Spot the Difference ถ้าเป็นมือใหม่</p>
+            <p className="text-muted-foreground text-sm">เริ่มจาก Spot the Difference ถ้าเป็นมือใหม่</p>
           </div>
           <div className="text-center">
             <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-tennessee/20 flex items-center justify-center">
               <Brain className="w-8 h-8 text-tennessee" />
             </div>
             <h3 className="font-bold text-foreground mb-2">2. เล่นและเรียนรู้</h3>
-            <p className="text-rackley text-sm">ทุกข้อมี feedback ทันที พร้อมอธิบายเหตุผล</p>
+            <p className="text-muted-foreground text-sm">ทุกข้อมี feedback ทันที พร้อมอธิบายเหตุผล</p>
           </div>
           <div className="text-center">
             <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-turquoise/20 flex items-center justify-center">
               <Lightbulb className="w-8 h-8 text-turquoise" />
             </div>
             <h3 className="font-bold text-foreground mb-2">3. สะสม Insights</h3>
-            <p className="text-rackley text-sm">เก็บ Pattern ที่เรียนรู้ไว้ใช้ตลอดไป</p>
+            <p className="text-muted-foreground text-sm">เก็บ Pattern ที่เรียนรู้ไว้ใช้ตลอดไป</p>
           </div>
         </div>
       </div>
 
       {/* Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
-        <ChevronDown className="h-6 w-6 text-rackley" />
-        <span className="text-rackley text-sm">เลื่อนลงเพื่อดูเพิ่มเติม</span>
+        <ChevronDown className="h-6 w-6 text-muted-foreground" />
+        <span className="text-muted-foreground text-sm">เลื่อนลงเพื่อดูเพิ่มเติม</span>
       </div>
 
       {/* Guest Mode Modal */}

@@ -15,6 +15,7 @@ import { PublicRoute } from '@/components/PublicRoute';
 import { ScrollToTop } from '@/components/ScrollToTop';
 import { AppLayout } from '@/components/AppLayout';
 import { PageLoader } from '@/components/LoadingSpinner';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 // Lazy loaded pages
 const Landing = lazy(() => import('@/pages/Landing'));
@@ -55,11 +56,12 @@ const App = () => (
         <Toaster />
         <Sonner />
       <BrowserRouter>
-        <AuthProvider>
-          <UserProvider>
-            <ProgressProvider>
-              <SpotProvider>
-                <AnimationProvider>
+        <ErrorBoundary>
+          <AuthProvider>
+            <UserProvider>
+              <ProgressProvider>
+                <SpotProvider>
+                  <AnimationProvider>
                   <ScrollToTop />
                   <Suspense fallback={<PageLoader />}>
                     <Routes>
@@ -159,6 +161,7 @@ const App = () => (
             </ProgressProvider>
           </UserProvider>
         </AuthProvider>
+      </ErrorBoundary>
       </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>

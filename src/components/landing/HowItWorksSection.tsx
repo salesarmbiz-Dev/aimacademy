@@ -44,9 +44,9 @@ const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ sectionRef }) => 
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <span className="text-tennessee text-sm font-semibold">วิธีการทำงาน</span>
+          <span className="text-tennessee text-sm font-semibold uppercase tracking-wide">วิธีการทำงาน</span>
           <h2 className="text-foreground text-3xl md:text-4xl font-bold mt-2">Prompt Lego Loop</h2>
-          <p className="text-rackley text-lg mt-2">5 ขั้นตอนง่ายๆ สู่การเป็น Prompt Master</p>
+          <p className="text-muted-foreground text-lg mt-2">5 ขั้นตอนง่ายๆ สู่การเป็น Prompt Master</p>
         </div>
 
         {/* Loop Visualization */}
@@ -56,19 +56,19 @@ const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ sectionRef }) => 
             {steps.map((step, index) => (
               <div key={step.number} className="flex items-start gap-4 animate-fade-in">
                 <div className="relative">
-                  <div className="w-12 h-12 bg-turquoise rounded-full flex items-center justify-center text-oxford-blue font-bold text-lg">
+                  <div className="w-12 h-12 bg-tennessee rounded-full flex items-center justify-center text-oxford-blue font-bold text-lg">
                     {step.number}
                   </div>
                   {index < steps.length - 1 && (
-                    <div className="absolute top-12 left-1/2 -translate-x-1/2 w-0.5 h-6 bg-turquoise/50"></div>
+                    <div className="absolute top-12 left-1/2 -translate-x-1/2 w-0.5 h-6 bg-tennessee/50"></div>
                   )}
                 </div>
                 <div className="flex-1 pb-6">
                   <div className="flex items-center gap-2">
-                    <step.icon className="h-5 w-5 text-turquoise" />
+                    <step.icon className="h-5 w-5 text-tennessee" />
                     <span className="text-foreground font-semibold text-lg">{step.name}</span>
                   </div>
-                  <p className="text-rackley text-sm mt-1">{step.thai}</p>
+                  <p className="text-muted-foreground text-sm mt-1">{step.thai}</p>
                 </div>
               </div>
             ))}
@@ -79,8 +79,8 @@ const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ sectionRef }) => 
             <div className="relative w-full max-w-3xl mx-auto h-[400px]">
               {/* Center Text */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-                <span className="text-turquoise font-bold text-xl">Prompt Lego</span>
-                <span className="block text-turquoise font-bold text-xl">Loop</span>
+                <span className="text-foreground font-bold text-xl">Prompt Lego</span>
+                <span className="block text-tennessee font-bold text-xl">Loop</span>
               </div>
 
               {/* Steps positioned in circle */}
@@ -99,11 +99,11 @@ const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ sectionRef }) => 
                     }}
                   >
                     <div className="flex flex-col items-center text-center w-32">
-                      <div className="w-12 h-12 bg-turquoise rounded-full flex items-center justify-center text-oxford-blue font-bold text-lg shadow-lg shadow-turquoise/30">
+                      <div className="w-12 h-12 bg-tennessee rounded-full flex items-center justify-center text-oxford-blue font-bold text-lg shadow-lg shadow-tennessee/30">
                         <step.icon className="h-6 w-6" />
                       </div>
                       <span className="text-foreground font-semibold mt-2">{step.name}</span>
-                      <p className="text-rackley text-xs mt-1">{step.thai}</p>
+                      <p className="text-muted-foreground text-xs mt-1">{step.thai}</p>
                     </div>
                   </div>
                 );
@@ -116,7 +116,7 @@ const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ sectionRef }) => 
                   cy="200"
                   r="140"
                   fill="none"
-                  stroke="hsl(var(--turquoise-blue))"
+                  stroke="hsl(var(--border))"
                   strokeWidth="2"
                   strokeDasharray="10 5"
                   opacity="0.3"

@@ -14,27 +14,27 @@ const ProblemSolutionSection: React.FC = () => {
 
             {/* Visual - Black Box */}
             <div className="relative w-48 h-48 mx-auto md:mx-0 mt-8 mb-6">
-              <div className="w-full h-full bg-oxford-blue border border-rackley rounded-lg flex items-center justify-center">
-                <span className="text-rackley text-4xl">?</span>
+              <div className="w-full h-full bg-oxford-blue border border-border/30 rounded-lg flex items-center justify-center">
+                <span className="text-muted-foreground text-4xl">?</span>
               </div>
               {/* Floating question marks */}
-              <span className="absolute -top-2 -left-2 text-rackley text-2xl animate-float-slow">?</span>
-              <span className="absolute top-4 -right-4 text-rackley text-lg animate-float-medium">?</span>
-              <span className="absolute -bottom-2 left-8 text-rackley text-xl animate-float-fast">?</span>
-              <span className="absolute bottom-8 -right-2 text-rackley text-sm animate-float-slow">?</span>
+              <span className="absolute -top-2 -left-2 text-muted-foreground text-2xl animate-float-slow">?</span>
+              <span className="absolute top-4 -right-4 text-muted-foreground text-lg animate-float-medium">?</span>
+              <span className="absolute -bottom-2 left-8 text-muted-foreground text-xl animate-float-fast">?</span>
+              <span className="absolute bottom-8 -right-2 text-muted-foreground text-sm animate-float-slow">?</span>
             </div>
 
             {/* Problem List */}
             <div className="space-y-3 mt-6">
-              <div className="flex items-start gap-3 text-rackley">
+              <div className="flex items-start gap-3 text-muted-foreground">
                 <span>❌</span>
                 <span>การเดา Prompt ทั้งก้อน ต้องคิดเองทั้งหมด</span>
               </div>
-              <div className="flex items-start gap-3 text-rackley">
+              <div className="flex items-start gap-3 text-muted-foreground">
                 <span>❌</span>
                 <span>ไม่เห็นโครงสร้างภายใน</span>
               </div>
-              <div className="flex items-start gap-3 text-rackley">
+              <div className="flex items-start gap-3 text-muted-foreground">
                 <span>❌</span>
                 <span>ไม่รู้ว่าส่วนไหนสำคัญแค่ไหน</span>
               </div>
@@ -43,7 +43,7 @@ const ProblemSolutionSection: React.FC = () => {
 
           {/* Solution Column */}
           <div className="animate-fade-in">
-            <span className="text-turquoise text-sm font-semibold uppercase tracking-wide">ทางออก</span>
+            <span className="text-tennessee text-sm font-semibold uppercase tracking-wide">ทางออก</span>
             <h2 className="text-foreground text-2xl md:text-3xl font-bold mt-2">
               Prompt Lego = Modular Blocks
             </h2>
@@ -77,16 +77,16 @@ const ProblemSolutionSection: React.FC = () => {
 
             {/* Solution List */}
             <div className="space-y-3 mt-6">
-              <div className="flex items-start gap-3 text-turquoise">
-                <span>✅</span>
+              <div className="flex items-start gap-3 text-foreground">
+                <span className="text-tennessee">✅</span>
                 <span>เห็นแยกเป็นชิ้นๆ ทดลองสลับที่ได้</span>
               </div>
-              <div className="flex items-start gap-3 text-turquoise">
-                <span>✅</span>
+              <div className="flex items-start gap-3 text-foreground">
+                <span className="text-tennessee">✅</span>
                 <span>เพิ่มหรือลด Block แล้วเห็นผลลัพธ์ทันที</span>
               </div>
-              <div className="flex items-start gap-3 text-turquoise">
-                <span>✅</span>
+              <div className="flex items-start gap-3 text-foreground">
+                <span className="text-tennessee">✅</span>
                 <span>เปลี่ยนการเรียนรู้จาก 'ท่องจำ' เป็น 'ทำความเข้าใจ'</span>
               </div>
             </div>
