@@ -1,24 +1,24 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye, Puzzle, Trophy, Medal } from 'lucide-react';
+import { Gamepad2, Trophy, Medal, ClipboardCheck } from 'lucide-react';
 
 const QuickActions: React.FC = () => {
   const navigate = useNavigate();
 
   const actions = [
     {
-      icon: Eye,
-      text: 'Spot the Difference',
-      path: '/spot',
-      primary: false,
-      style: 'bg-card border-2 border-turquoise text-turquoise hover:bg-turquoise/10',
-    },
-    {
-      icon: Puzzle,
-      text: 'Prompt Lego',
-      path: '/prompt-lego',
+      icon: Gamepad2,
+      text: 'ศูนย์ฝึก AI',
+      path: '/games',
       primary: true,
       style: 'bg-gradient-to-r from-tennessee to-tennessee/80 text-foreground hover:shadow-lg hover:shadow-tennessee/30',
+    },
+    {
+      icon: ClipboardCheck,
+      text: 'ประเมินทักษะ',
+      path: '/assessment',
+      primary: false,
+      style: 'bg-card border-2 border-turquoise text-turquoise hover:bg-turquoise/10',
     },
     {
       icon: Trophy,

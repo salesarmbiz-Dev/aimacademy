@@ -3,8 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard,
-  Eye,
-  Puzzle,
+  Gamepad2,
   Trophy,
   Medal,
   Menu,
@@ -28,8 +27,7 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/spot', label: 'Spot the Difference', icon: Eye },
-  { path: '/prompt-lego', label: 'Prompt Lego', icon: Puzzle },
+  { path: '/games', label: 'เกมทั้งหมด', icon: Gamepad2 },
   { path: '/assessment', label: 'ประเมินทักษะ', icon: ClipboardCheck },
   { path: '/leaderboard', label: 'Leaderboard', icon: Medal },
 ];
