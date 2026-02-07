@@ -17,10 +17,10 @@ const B2BFinalCTASection: React.FC = () => {
     >
       <div className="max-w-[1200px] mx-auto px-6 md:px-8 text-center">
         {/* Headline */}
-        <h2 className="text-[28px] md:text-4xl font-bold text-white">
+        <h2 className="text-[28px] md:text-4xl font-bold text-foreground">
           พร้อมยกระดับทักษะ AI ของทีมคุณ?
         </h2>
-        <p className="text-lg text-rackley mt-3">
+        <p className="text-lg text-muted-foreground mt-3">
           เริ่มต้นฟรี วัดผลได้จริง ไม่ต้องผูกมัด
         </p>
 
@@ -28,13 +28,13 @@ const B2BFinalCTASection: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
           <Link
             to="/register"
-            className="w-full sm:w-auto px-9 py-4.5 bg-tennessee-orange text-white text-lg font-semibold rounded-xl hover:brightness-110 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200"
+            className="w-full sm:w-auto btn-primary text-lg py-4"
           >
             ทดลองใช้ฟรี สำหรับ 5 คน
           </Link>
           <a
             href="mailto:support@aimacademy.co"
-            className="w-full sm:w-auto px-8 py-4 bg-transparent border border-turquoise text-turquoise text-base rounded-xl hover:bg-turquoise/10 transition-all duration-200"
+            className="w-full sm:w-auto btn-secondary py-4"
           >
             ติดต่อทีมงาน
           </a>
@@ -44,9 +44,9 @@ const B2BFinalCTASection: React.FC = () => {
         <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6 mt-8">
           {trustBadges.map((badge, index) => (
             <React.Fragment key={index}>
-              <span className="text-[13px] text-rackley">{badge}</span>
+              <span className="text-[13px] text-muted-foreground">{badge}</span>
               {index < trustBadges.length - 1 && (
-                <span className="hidden md:inline text-rackley">·</span>
+                <span className="hidden md:inline text-muted-foreground">·</span>
               )}
             </React.Fragment>
           ))}

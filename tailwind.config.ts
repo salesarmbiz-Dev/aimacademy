@@ -23,6 +23,23 @@ export default {
       fontFamily: {
         sans: ["'Noto Sans Thai'", "system-ui", "-apple-system", "sans-serif"],
       },
+      fontSize: {
+        'xs': ['14px', { lineHeight: '1.8' }],
+        'sm': ['16px', { lineHeight: '1.8' }],
+        'base': ['18px', { lineHeight: '1.8' }],
+        'lg': ['20px', { lineHeight: '1.7' }],
+        'xl': ['24px', { lineHeight: '1.6' }],
+        '2xl': ['28px', { lineHeight: '1.5' }],
+        '3xl': ['34px', { lineHeight: '1.4' }],
+        '4xl': ['42px', { lineHeight: '1.3' }],
+        '5xl': ['52px', { lineHeight: '1.2' }],
+        '6xl': ['68px', { lineHeight: '1.1' }],
+      },
+      lineHeight: {
+        'thai': '1.8',
+        'thai-loose': '2.0',
+        'thai-tight': '1.6',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -90,9 +107,27 @@ export default {
         },
       },
       borderRadius: {
-        lg: "8px",
-        md: "6px",
-        sm: "4px",
+        'sm': '4px',
+        'md': '6px',
+        'lg': '8px',
+        'xl': '12px',
+        '2xl': '16px',
+        '3xl': '24px',
+      },
+      minHeight: {
+        'touch': '44px',
+      },
+      minWidth: {
+        'touch': '44px',
+      },
+      maxWidth: {
+        'content': '720px',
+        'wide': '1080px',
+      },
+      spacing: {
+        '18': '4.5rem',
+        '88': '22rem',
+        '128': '32rem',
       },
       keyframes: {
         "accordion-down": {
