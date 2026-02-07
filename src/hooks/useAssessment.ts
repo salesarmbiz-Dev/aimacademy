@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useActivityTracker } from './useActivityTracker';
+import { useTracking } from '@/contexts/TrackingContext';
 
 export interface AssessmentQuestion {
   id: string;
@@ -56,6 +57,7 @@ const SKILL_LABELS: Record<string, string> = {
 export const useAssessment = () => {
   const { user, isGuestMode } = useAuth();
   const { trackActivity } = useActivityTracker();
+  const { trackEvent } = useTracking();
   const [loading, setLoading] = useState(true);
   const [questions, setQuestions] = useState<AssessmentQuestion[]>([]);
   const [preTestAttempt, setPreTestAttempt] = useState<AssessmentAttempt | null>(null);
@@ -169,6 +171,7 @@ export const useAssessment = () => {
     setUserAnswers({});
     
     trackActivity('assessment_start', { type, attemptId: attempt.id });
+    trackEvent('assessment_start', { type, attempt_id: attempt.id });
     
     return { attempt, questions: shuffled };
   };
@@ -270,6 +273,15 @@ export const useAssessment = () => {
       type: completedAttempt.assessment_type, 
       score: percentage,
       attemptId 
+    });
+    
+    // Track with new tracking context
+    trackEvent('assessment_complete', {
+      type: completedAttempt.assessment_type,
+      total_score: totalScore,
+      percentage,
+      time_seconds: totalTimeSeconds,
+      competencies: JSON.parse(JSON.stringify(skillScores)),
     });
 
     return completedAttempt;

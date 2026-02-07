@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Eye, Trophy, Target, Flame, Lightbulb, Lock, 
@@ -11,6 +11,7 @@ import { Progress } from '@/components/ui/progress';
 import { useSpot } from '@/contexts/SpotContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUser } from '@/contexts/UserContext';
+import { useGameTracking } from '@/hooks/useGameTracking';
 import { CATEGORIES, getChallengesByCategory } from '@/data/spotChallenges';
 import SkillRadarChart from '@/components/spot/SkillRadarChart';
 import DailyChallengeCard from '@/components/spot/DailyChallengeCard';
@@ -31,6 +32,15 @@ const SpotHub: React.FC = () => {
     skills,
     patternsDiscovered,
   } = useSpot();
+  const { startGame } = useGameTracking('spot-the-difference');
+  const hasTrackedRef = useRef(false);
+
+  // Track game entry when hub is viewed
+  useEffect(() => {
+    if (!hasTrackedRef.current) {
+      hasTrackedRef.current = true;
+    }
+  }, []);
 
   const accuracy = challengesCompleted > 0 
     ? Math.round((correctAnswers / challengesCompleted) * 100) 
@@ -52,6 +62,7 @@ const SpotHub: React.FC = () => {
   ];
 
   const handlePlayCategory = (categoryId: string) => {
+    startGame({ category: categoryId });
     navigate(`/spot/play/${categoryId}`);
   };
 

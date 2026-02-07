@@ -9,6 +9,7 @@ import ProfileAchievements from '@/components/profile/ProfileAchievements';
 import ProfileHistory from '@/components/profile/ProfileHistory';
 import ProfileInsights from '@/components/profile/ProfileInsights';
 import ProfileSettings from '@/components/profile/ProfileSettings';
+import ProfileActivity from '@/components/profile/ProfileActivity';
 import { MOCK_BADGES, MOCK_INSIGHTS } from '@/components/profile/types';
 
 const Profile: React.FC = () => {
@@ -53,6 +54,12 @@ const Profile: React.FC = () => {
               📊 Stats
             </TabsTrigger>
             <TabsTrigger 
+              value="activity"
+              className="data-[state=active]:bg-accent data-[state=active]:text-secondary px-6 py-3 rounded-lg"
+            >
+              ⚡ Activity
+            </TabsTrigger>
+            <TabsTrigger 
               value="achievements"
               className="data-[state=active]:bg-accent data-[state=active]:text-secondary px-6 py-3 rounded-lg"
             >
@@ -87,6 +94,9 @@ const Profile: React.FC = () => {
           <div className="mt-6">
             <TabsContent value="stats" className="m-0">
               <ProfileStats />
+            </TabsContent>
+            <TabsContent value="activity" className="m-0">
+              <ProfileActivity />
             </TabsContent>
             <TabsContent value="achievements" className="m-0">
               <ProfileAchievements />

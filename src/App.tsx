@@ -10,11 +10,13 @@ import { UserProvider } from '@/contexts/UserContext';
 import { ProgressProvider } from '@/contexts/ProgressContext';
 import { AnimationProvider } from '@/contexts/AnimationContext';
 import { SpotProvider } from '@/contexts/SpotContext';
+import { TrackingProvider } from '@/contexts/TrackingContext';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { PublicRoute } from '@/components/PublicRoute';
 import { ScrollToTop } from '@/components/ScrollToTop';
 import { AppLayout } from '@/components/AppLayout';
 import { PageLoader } from '@/components/LoadingSpinner';
+import { PageTracker } from '@/components/PageTracker';
 import ErrorBoundary from '@/components/ErrorBoundary';
 
 // Lazy loaded pages
@@ -61,17 +63,19 @@ const App = () => (
         <Sonner />
       <BrowserRouter>
         <ErrorBoundary>
-          <AuthProvider>
-            <UserProvider>
-              <ProgressProvider>
-                <SpotProvider>
-                  <AnimationProvider>
-                  <ScrollToTop />
-                  <Suspense fallback={<PageLoader />}>
-                    <Routes>
-                      {/* Public Routes */}
-                      <Route
-                        path="/"
+          <TrackingProvider>
+            <AuthProvider>
+              <UserProvider>
+                <ProgressProvider>
+                  <SpotProvider>
+                    <AnimationProvider>
+                    <ScrollToTop />
+                    <PageTracker />
+                    <Suspense fallback={<PageLoader />}>
+                      <Routes>
+                        {/* Public Routes */}
+                        <Route
+                          path="/"
                         element={
                           <PublicRoute>
                             <Landing />
@@ -160,15 +164,16 @@ const App = () => (
                       {/* Public Verification Route */}
                       <Route path="/verify/:code" element={<VerifyCertificate />} />
 
-                      {/* 404 Route */}
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </Suspense>
-                </AnimationProvider>
-              </SpotProvider>
-            </ProgressProvider>
-          </UserProvider>
-        </AuthProvider>
+                        {/* 404 Route */}
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </Suspense>
+                  </AnimationProvider>
+                </SpotProvider>
+              </ProgressProvider>
+            </UserProvider>
+          </AuthProvider>
+        </TrackingProvider>
       </ErrorBoundary>
       </BrowserRouter>
       </TooltipProvider>

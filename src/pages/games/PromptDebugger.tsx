@@ -19,6 +19,7 @@ import { BugTypeSelector } from '@/components/games/debugger/BugTypeSelector';
 import { ResultsModal } from '@/components/games/debugger/ResultsModal';
 import { GameSummary } from '@/components/games/debugger/GameSummary';
 import { useDebuggerProgress } from '@/hooks/useDebuggerProgress';
+import { useGameTracking } from '@/hooks/useGameTracking';
 import { debuggerLevels, bugTypeInfo, type BugType, type DebuggerLevel } from '@/data/debuggerLevels';
 import type { SelectedBug, GameState, LevelProgress } from '@/components/games/debugger/types';
 
@@ -27,6 +28,7 @@ type View = 'levelSelect' | 'gameplay' | 'summary';
 const PromptDebugger: React.FC = () => {
   const navigate = useNavigate();
   const { levelProgress, loading, saveLevelResult, getHighestUnlockedLevel } = useDebuggerProgress();
+  const { startGame, endGame, exitGame, trackLevel } = useGameTracking('prompt-debugger');
 
   // View state
   const [currentView, setCurrentView] = useState<View>('levelSelect');
@@ -84,6 +86,9 @@ const PromptDebugger: React.FC = () => {
       setShowResults(false);
       setLevelResult(null);
       setCurrentView('gameplay');
+      
+      // Track game start for this level
+      startGame({ level });
     }
   };
 
@@ -220,15 +225,28 @@ const PromptDebugger: React.FC = () => {
       xpEarned,
     };
 
+    // Track level completion
+    trackLevel(currentLevel.level, totalScore, {
+      bugs_found: bugsFound,
+      types_correct: typesCorrect,
+      time_seconds: gameState.timeElapsed,
+      xp_earned: xpEarned,
+      stars,
+    });
+
     setLevelResult(result);
     saveLevelResult(currentLevel.level, result);
     setShowResults(true);
-  }, [currentLevel, gameState, saveLevelResult]);
+  }, [currentLevel, gameState, saveLevelResult, trackLevel]);
 
   // Navigation handlers
   const handleExitGame = () => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
+    }
+    // Track exit without completion
+    if (selectedLevel) {
+      exitGame(gameState.selectedBugs.length > 0 ? 50 : 0, { level: selectedLevel });
     }
     setCurrentView('levelSelect');
     setSelectedLevel(null);
@@ -238,6 +256,12 @@ const PromptDebugger: React.FC = () => {
     if (selectedLevel && selectedLevel < 10) {
       handleLevelSelect(selectedLevel + 1);
     } else {
+      // Track overall game completion when all levels done
+      const totalXp = Array.from(levelProgress.values()).reduce((sum, p) => sum + (p.xpEarned || 0), 0);
+      const avgScore = completedCount > 0 
+        ? Math.round(Array.from(levelProgress.values()).reduce((sum, p) => sum + p.score, 0) / completedCount)
+        : 0;
+      endGame(avgScore, totalXp, { levels_completed: completedCount });
       setCurrentView('summary');
     }
   };
