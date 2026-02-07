@@ -319,6 +319,57 @@ export type Database = {
           },
         ]
       }
+      game_debugger_results: {
+        Row: {
+          attempts: number | null
+          bugs_found: number | null
+          bugs_total: number | null
+          completed_at: string
+          created_at: string
+          fix_quality_score: number | null
+          id: string
+          level: number
+          score: number | null
+          stars: number | null
+          time_seconds: number | null
+          types_correct: number | null
+          user_id: string
+          xp_earned: number | null
+        }
+        Insert: {
+          attempts?: number | null
+          bugs_found?: number | null
+          bugs_total?: number | null
+          completed_at?: string
+          created_at?: string
+          fix_quality_score?: number | null
+          id?: string
+          level: number
+          score?: number | null
+          stars?: number | null
+          time_seconds?: number | null
+          types_correct?: number | null
+          user_id: string
+          xp_earned?: number | null
+        }
+        Update: {
+          attempts?: number | null
+          bugs_found?: number | null
+          bugs_total?: number | null
+          completed_at?: string
+          created_at?: string
+          fix_quality_score?: number | null
+          id?: string
+          level?: number
+          score?: number | null
+          stars?: number | null
+          time_seconds?: number | null
+          types_correct?: number | null
+          user_id?: string
+          xp_earned?: number | null
+        }
+        Relationships: []
+      }
       org_members: {
         Row: {
           id: string

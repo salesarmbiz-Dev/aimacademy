@@ -41,6 +41,7 @@ const VerifyCertificate = lazy(() => import('@/pages/VerifyCertificate'));
 const Assessment = lazy(() => import('@/pages/Assessment'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
 const GamesHub = lazy(() => import('@/pages/GamesHub'));
+const PromptDebugger = lazy(() => import('@/pages/games/PromptDebugger'));
 
 // Team pages
 const TeamHub = lazy(() => import('@/pages/team/TeamHub'));
@@ -126,6 +127,7 @@ const App = () => (
                       >
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/games" element={<GamesHub />} />
+                        <Route path="/games/debugger" element={<PromptDebugger />} />
                         <Route path="/prompt-lego" element={<PromptLego />} />
                         <Route path="/challenges" element={<Challenges />} />
                         <Route path="/library" element={<Library />} />
