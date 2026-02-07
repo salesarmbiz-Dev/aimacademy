@@ -63,8 +63,8 @@ const App = () => (
         <Sonner />
       <BrowserRouter>
         <ErrorBoundary>
-          <TrackingProvider>
-            <AuthProvider>
+          <AuthProvider>
+            <TrackingProvider>
               <UserProvider>
                 <ProgressProvider>
                   <SpotProvider>
@@ -172,8 +172,8 @@ const App = () => (
                 </SpotProvider>
               </ProgressProvider>
             </UserProvider>
-          </AuthProvider>
-        </TrackingProvider>
+          </TrackingProvider>
+        </AuthProvider>
       </ErrorBoundary>
       </BrowserRouter>
       </TooltipProvider>
