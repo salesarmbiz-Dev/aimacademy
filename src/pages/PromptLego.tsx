@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { HelpCircle, Plus, RotateCcw, Sparkles, ChevronDown, ChevronUp, Menu } from 'lucide-react';
 import { useProgress } from '@/contexts/ProgressContext';
 import { useUser } from '@/contexts/UserContext';
+import { useGameTracking } from '@/hooks/useGameTracking';
 import ScoreBar from '@/components/prompt-lego/ScoreBar';
 import BlockCard from '@/components/prompt-lego/BlockCard';
 import BlockLibrary from '@/components/prompt-lego/BlockLibrary';
@@ -19,6 +20,8 @@ import {
 const PromptLego: React.FC = () => {
   const { getStats } = useProgress();
   const progressStats = getStats();
+  const { startGame, endGame, trackAssetCreated } = useGameTracking('prompt-lego');
+  const hasTrackedStart = useRef(false);
 
   // State
   const [selectedPromptId, setSelectedPromptId] = useState(MOCK_PROMPTS[0].id);
@@ -37,6 +40,14 @@ const PromptLego: React.FC = () => {
   const selectedPrompt = MOCK_PROMPTS.find(p => p.id === selectedPromptId) || MOCK_PROMPTS[0];
   const currentScore = calculateScore(currentBlocks);
   const hasChanges = JSON.stringify(currentBlocks) !== JSON.stringify(selectedPrompt.blocks);
+
+  // Track game start on mount
+  useEffect(() => {
+    if (!hasTrackedStart.current) {
+      startGame({ prompt_id: selectedPromptId });
+      hasTrackedStart.current = true;
+    }
+  }, [startGame, selectedPromptId]);
 
   // Handlers
   const handlePromptChange = (promptId: string) => {
@@ -116,6 +127,20 @@ const PromptLego: React.FC = () => {
   };
 
   const handleGenerate = () => {
+    // Track experiment completion
+    const xpEarned = Math.abs(currentScore - selectedPrompt.originalScore) + 10;
+    endGame(currentScore, xpEarned, {
+      prompt_id: selectedPromptId,
+      original_score: selectedPrompt.originalScore,
+      modified_score: currentScore,
+      blocks_count: currentBlocks.length,
+    });
+    
+    // Track if this creates an asset (prompt template)
+    if (currentScore > selectedPrompt.originalScore) {
+      trackAssetCreated('prompt', currentScore);
+    }
+    
     setShowResultsModal(true);
   };
 

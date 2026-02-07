@@ -1,6 +1,7 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTracking } from '@/contexts/TrackingContext';
 import { toast } from '@/hooks/use-toast';
 import type { SOPMachineState, GeneratedSOP, QualityBreakdown } from '@/components/games/sop-machine/types';
 import { generateSOPFromInputs } from '@/data/sopTemplates';
@@ -8,6 +9,9 @@ import { getQuestionsForTemplate } from '@/data/sopQuestions';
 
 export function useSOPMachine() {
   const { user, isGuestMode } = useAuth();
+  const { trackEvent, trackGameStart, trackGameEnd } = useTracking();
+  const hasTrackedStart = useRef(false);
+  
   const [state, setState] = useState<SOPMachineState>({
     currentView: 'template',
     selectedTemplate: null,
@@ -29,6 +33,12 @@ export function useSOPMachine() {
   }, []);
 
   const startWizard = useCallback(() => {
+    // Track game start when wizard begins
+    if (!hasTrackedStart.current) {
+      trackGameStart('sop-machine', { template_type: state.selectedTemplate });
+      hasTrackedStart.current = true;
+    }
+    
     setState(prev => ({
       ...prev,
       currentView: 'wizard',
@@ -36,7 +46,7 @@ export function useSOPMachine() {
       answers: {},
       startTime: Date.now(),
     }));
-  }, []);
+  }, [state.selectedTemplate, trackGameStart]);
 
   const updateAnswer = useCallback((questionId: string, value: any) => {
     setState(prev => ({
@@ -155,6 +165,21 @@ export function useSOPMachine() {
     const timeSpent = state.startTime ? Math.floor((Date.now() - state.startTime) / 1000) : 0;
     const xpEarned = Math.floor(state.qualityScore * 1.5);
 
+    // Track game completion
+    trackGameEnd('sop-machine', state.qualityScore, xpEarned, {
+      template_type: state.selectedTemplate,
+      time_seconds: timeSpent,
+      sections_count: state.generatedSOP.sections.length,
+    });
+
+    // Track asset creation
+    trackEvent('asset_created', {
+      asset_type: 'sop',
+      game_source: 'sop-machine',
+      quality_score: state.qualityScore,
+      template_type: state.selectedTemplate,
+    });
+
     try {
       // Save session
       await supabase.from('sop_machine_sessions').insert({
@@ -202,7 +227,7 @@ export function useSOPMachine() {
     } catch (error) {
       console.error('Failed to save session:', error);
     }
-  }, [user, state]);
+  }, [user, state, trackGameEnd, trackEvent]);
 
   const saveToLibrary = useCallback(async () => {
     if (!user || !state.generatedSOP) {
@@ -308,6 +333,7 @@ export function useSOPMachine() {
   }, [state.generatedSOP, state.qualityScore]);
 
   const reset = useCallback(() => {
+    hasTrackedStart.current = false;
     setState({
       currentView: 'template',
       selectedTemplate: null,

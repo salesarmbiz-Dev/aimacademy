@@ -14,6 +14,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_events: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_type: string
+          id: string
+          page_path: string | null
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          page_path?: string | null
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          page_path?: string | null
+          session_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_events_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "user_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assessment_answers: {
         Row: {
           attempt_id: string
@@ -197,6 +235,51 @@ export type Database = {
           user_id?: string
           user_name?: string
           verify_code?: string
+        }
+        Relationships: []
+      }
+      daily_user_stats: {
+        Row: {
+          assets_created: number | null
+          created_at: string | null
+          games_completed: number | null
+          games_played: number | null
+          id: string
+          pages_visited: number | null
+          stat_date: string
+          total_sessions: number | null
+          total_time_seconds: number | null
+          updated_at: string | null
+          user_id: string
+          xp_earned: number | null
+        }
+        Insert: {
+          assets_created?: number | null
+          created_at?: string | null
+          games_completed?: number | null
+          games_played?: number | null
+          id?: string
+          pages_visited?: number | null
+          stat_date: string
+          total_sessions?: number | null
+          total_time_seconds?: number | null
+          updated_at?: string | null
+          user_id: string
+          xp_earned?: number | null
+        }
+        Update: {
+          assets_created?: number | null
+          created_at?: string | null
+          games_completed?: number | null
+          games_played?: number | null
+          id?: string
+          pages_visited?: number | null
+          stat_date?: string
+          total_sessions?: number | null
+          total_time_seconds?: number | null
+          updated_at?: string | null
+          user_id?: string
+          xp_earned?: number | null
         }
         Relationships: []
       }
@@ -681,6 +764,42 @@ export type Database = {
           updated_at?: string
           user_id?: string
           xp_earned?: number | null
+        }
+        Relationships: []
+      }
+      user_sessions: {
+        Row: {
+          created_at: string | null
+          device_type: string | null
+          duration_seconds: number | null
+          games_played: number | null
+          id: string
+          pages_visited: number | null
+          session_end: string | null
+          session_start: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          device_type?: string | null
+          duration_seconds?: number | null
+          games_played?: number | null
+          id?: string
+          pages_visited?: number | null
+          session_end?: string | null
+          session_start?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          device_type?: string | null
+          duration_seconds?: number | null
+          games_played?: number | null
+          id?: string
+          pages_visited?: number | null
+          session_end?: string | null
+          session_start?: string | null
+          user_id?: string
         }
         Relationships: []
       }
