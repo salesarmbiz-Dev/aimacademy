@@ -25,7 +25,7 @@ const ForBusiness: React.FC = () => {
       </Helmet>
 
       <div className="min-h-screen bg-background">
-        <LandingNav onScrollTo={scrollToSection} />
+        <LandingNav />
 
         {/* Hero Section */}
         <section className="gradient-hero pt-24 pb-16 md:pt-32 md:pb-24">
@@ -286,7 +286,7 @@ const ForBusiness: React.FC = () => {
           </div>
         </section>
 
-        <Footer onScrollTo={scrollToSection} />
+        <Footer />
       </div>
     </>
   );

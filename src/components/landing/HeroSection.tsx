@@ -1,122 +1,60 @@
 import React from 'react';
-import { Gamepad2, Wrench, BarChart3, CheckCircle2 } from 'lucide-react';
+import { Gamepad2, Wrench, BarChart3, ChevronDown } from 'lucide-react';
 
-interface HeroSectionProps {
-  onScrollToDemo: () => void;
-  onScrollToGames: () => void;
-}
+const HeroSection: React.FC = () => {
+  const scrollToNext = () => {
+    const element = document.getElementById('pain-points');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
-const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToDemo, onScrollToGames }) => {
   return (
-    <section className="gradient-hero pt-24 pb-16 md:pt-32 md:pb-24">
-      <div className="max-w-7xl mx-auto px-4 md:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left Column - Text Content */}
-          <div className="space-y-8 animate-fade-in">
-            {/* Eyebrow */}
-            <p className="text-tennessee text-sm font-semibold uppercase tracking-wide">
-              AI Training ที่ได้มากกว่า 'ความรู้'
-            </p>
+    <section className="gradient-hero pt-28 pb-20 md:pt-36 md:pb-28 min-h-[90vh] flex flex-col justify-center">
+      <div className="max-w-5xl mx-auto px-4 md:px-8 text-center">
+        {/* Eyebrow */}
+        <p className="text-rackley text-sm md:text-base font-medium mb-6 animate-fade-in">
+          สำหรับ HR & ผู้บริหารที่ต้องพัฒนาทีมด้าน AI
+        </p>
 
-            {/* Headline */}
-            <h1 className="text-foreground text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-              Training ที่สนุก<br />
-              ได้เครื่องมือจริง<br />
-              และวัดผลได้
-            </h1>
+        {/* Headline */}
+        <h1 className="text-foreground text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+          AI Training ที่จบแล้ว
+          <br />
+          <span className="text-turquoise">ได้มากกว่า Certificate</span>
+        </h1>
 
-            {/* Subheadline */}
-            <p className="text-muted-foreground text-lg md:text-xl max-w-lg">
-              เปลี่ยน AI Training จากค่าใช้จ่ายเป็นการลงทุน — ทุกเกมสร้าง deliverables มูลค่า ฿50-500K กลับไปใช้งานจริง
-            </p>
+        {/* Subheadline */}
+        <p className="text-muted-foreground text-lg md:text-xl leading-relaxed max-w-3xl mx-auto mb-10">
+          Platform ที่ทำให้พนักงานเรียนรู้ AI จริง — สนุกจนทำจบ ได้เครื่องมือกลับไปใช้
+          <br className="hidden md:block" />
+          และ HR เห็นผลลัพธ์ชัดเจนทุกมิติ
+        </p>
 
-            {/* Button Group */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button 
-                onClick={onScrollToDemo}
-                className="btn-primary btn-shimmer text-base px-8 py-3"
-              >
-                นัดสาธิตฟรี
-              </button>
-              <button 
-                onClick={onScrollToGames}
-                className="btn-secondary text-base px-8 py-3"
-              >
-                ดูเกมตัวอย่าง
-              </button>
-            </div>
-
-            {/* Trust Badges */}
-            <div className="flex flex-wrap gap-6 pt-4">
-              <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                <CheckCircle2 className="w-4 h-4 text-tennessee" />
-                <span>ใช้งานจริงใน 20+ องค์กร</span>
-              </div>
-              <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                <CheckCircle2 className="w-4 h-4 text-tennessee" />
-                <span>Completion rate 85%+</span>
-              </div>
-              <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                <CheckCircle2 className="w-4 h-4 text-tennessee" />
-                <span>วัดผลได้ทุกมิติ</span>
-              </div>
-            </div>
+        {/* Value Pills */}
+        <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-12">
+          <div className="flex items-center gap-2 bg-tennessee/10 text-tennessee rounded-full px-4 py-2 text-sm md:text-base font-medium">
+            <Gamepad2 className="w-4 h-4" />
+            <span>เรียนผ่านเกม</span>
           </div>
-
-          {/* Right Column - Visual Composition (Desktop Only) */}
-          <div className="hidden lg:block relative h-[400px]">
-            {/* Card 1 - Gamified Learning */}
-            <div 
-              className="absolute top-0 left-0 bg-oxford-blue/80 border border-border/30 rounded-2xl p-6 backdrop-blur w-72 animate-fade-in hover-lift"
-              style={{ animationDelay: '0.2s' }}
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-xl bg-tennessee/10 flex items-center justify-center">
-                  <Gamepad2 className="w-5 h-5 text-tennessee" />
-                </div>
-                <span className="text-foreground font-semibold">Gamified Learning</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground text-sm">Completion Rate</span>
-                <span className="text-tennessee font-bold">85%+</span>
-              </div>
-            </div>
-
-            {/* Card 2 - Real Deliverables */}
-            <div 
-              className="absolute top-28 left-16 bg-oxford-blue/80 border border-border/30 rounded-2xl p-6 backdrop-blur w-72 z-10 animate-fade-in hover-lift"
-              style={{ animationDelay: '0.4s' }}
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-xl bg-tennessee/10 flex items-center justify-center">
-                  <Wrench className="w-5 h-5 text-tennessee" />
-                </div>
-                <span className="text-foreground font-semibold">Real Deliverables</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground text-sm">Value per Game</span>
-                <span className="text-tennessee font-bold">฿50-500K</span>
-              </div>
-            </div>
-
-            {/* Card 3 - HR Analytics */}
-            <div 
-              className="absolute top-56 left-32 bg-oxford-blue/80 border border-border/30 rounded-2xl p-6 backdrop-blur w-72 z-20 animate-fade-in hover-lift"
-              style={{ animationDelay: '0.6s' }}
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-xl bg-tennessee/10 flex items-center justify-center">
-                  <BarChart3 className="w-5 h-5 text-tennessee" />
-                </div>
-                <span className="text-foreground font-semibold">HR Analytics</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground text-sm">Dashboard Modules</span>
-                <span className="text-tennessee font-bold">6</span>
-              </div>
-            </div>
+          <div className="flex items-center gap-2 bg-turquoise/10 text-turquoise rounded-full px-4 py-2 text-sm md:text-base font-medium">
+            <Wrench className="w-4 h-4" />
+            <span>ได้เครื่องมือจริง</span>
+          </div>
+          <div className="flex items-center gap-2 bg-oxford-blue/20 text-foreground rounded-full px-4 py-2 text-sm md:text-base font-medium">
+            <BarChart3 className="w-4 h-4" />
+            <span>วัดผลได้ทุกคน</span>
           </div>
         </div>
+
+        {/* Scroll Indicator */}
+        <button
+          onClick={scrollToNext}
+          className="text-muted-foreground hover:text-foreground transition-colors animate-bounce focus:outline-none focus:ring-2 focus:ring-turquoise rounded-full p-2"
+          aria-label="เลื่อนลงดูเพิ่มเติม"
+        >
+          <ChevronDown className="w-8 h-8" />
+        </button>
       </div>
     </section>
   );
