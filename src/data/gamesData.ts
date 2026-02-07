@@ -62,10 +62,10 @@ export const gamesData: GameDefinition[] = [
     descriptionTh: 'หาและแก้ไขปัญหาใน Prompt ที่ให้ผลลัพธ์ไม่ดี',
     icon: 'Bug',
     route: '/games/debugger',
-    duration: '20-30 นาที',
+    duration: '45-60 นาที',
     difficulty: 'hard',
     set: 1,
-    isBuilt: false,
+    isBuilt: true,
     unlockRequirement: {
       gameId: 'spot',
       minScore: 70,
