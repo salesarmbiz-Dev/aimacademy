@@ -605,6 +605,57 @@ export type Database = {
         }
         Relationships: []
       }
+      survey_responses: {
+        Row: {
+          continue_interest: string | null
+          created_at: string
+          desired_topics: string | null
+          id: string
+          nps_followup: string | null
+          nps_score: number
+          open_feedback: string | null
+          rating_difficulty: number | null
+          rating_fun: number | null
+          rating_usefulness: number | null
+          submitted_at: string
+          trigger_context: string
+          user_id: string
+          xp_earned: number | null
+        }
+        Insert: {
+          continue_interest?: string | null
+          created_at?: string
+          desired_topics?: string | null
+          id?: string
+          nps_followup?: string | null
+          nps_score: number
+          open_feedback?: string | null
+          rating_difficulty?: number | null
+          rating_fun?: number | null
+          rating_usefulness?: number | null
+          submitted_at?: string
+          trigger_context: string
+          user_id: string
+          xp_earned?: number | null
+        }
+        Update: {
+          continue_interest?: string | null
+          created_at?: string
+          desired_topics?: string | null
+          id?: string
+          nps_followup?: string | null
+          nps_score?: number
+          open_feedback?: string | null
+          rating_difficulty?: number | null
+          rating_fun?: number | null
+          rating_usefulness?: number | null
+          submitted_at?: string
+          trigger_context?: string
+          user_id?: string
+          xp_earned?: number | null
+        }
+        Relationships: []
+      }
       user_activity_log: {
         Row: {
           activity_data: Json | null
