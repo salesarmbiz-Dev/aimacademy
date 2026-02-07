@@ -549,6 +549,51 @@ export type Database = {
         }
         Relationships: []
       }
+      user_assets: {
+        Row: {
+          category: Database["public"]["Enums"]["asset_category"]
+          content_json: Json
+          created_at: string
+          description: string | null
+          id: string
+          quality_score: number | null
+          source_game: string
+          status: Database["public"]["Enums"]["asset_status"] | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["asset_category"]
+          content_json?: Json
+          created_at?: string
+          description?: string | null
+          id?: string
+          quality_score?: number | null
+          source_game: string
+          status?: Database["public"]["Enums"]["asset_status"] | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["asset_category"]
+          content_json?: Json
+          created_at?: string
+          description?: string | null
+          id?: string
+          quality_score?: number | null
+          source_game?: string
+          status?: Database["public"]["Enums"]["asset_status"] | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_consents: {
         Row: {
           created_at: string
@@ -655,6 +700,8 @@ export type Database = {
       }
     }
     Enums: {
+      asset_category: "prompt" | "sop" | "pattern" | "workflow" | "template"
+      asset_status: "active" | "archived"
       game_status: "locked" | "unlocked" | "in_progress" | "completed"
     }
     CompositeTypes: {
@@ -783,6 +830,8 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      asset_category: ["prompt", "sop", "pattern", "workflow", "template"],
+      asset_status: ["active", "archived"],
       game_status: ["locked", "unlocked", "in_progress", "completed"],
     },
   },
