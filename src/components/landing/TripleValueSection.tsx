@@ -1,7 +1,13 @@
 import React from 'react';
 import { Gamepad2, Wrench, BarChart3 } from 'lucide-react';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 const TripleValueSection: React.FC = () => {
+  const headerRef = useScrollReveal();
+  const block1Ref = useScrollReveal();
+  const block2Ref = useScrollReveal();
+  const block3Ref = useScrollReveal();
+
   const values = [
     {
       icon: Gamepad2,
@@ -26,11 +32,13 @@ const TripleValueSection: React.FC = () => {
     },
   ];
 
+  const blockRefs = [block1Ref, block2Ref, block3Ref];
+
   return (
     <section id="triple-value" className="bg-oxford-blue py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div ref={headerRef} className="text-center mb-16 scroll-reveal">
           <p className="text-tennessee text-sm font-semibold uppercase tracking-wide mb-2">
             ทำไมต้อง AIM Academy
           </p>
@@ -44,7 +52,8 @@ const TripleValueSection: React.FC = () => {
           {values.map((value, index) => (
             <div
               key={index}
-              className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8 items-start"
+              ref={blockRefs[index]}
+              className={`grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8 items-start scroll-reveal scroll-reveal-delay-${index + 1}`}
             >
               {/* Icon */}
               <div className="w-16 h-16 rounded-2xl bg-tennessee/10 flex items-center justify-center flex-shrink-0">

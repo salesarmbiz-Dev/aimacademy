@@ -1,6 +1,11 @@
 import React from 'react';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 const DeliverablesSection: React.FC = () => {
+  const headerRef = useScrollReveal();
+  const tableRef = useScrollReveal();
+  const totalRef = useScrollReveal();
+
   const deliverables = [
     { game: 'SOP Machine', deliverable: 'AI-enhanced SOPs 10-20 ชิ้น', value: '฿150-300K' },
     { game: 'Workflow Forge', deliverable: 'Automated workflow blueprints', value: '฿200-400K' },
@@ -14,7 +19,7 @@ const DeliverablesSection: React.FC = () => {
     <section id="deliverables" className="bg-oxford-blue py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div ref={headerRef} className="text-center mb-12 scroll-reveal">
           <p className="text-tennessee text-sm font-semibold uppercase tracking-wide mb-2">
             สิ่งที่องค์กรได้กลับไป
           </p>
@@ -24,7 +29,7 @@ const DeliverablesSection: React.FC = () => {
         </div>
 
         {/* Desktop Table */}
-        <div className="hidden md:block bg-card rounded-2xl border border-border/30 overflow-hidden">
+        <div ref={tableRef} className="hidden md:block bg-card rounded-2xl border border-border/30 overflow-hidden scroll-reveal scroll-reveal-delay-1">
           <table className="w-full">
             <thead>
               <tr className="bg-oxford-blue/80">
@@ -65,7 +70,7 @@ const DeliverablesSection: React.FC = () => {
           {deliverables.map((item, index) => (
             <div
               key={index}
-              className="bg-card rounded-xl p-4 border border-border/30"
+              className="bg-card rounded-xl p-4 border border-border/30 hover-lift"
             >
               <div className="flex justify-between items-start mb-2">
                 <h4 className="text-foreground font-semibold">{item.game}</h4>
@@ -77,7 +82,7 @@ const DeliverablesSection: React.FC = () => {
         </div>
 
         {/* Total Value */}
-        <div className="text-center mt-8">
+        <div ref={totalRef} className="text-center mt-8 scroll-reveal scroll-reveal-delay-2">
           <p className="text-muted-foreground">
             รวมมูลค่า Deliverables ทั้งหมด:{' '}
             <span className="text-tennessee font-bold text-xl">฿780K - ฿1.5M+</span>{' '}

@@ -1,6 +1,11 @@
 import React from 'react';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 const DashboardPreviewSection: React.FC = () => {
+  const headerRef = useScrollReveal();
+  const mockupRef = useScrollReveal();
+  const modulesRef = useScrollReveal();
+
   const stats = [
     { number: '24/30', label: 'Active Users' },
     { number: '72', label: 'Avg Score' },
@@ -29,7 +34,7 @@ const DashboardPreviewSection: React.FC = () => {
     <section id="dashboard" className="bg-background py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div ref={headerRef} className="text-center mb-12 scroll-reveal">
           <p className="text-tennessee text-sm font-semibold uppercase tracking-wide mb-2">
             สำหรับ HR & L&D
           </p>
@@ -40,7 +45,10 @@ const DashboardPreviewSection: React.FC = () => {
 
         {/* Dashboard Mockup */}
         <div className="max-w-4xl mx-auto">
-          <div className="bg-card rounded-2xl border border-border/30 overflow-hidden shadow-2xl">
+          <div 
+            ref={mockupRef} 
+            className="bg-card rounded-2xl border border-border/30 overflow-hidden shadow-2xl scroll-reveal scroll-reveal-delay-1 animate-float-gentle"
+          >
             {/* Top Bar */}
             <div className="bg-oxford-blue/80 px-6 py-4 flex justify-between items-center border-b border-border/30">
               <span className="text-foreground font-semibold">บริษัท AI Solutions จำกัด</span>
@@ -85,11 +93,11 @@ const DashboardPreviewSection: React.FC = () => {
           </div>
 
           {/* Module Pills */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-8">
+          <div ref={modulesRef} className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-8 scroll-reveal scroll-reveal-delay-2">
             {modules.map((module, index) => (
               <div
                 key={index}
-                className="bg-card border border-border/30 rounded-xl px-4 py-3 text-center text-sm text-foreground"
+                className="bg-card border border-border/30 rounded-xl px-4 py-3 text-center text-sm text-foreground hover-scale cursor-default"
               >
                 {module}
               </div>

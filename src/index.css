@@ -359,6 +359,46 @@
     color: hsl(var(--foreground));
     background-color: rgba(255, 255, 255, 0.05);
   }
+
+  /* === SCROLL REVEAL === */
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 600ms ease-out, transform 600ms ease-out;
+  }
+  .scroll-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .scroll-reveal-delay-1 { transition-delay: 100ms; }
+  .scroll-reveal-delay-2 { transition-delay: 200ms; }
+  .scroll-reveal-delay-3 { transition-delay: 300ms; }
+  .scroll-reveal-delay-4 { transition-delay: 400ms; }
+
+  /* === CTA SHIMMER === */
+  .btn-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 100%
+    );
+    animation: shimmerSlide 0.8s ease-out 2s forwards;
+  }
+  @keyframes shimmerSlide {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
 }
 
 /* === KEYFRAMES === */
@@ -544,6 +584,15 @@
     opacity: 1;
     transform: scale(1);
   }
+}
+
+@keyframes floatGentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.animate-float-gentle {
+  animation: floatGentle 4s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
