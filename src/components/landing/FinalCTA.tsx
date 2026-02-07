@@ -1,41 +1,38 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
 
-const FinalCTA: React.FC = () => {
+interface FinalCTAProps {
+  onDemoClick: () => void;
+}
+
+const FinalCTA: React.FC<FinalCTAProps> = ({ onDemoClick }) => {
   return (
-    <section className="bg-oxford-blue py-16 md:py-24 px-4 relative overflow-hidden">
-      {/* Radial gradient background */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_hsl(var(--border)/0.05)_0%,_transparent_70%)]"></div>
-      
-      <div className="max-w-2xl mx-auto text-center relative z-10">
-        <h2 className="text-foreground text-2xl md:text-3xl font-bold">
-          อย่าเพิ่งเขียน Prompt...
+    <section className="gradient-hero py-20 md:py-28">
+      <div className="max-w-3xl mx-auto px-4 md:px-8 text-center">
+        <h2 className="text-foreground text-3xl md:text-4xl font-bold mb-6">
+          พร้อมเปลี่ยน AI Training<br />
+          ให้เป็นการลงทุนที่วัดผลได้?
         </h2>
-        <h2 className="text-tennessee text-2xl md:text-3xl font-bold mt-2">
-          ให้เริ่ม 'ประกอบ' มันขึ้นมา
-        </h2>
-        <p className="text-muted-foreground text-lg mt-4">
-          Prompt Lego: มาตรฐานใหม่ของการเรียนรู้ AI
+
+        <p className="text-muted-foreground text-lg mb-10 max-w-xl mx-auto">
+          นัดสาธิตฟรี 30 นาที — ดูระบบจริง ถามทุกคำถาม ไม่มีข้อผูกมัด
         </p>
 
-        {/* CTA Button */}
-        <Link
-          to="/register"
-          className="btn-primary gap-2 text-xl px-12 py-5 mt-10"
+        <button
+          onClick={onDemoClick}
+          className="btn-primary text-lg px-10 py-4"
         >
-          เริ่มเล่นฟรีวันนี้
-          <ArrowRight className="h-6 w-6" />
-        </Link>
+          นัดสาธิตฟรี
+        </button>
 
-        {/* Trust Indicators */}
-        <div className="flex flex-wrap items-center justify-center gap-2 md:gap-4 mt-8 text-muted-foreground text-sm">
-          <span>✓ ไม่ต้องใช้บัตรเครดิต</span>
-          <span className="hidden md:inline">•</span>
-          <span>✓ เริ่มใช้ได้ทันที</span>
-          <span className="hidden md:inline">•</span>
-          <span>✓ ยกเลิกได้ตลอดเวลา</span>
-        </div>
+        <p className="text-muted-foreground text-sm mt-8">
+          หรือส่งอีเมลมาที่{' '}
+          <a 
+            href="mailto:hello@aimacademy.co.th" 
+            className="text-tennessee hover:underline"
+          >
+            hello@aimacademy.co.th
+          </a>
+        </p>
       </div>
     </section>
   );
