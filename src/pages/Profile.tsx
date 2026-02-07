@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { MessageSquarePlus } from 'lucide-react';
 import { useUser } from '@/contexts/UserContext';
 import ProfileHeader from '@/components/profile/ProfileHeader';
 import ProfileStats from '@/components/profile/ProfileStats';
@@ -10,6 +11,7 @@ import ProfileHistory from '@/components/profile/ProfileHistory';
 import ProfileInsights from '@/components/profile/ProfileInsights';
 import ProfileSettings from '@/components/profile/ProfileSettings';
 import ProfileActivity from '@/components/profile/ProfileActivity';
+import PostGameSurvey from '@/components/survey/PostGameSurvey';
 import { MOCK_BADGES, MOCK_INSIGHTS } from '@/components/profile/types';
 
 const Profile: React.FC = () => {
@@ -17,6 +19,7 @@ const Profile: React.FC = () => {
   const [activeTab, setActiveTab] = useState('stats');
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+  const [showSurvey, setShowSurvey] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
 
   const earnedBadgesCount = MOCK_BADGES.filter(b => b.earnedAt).length;
@@ -38,11 +41,21 @@ const Profile: React.FC = () => {
   return (
     <div className="min-h-screen bg-background p-6 lg:p-8">
       <div className="max-w-6xl mx-auto">
-        {/* Profile Header */}
-        <ProfileHeader 
-          onEditAvatar={() => setShowAvatarModal(true)}
-          onEditProfile={() => setShowEditProfileModal(true)}
-        />
+        {/* Profile Header with Feedback Button */}
+        <div className="flex items-start justify-between flex-wrap gap-4">
+          <ProfileHeader 
+            onEditAvatar={() => setShowAvatarModal(true)}
+            onEditProfile={() => setShowEditProfileModal(true)}
+          />
+          <Button
+            variant="outline"
+            onClick={() => setShowSurvey(true)}
+            className="gap-2 mt-4 md:mt-0"
+          >
+            <MessageSquarePlus className="w-4 h-4" />
+            📝 ให้ Feedback
+          </Button>
+        </div>
 
         {/* Tab Navigation */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
@@ -202,6 +215,13 @@ const Profile: React.FC = () => {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Post-Game Survey Modal */}
+        <PostGameSurvey
+          isOpen={showSurvey}
+          onClose={() => setShowSurvey(false)}
+          triggerContext="manual"
+        />
       </div>
     </div>
   );
