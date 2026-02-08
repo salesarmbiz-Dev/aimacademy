@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Smile, Heart, Eye, ChevronDown, ChevronUp } from 'lucide-react';
+import { Smile, Heart, Eye, ChevronDown, ChevronUp, Copy } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface OutputMetrics {
   tone: number;
@@ -45,6 +46,25 @@ const OutputComparisonSection: React.FC<OutputComparisonProps> = ({
   modifiedMetrics,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [copiedOriginal, setCopiedOriginal] = useState(false);
+  const [copiedModified, setCopiedModified] = useState(false);
+  const { toast } = useToast();
+
+  const handleCopyOutput = async (output: string, type: 'original' | 'modified') => {
+    try {
+      await navigator.clipboard.writeText(output);
+      if (type === 'original') {
+        setCopiedOriginal(true);
+        setTimeout(() => setCopiedOriginal(false), 2000);
+      } else {
+        setCopiedModified(true);
+        setTimeout(() => setCopiedModified(false), 2000);
+      }
+      toast({ title: '📋 Copy Output แล้ว!' });
+    } catch {
+      toast({ title: '❌ Copy ไม่สำเร็จ', variant: 'destructive' });
+    }
+  };
 
   const getBorderColor = (score: number) => {
     if (score >= 90) return 'border-turquoise';
@@ -75,12 +95,22 @@ const OutputComparisonSection: React.FC<OutputComparisonProps> = ({
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Original Output */}
-        <div className={`bg-card border-2 ${getBorderColor(originalScore)} rounded-2xl overflow-hidden`}>
+        <div className={`bg-card border-2 ${getBorderColor(originalScore)} rounded-2xl overflow-hidden relative`}>
           <div className={`${getHeaderBg(originalScore)} px-4 py-3 flex items-center justify-between`}>
             <span className="text-turquoise font-semibold">Original Output</span>
-            <span className="text-turquoise text-sm bg-turquoise/20 px-2 py-1 rounded">
-              {originalScore}/100
-            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => handleCopyOutput(originalOutput, 'original')}
+                className="text-rackley hover:text-turquoise p-1 rounded transition-colors"
+                title="Copy Output"
+                aria-label="Copy Original Output"
+              >
+                {copiedOriginal ? '✅' : <Copy className="h-4 w-4" />}
+              </button>
+              <span className="text-turquoise text-sm bg-turquoise/20 px-2 py-1 rounded">
+                {originalScore}/100
+              </span>
+            </div>
           </div>
           <div className={`p-5 ${isExpanded ? '' : 'max-h-48'} overflow-y-auto`}>
             <p className="text-foreground text-sm leading-relaxed whitespace-pre-line">
@@ -95,19 +125,29 @@ const OutputComparisonSection: React.FC<OutputComparisonProps> = ({
         </div>
 
         {/* Modified Output */}
-        <div className={`bg-card border-2 ${getBorderColor(modifiedScore)} rounded-2xl overflow-hidden`}>
+        <div className={`bg-card border-2 ${getBorderColor(modifiedScore)} rounded-2xl overflow-hidden relative`}>
           <div className={`${getHeaderBg(modifiedScore)} px-4 py-3 flex items-center justify-between`}>
             <span className={`font-semibold ${modifiedScore >= 70 ? 'text-foreground' : 'text-tennessee'}`}>
               Modified Output
             </span>
-            <span className={`text-sm px-2 py-1 rounded ${
-              modifiedScore >= 90 ? 'text-turquoise bg-turquoise/20' :
-              modifiedScore >= 70 ? 'text-rackley bg-rackley/20' :
-              modifiedScore >= 50 ? 'text-tennessee bg-tennessee/20' :
-              'text-red-500 bg-red-500/20'
-            }`}>
-              {modifiedScore}/100
-            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => handleCopyOutput(modifiedOutput, 'modified')}
+                className="text-rackley hover:text-turquoise p-1 rounded transition-colors"
+                title="Copy Output"
+                aria-label="Copy Modified Output"
+              >
+                {copiedModified ? '✅' : <Copy className="h-4 w-4" />}
+              </button>
+              <span className={`text-sm px-2 py-1 rounded ${
+                modifiedScore >= 90 ? 'text-turquoise bg-turquoise/20' :
+                modifiedScore >= 70 ? 'text-rackley bg-rackley/20' :
+                modifiedScore >= 50 ? 'text-tennessee bg-tennessee/20' :
+                'text-red-500 bg-red-500/20'
+              }`}>
+                {modifiedScore}/100
+              </span>
+            </div>
           </div>
           <div className={`p-5 ${isExpanded ? '' : 'max-h-48'} overflow-y-auto`}>
             <p className="text-foreground text-sm leading-relaxed whitespace-pre-line">
